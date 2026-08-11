@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ devotional.title }} - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .devotional-detail img {
+        width: 100%;
+        max-height: 400px;
+        object-fit: cover;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+    }
+    .devotional-detail .meta {
+        color: #6c757d;
+        font-size: 0.95rem;
+    }
+    .devotional-detail .meta i {
+        color: var(--gold);
+        margin-right: 5px;
+    }
+    .devotional-detail .content {
+        font-size: 1.1rem;
+        line-height: 1.9;
+    }
+    .devotional-detail .scripture-box {
+        background: #f8f7f4;
+        border-left: 4px solid var(--gold);
+        padding: 1.2rem 1.8rem;
+        border-radius: 8px;
+        margin: 2rem 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto devotional-detail">
+                {% if devotional.featured_image %}
+                    <img src="{{ devotional.featured_image.url }}" alt="{{ devotional.title }}">
+                {% endif %}
+                <h1>{{ devotional.title }}</h1>
+                <div class="meta mb-3">
+                    <p><i class="fas fa-user"></i> {{ devotional.author|default:"Pastor Kingsley Nwekwo" }}</p>
+                    <p><i class="fas fa-calendar-alt"></i> {{ devotional.created_at|date:"F d, Y" }}</p>
+                    <p><i class="fas fa-eye"></i> {{ devotional.views }} views</p>
+                </div>
+
+                {% if devotional.scripture %}
+                    <div class="scripture-box">
+                        <strong><i class="fas fa-book-open"></i> Scripture:</strong> {{ devotional.scripture }}
+                    </div>
+                {% endif %}
+
+                <div class="content">
+                    {{ devotional.content|linebreaks }}
+                </div>
+
+                <!-- Reading time -->
+                <p class="text-muted"><i class="fas fa-clock"></i> Reading time: {{ devotional.reading_time }} min</p>
+
+                <!-- Related -->
+                {% if related_devotionals %}
+                    <hr class="my-5">
+                    <h4 class="mb-3">More Devotionals</h4>
+                    <div class="row g-3">
+                        {% for rel in related_devotionals %}
+                            <div class="col-md-6">
+                                <a href="{% url 'core:devotional_detail' rel.slug %}" class="text-decoration-none text-dark">
+                                    <div class="card premium-card">
+                                        <div class="card-body">
+                                            <h6>{{ rel.title|truncatechars:50 }}</h6>
+                                            <small class="text-muted">{{ rel.created_at|date:"M d, Y" }}</small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

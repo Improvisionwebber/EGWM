@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Ministries - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .ministry-card {
+        background: #fff;
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+        transition: transform 0.3s, box-shadow 0.3s;
+        height: 100%;
+    }
+    .ministry-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+    }
+    .ministry-card img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+    }
+    .ministry-card .card-body {
+        padding: 1.5rem;
+    }
+    .ministry-card .meeting-info {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    .ministry-card .meeting-info i {
+        color: var(--gold);
+        width: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <h1 class="section-title text-center">Our Ministries</h1>
+        <p class="section-subtitle text-center mb-5">Serving God and community through various ministries.</p>
+
+        {% if ministries %}
+            <div class="row g-4">
+                {% for ministry in ministries %}
+                    <div class="col-lg-4 col-md-6">
+                        <div class="ministry-card">
+                            {% if ministry.image %}
+                                <img src="{{ ministry.image.url }}" alt="{{ ministry.name }}">
+                            {% else %}
+                                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 220px;">
+                                    <i class="fas fa-church" style="font-size: 3rem; color: #ccc;"></i>
+                                </div>
+                            {% endif %}
+                            <div class="card-body">
+                                <h4>{{ ministry.name }}</h4>
+                                {% if ministry.leader %}
+                                    <p><i class="fas fa-user"></i> {{ ministry.leader }}</p>
+                                {% endif %}
+                                <p>{{ ministry.description|truncatewords:25 }}</p>
+                                <div class="meeting-info">
+                                    {% if ministry.meeting_day %}<p><i class="fas fa-calendar-alt"></i> {{ ministry.meeting_day }}</p>{% endif %}
+                                    {% if ministry.meeting_time %}<p><i class="fas fa-clock"></i> {{ ministry.meeting_time }}</p>{% endif %}
+                                    {% if ministry.meeting_venue %}<p><i class="fas fa-map-pin"></i> {{ ministry.meeting_venue }}</p>{% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center">
+                <p>Ministry information coming soon.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

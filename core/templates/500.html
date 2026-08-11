@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Server Error - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
+
+{% block content %}
+<section class="section-padding text-center">
+    <div class="container">
+        <div style="font-size: 8rem; font-weight: 800; color: var(--gold);">500</div>
+        <h1 class="display-4">Internal Server Error</h1>
+        <p class="lead">Something went wrong on our end. Please try again later.</p>
+        <a href="{% url 'core:home' %}" class="btn btn-gold mt-3">Return Home</a>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Sermons - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .sermon-card {
+        background: #fff;
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        transition: transform 0.3s, box-shadow 0.3s;
+        height: 100%;
+    }
+    .sermon-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+    }
+    .sermon-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+    .sermon-card .card-body {
+        padding: 1.5rem;
+    }
+    .sermon-card .sermon-meta {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    .sermon-card .sermon-meta i {
+        margin-right: 5px;
+        color: var(--gold);
+    }
+    .sermon-card .btn-play {
+        background: var(--gold);
+        color: #000;
+        border: none;
+        border-radius: 50px;
+        padding: 0.4rem 1.2rem;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+    .sermon-card .btn-play:hover {
+        background: var(--gold-dark);
+        color: #fff;
+    }
+    .filter-sidebar {
+        background: #fff;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+    }
+    .filter-sidebar .list-group-item {
+        border: none;
+        padding: 0.6rem 0;
+        background: transparent;
+    }
+    .filter-sidebar .list-group-item a {
+        color: #333;
+        text-decoration: none;
+    }
+    .filter-sidebar .list-group-item a:hover,
+    .filter-sidebar .list-group-item.active a {
+        color: var(--gold);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar Filters -->
+            <div class="col-lg-3 mb-4 mb-lg-0">
+                <div class="filter-sidebar">
+                    <h5><i class="fas fa-filter"></i> Categories</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item {% if not current_category %}active{% endif %}">
+                            <a href="{% url 'core:sermons' %}">All Sermons</a>
+                        </li>
+                        {% for cat in categories %}
+                            <li class="list-group-item {% if current_category == cat.slug %}active{% endif %}">
+                                <a href="?category={{ cat.slug }}">{{ cat.title }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Sermon List -->
+            <div class="col-lg-9">
+                <h1 class="section-title">Sermons</h1>
+                <p class="mb-4">Listen to messages that inspire and transform.</p>
+
+                <form class="mb-4" method="get" action="{% url 'core:sermons' %}">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control form-control-premium" placeholder="Search sermons..." value="{{ search_query }}">
+                        <button class="btn btn-gold" type="submit">Search</button>
+                    </div>
+                </form>
+
+                {% if sermons %}
+                    <div class="row g-4">
+                        {% for sermon in sermons %}
+                            <div class="col-md-6">
+                                <div class="sermon-card">
+                                    {% if sermon.thumbnail %}
+                                        <img src="{{ sermon.thumbnail.url }}" alt="{{ sermon.title }}">
+                                    {% else %}
+                                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                            <i class="fas fa-play-circle" style="font-size: 3rem; color: var(--gold);"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ sermon.title }}</h5>
+                                        <div class="sermon-meta">
+                                            <p><i class="fas fa-user"></i> {{ sermon.speaker }}</p>
+                                            <p><i class="fas fa-book"></i> {{ sermon.bible_reference|default:"No reference" }}</p>
+                                            <p><i class="fas fa-calendar-alt"></i> {{ sermon.date_preached|date:"M d, Y" }}</p>
+                                        </div>
+                                        <a href="{% url 'core:sermon_detail' sermon.slug %}" class="btn btn-gold btn-sm">Listen Now</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if sermons.paginator.num_pages > 1 %}
+                        <nav class="mt-5">
+                            <ul class="pagination justify-content-center">
+                                {% if sermons.has_previous %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ sermons.previous_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}">Previous</a></li>
+                                {% endif %}
+                                {% for num in sermons.paginator.page_range %}
+                                    <li class="page-item {% if sermons.number == num %}active{% endif %}">
+                                        <a class="page-link" href="?page={{ num }}{% if current_category %}&category={{ current_category }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}">{{ num }}</a>
+                                    </li>
+                                {% endfor %}
+                                {% if sermons.has_next %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ sermons.next_page_number }}{% if current_category %}&category={{ current_category }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}">Next</a></li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    {% endif %}
+                {% else %}
+                    <p>No sermons found. Please check back later.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

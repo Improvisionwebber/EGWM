@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Embassy of God's Word Ministry{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{% if church_settings and church_settings.meta_description %}{{ church_settings.meta_description }}{% else %}Embassy of God's Word Ministry – Abuja, Nigeria. Pastor Kingsley Nwekwo. Worship, prayer, and community.{% endif %}{% endblock %}">
+    <link rel="icon" href="{% if church_settings and church_settings.favicon %}{{ church_settings.favicon.url }}{% else %}#{% endif %}" type="image/x-icon">
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts: Inter for modern clean look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+
+    {% block extra_head %}{% endblock %}
+
+    <style>
+        /* ---------- Global Premium Styles ---------- */
+        :root {
+            --gold: #D4AF37;
+            --gold-light: #E8C84E;
+            --gold-dark: #B8960F;
+            --black: #0D0D0D;
+            --charcoal: #1A1A1A;
+            --dark-gray: #2D2D2D;
+            --white: #FFFFFF;
+            --off-white: #F8F7F4;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--off-white);
+            color: var(--black);
+            padding-top: 76px; /* fixed navbar height */
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        a {
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .gold-text {
+            color: var(--gold);
+        }
+        .gold-bg {
+            background-color: var(--gold);
+        }
+        .black-bg {
+            background-color: var(--black);
+        }
+        .charcoal-bg {
+            background-color: var(--charcoal);
+        }
+
+        .section-padding {
+            padding: 80px 0;
+        }
+        .section-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #6c757d;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Buttons */
+        .btn-gold {
+            background-color: var(--gold);
+            border-color: var(--gold);
+            color: var(--black);
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+        .btn-gold:hover {
+            background-color: var(--gold-dark);
+            border-color: var(--gold-dark);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+        }
+        .btn-outline-gold {
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            background: transparent;
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+        .btn-outline-gold:hover {
+            background-color: var(--gold);
+            color: var(--black);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+        }
+
+        /* Cards */
+        .premium-card {
+            background: var(--white);
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        .premium-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .premium-card .card-img-top {
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            object-fit: cover;
+            height: 220px;
+        }
+
+        /* Navbar */
+        .navbar-premium {
+            background-color: var(--black);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+            padding: 0.8rem 0;
+        }
+        .navbar-premium .navbar-brand {
+            font-weight: 800;
+            color: var(--gold) !important;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+        }
+        .navbar-premium .navbar-brand img {
+            max-height: 45px;
+            margin-right: 10px;
+        }
+        .navbar-premium .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .navbar-premium .nav-link:hover,
+        .navbar-premium .nav-link.active {
+            color: var(--gold) !important;
+            background: rgba(212, 175, 55, 0.1);
+        }
+        .navbar-premium .dropdown-menu {
+            background: var(--charcoal);
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+        }
+        .navbar-premium .dropdown-item {
+            color: rgba(255,255,255,0.8);
+            padding: 0.6rem 1.5rem;
+        }
+        .navbar-premium .dropdown-item:hover {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--gold);
+        }
+
+        /* Footer */
+        .footer-premium {
+            background-color: var(--black);
+            color: rgba(255,255,255,0.8);
+            padding: 60px 0 30px;
+        }
+        .footer-premium h5 {
+            color: var(--gold);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        .footer-premium a {
+            color: rgba(255,255,255,0.6);
+            transition: color 0.3s;
+        }
+        .footer-premium a:hover {
+            color: var(--gold);
+        }
+        .footer-premium .social-icons a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+            margin-right: 10px;
+            color: rgba(255,255,255,0.7);
+            transition: all 0.3s;
+        }
+        .footer-premium .social-icons a:hover {
+            background: var(--gold);
+            color: var(--black);
+            transform: translateY(-3px);
+        }
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 1.5rem;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+        }
+
+        /* Hero slider */
+        .hero-slide {
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            background-color: var(--charcoal);
+        }
+        .hero-slide::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 100%);
+            z-index: 1;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            color: var(--white);
+            max-width: 700px;
+        }
+        .hero-content h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+        .hero-content h1 .gold-text {
+            display: inline-block;
+        }
+        .hero-content p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        /* Back to top */
+        #back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--gold);
+            color: var(--black);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+            transition: all 0.3s;
+            z-index: 1000;
+            display: none;
+        }
+        #back-to-top:hover {
+            background: var(--gold-dark);
+            color: var(--white);
+            transform: translateY(-4px);
+        }
+
+        /* Messages */
+        .alert-premium {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        /* Forms */
+        .form-control-premium {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 0.8rem 1.2rem;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        .form-control-premium:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 991px) {
+            .hero-content h1 {
+                font-size: 2.8rem;
+            }
+            .section-title {
+                font-size: 2.2rem;
+            }
+            body {
+                padding-top: 66px;
+            }
+        }
+        @media (max-width: 576px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            .section-padding {
+                padding: 50px 0;
+            }
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="navbar navbar-expand-lg navbar-premium fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'core:home' %}">
+                {% if church_settings and church_settings.logo %}
+                    <img src="{{ church_settings.logo.url }}" alt="{{ church_settings.church_name }}">
+                {% endif %}
+                <span>{% if church_settings %}{{ church_settings.short_name|default:church_settings.church_name }}{% else %}Embassy of God's Word{% endif %}</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'core:home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'core:about' %}">About</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'leadership' %}active{% endif %}" href="{% url 'core:leadership' %}">Leadership</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'ministries' %}active{% endif %}" href="{% url 'core:ministries' %}">Ministries</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {% if request.resolver_match.app_name == 'core' and request.resolver_match.url_name in 'sermons,sermon_detail,devotionals,devotional_detail,events,event_detail' %}active{% endif %}" href="#" id="mediaDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Media
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="mediaDropdown">
+                            <li><a class="dropdown-item" href="{% url 'core:sermons' %}">Sermons</a></li>
+                            <li><a class="dropdown-item" href="{% url 'core:devotionals' %}">Devotionals</a></li>
+                            <li><a class="dropdown-item" href="{% url 'core:events' %}">Events</a></li>
+                            <li><a class="dropdown-item" href="{% url 'core:gallery' %}">Gallery</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'testimonies' %}active{% endif %}" href="{% url 'core:testimonies' %}">Testimonies</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'give' %}active{% endif %}" href="{% url 'core:give' %}">Give</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'core:contact' %}">Contact</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:prayer_request' %}">
+                            <span class="badge bg-gold text-dark px-3 py-2" style="background-color: var(--gold);">Prayer</span>
+                        </a>
+                    </li>
+                </ul>
+                <!-- Search form in navbar (optional) -->
+                <form class="d-flex ms-lg-3" action="{% url 'core:search_results' %}" method="get">
+                    <div class="input-group">
+                        <input class="form-control form-control-sm" type="search" name="q" placeholder="Search..." aria-label="Search">
+                        <button class="btn btn-outline-gold btn-sm" type="submit"><i class="fas fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================== MESSAGES ==================== -->
+    {% if messages %}
+        <div class="container mt-3">
+            {% for message in messages %}
+                <div class="alert alert-premium alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    {% block content %}
+    {% endblock %}
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer-premium">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <h5>{% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}</h5>
+                    <p class="mb-2">
+                        <i class="fas fa-map-marker-alt gold-text me-2"></i>
+                        {% if church_settings %}{{ church_settings.address }}{% else %}Peyi Road, Ushafa, Bwari, Abuja{% endif %}
+                    </p>
+                    <p class="mb-2">
+                        <i class="fas fa-phone gold-text me-2"></i>
+                        {% if church_settings %}{{ church_settings.phone }}{% endif %}
+                    </p>
+                    <p class="mb-2">
+                        <i class="fas fa-envelope gold-text me-2"></i>
+                        {% if church_settings %}{{ church_settings.email }}{% endif %}
+                    </p>
+                    <div class="social-icons mt-3">
+                        {% for link in social_links %}
+                            <a href="{{ link.url }}" target="_blank" aria-label="{{ link.get_platform_display }}">
+                                <i class="fab fa-{{ link.platform }}"></i>
+                            </a>
+                        {% empty %}
+                            <!-- Fallback social links from church settings -->
+                            {% if church_settings %}
+                                {% if church_settings.facebook %}<a href="{{ church_settings.facebook }}" target="_blank"><i class="fab fa-facebook-f"></i></a>{% endif %}
+                                {% if church_settings.instagram %}<a href="{{ church_settings.instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>{% endif %}
+                                {% if church_settings.youtube %}<a href="{{ church_settings.youtube }}" target="_blank"><i class="fab fa-youtube"></i></a>{% endif %}
+                                {% if church_settings.tiktok %}<a href="{{ church_settings.tiktok }}" target="_blank"><i class="fab fa-tiktok"></i></a>{% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'core:home' %}">Home</a></li>
+                        <li><a href="{% url 'core:about' %}">About</a></li>
+                        <li><a href="{% url 'core:sermons' %}">Sermons</a></li>
+                        <li><a href="{% url 'core:events' %}">Events</a></li>
+                        <li><a href="{% url 'core:give' %}">Give</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5>Service Times</h5>
+                    {% if service_schedule %}
+                        <ul class="list-unstyled">
+                            {% for service in service_schedule %}
+                                <li><strong>{{ service.get_day_display }}</strong> {{ service.start_time|time:"g:i A" }} – {{ service.end_time|time:"g:i A" }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Sunday Worship: 9:00 AM &amp; 11:00 AM</p>
+                        <p>Wednesday Bible Study: 6:00 PM</p>
+                    {% endif %}
+                </div>
+                <div class="col-lg-3">
+                    <h5>Newsletter</h5>
+                    <p>Subscribe to receive updates and devotionals.</p>
+                    <form action="{% url 'core:newsletter_subscribe' %}" method="post" class="newsletter-form">
+                        {% csrf_token %}
+                        <div class="mb-2">
+                            <input type="email" name="email" class="form-control form-control-sm" placeholder="Your email" required>
+                        </div>
+                        <button type="submit" class="btn btn-gold btn-sm w-100">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom text-center">
+                <p class="mb-0">
+                    &copy; {% now "Y" %} 
+                    {% if church_settings and church_settings.copyright_text %}
+                        {{ church_settings.copyright_text }}
+                    {% else %}
+                        Embassy of God's Word Ministry. All rights reserved.
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== BACK TO TOP ==================== -->
+    <button id="back-to-top" class="btn" aria-label="Back to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- ==================== SCRIPTS ==================== -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Back to top button
+        const backBtn = document.getElementById('back-to-top');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 300) {
+                backBtn.style.display = 'block';
+            } else {
+                backBtn.style.display = 'none';
+            }
+        });
+        backBtn.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Auto-dismiss alerts after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    const closeBtn = alert.querySelector('.btn-close');
+                    if (closeBtn) closeBtn.click();
+                }, 5000);
+            });
+        });
+
+        // Placeholder for any additional JS
+        {% block extra_js %}{% endblock %}
+    </script>
+</body>
+</html>

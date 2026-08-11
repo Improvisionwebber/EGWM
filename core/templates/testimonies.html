@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Testimonies - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .testimony-card {
+        background: #fff;
+        border: none;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+        transition: transform 0.3s, box-shadow 0.3s;
+        height: 100%;
+    }
+    .testimony-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+    }
+    .testimony-card .testimony-text {
+        font-size: 1.05rem;
+        line-height: 1.7;
+        color: #333;
+    }
+    .testimony-card .testimony-author {
+        font-weight: 700;
+        margin-top: 1rem;
+    }
+    .testimony-card .testimony-title {
+        color: var(--gold);
+        font-weight: 600;
+        font-size: 1rem;
+    }
+    .testimony-card img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-right: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <h1 class="section-title text-center">Testimonies</h1>
+        <p class="section-subtitle text-center mb-5">Hear what God has done in the lives of His people.</p>
+
+        <form class="mb-4" method="get" action="{% url 'core:testimonies' %}">
+            <div class="input-group w-50 mx-auto">
+                <input type="text" name="q" class="form-control form-control-premium" placeholder="Search testimonies..." value="{{ search_query }}">
+                <button class="btn btn-gold" type="submit">Search</button>
+            </div>
+        </form>
+
+        {% if testimonies %}
+            <div class="row g-4">
+                {% for testimony in testimonies %}
+                    <div class="col-md-6">
+                        <div class="testimony-card">
+                            <div class="d-flex align-items-center mb-3">
+                                {% if testimony.photo %}
+                                    <img src="{{ testimony.photo.url }}" alt="{{ testimony.full_name }}">
+                                {% else %}
+                                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width:60px;height:60px;">
+                                        <i class="fas fa-user" style="font-size:1.5rem;color:#ccc;"></i>
+                                    </div>
+                                {% endif %}
+                                <div>
+                                    <div class="testimony-author">{{ testimony.full_name }}</div>
+                                    {% if testimony.title %}
+                                        <div class="testimony-title">{{ testimony.title }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <p class="testimony-text">“{{ testimony.story|truncatewords:40 }}”</p>
+                            <a href="{% url 'core:testimony_detail' testimony.slug %}" class="btn btn-outline-gold btn-sm">Read Full Testimony</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if testimonies.paginator.num_pages > 1 %}
+                <nav class="mt-5">
+                    <ul class="pagination justify-content-center">
+                        {% if testimonies.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?page={{ testimonies.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">Previous</a></li>
+                        {% endif %}
+                        {% for num in testimonies.paginator.page_range %}
+                            <li class="page-item {% if testimonies.number == num %}active{% endif %}">
+                                <a class="page-link" href="?page={{ num }}{% if search_query %}&q={{ search_query }}{% endif %}">{{ num }}</a>
+                            </li>
+                        {% endfor %}
+                        {% if testimonies.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ testimonies.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">Next</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        {% else %}
+            <div class="text-center">
+                <p>No testimonies found. Be the first to share yours!</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

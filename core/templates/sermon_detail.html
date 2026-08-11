@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ sermon.title }} - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .sermon-detail img {
+        width: 100%;
+        max-height: 500px;
+        object-fit: cover;
+        border-radius: 16px;
+    }
+    .sermon-detail .meta {
+        color: #6c757d;
+        font-size: 1rem;
+    }
+    .sermon-detail .meta i {
+        color: var(--gold);
+        margin-right: 8px;
+    }
+    .sermon-detail .content {
+        font-size: 1.05rem;
+        line-height: 1.8;
+    }
+    .related-card {
+        background: #fff;
+        border: none;
+        border-radius: 12px;
+        padding: 0.8rem;
+        transition: 0.3s;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .related-card:hover {
+        transform: translateX(4px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+    .related-card img {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+    .related-card .info h6 {
+        margin-bottom: 0;
+    }
+    .related-card .info small {
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto sermon-detail">
+                {% if sermon.thumbnail %}
+                    <img src="{{ sermon.thumbnail.url }}" alt="{{ sermon.title }}" class="mb-4">
+                {% endif %}
+                <h1>{{ sermon.title }}</h1>
+                <div class="meta mb-3">
+                    <p><i class="fas fa-user"></i> Speaker: {{ sermon.speaker }}</p>
+                    <p><i class="fas fa-calendar-alt"></i> {{ sermon.date_preached|date:"F d, Y" }}</p>
+                    {% if sermon.category %}<p><i class="fas fa-tag"></i> {{ sermon.category.title }}</p>{% endif %}
+                    {% if sermon.bible_reference %}<p><i class="fas fa-book"></i> {{ sermon.bible_reference }}</p>{% endif %}
+                    {% if sermon.series %}<p><i class="fas fa-layer-group"></i> Series: {{ sermon.series }}</p>{% endif %}
+                    <p><i class="fas fa-eye"></i> {{ sermon.views }} views</p>
+                </div>
+
+                <!-- Audio / Video -->
+                {% if sermon.youtube_url %}
+                    <div class="ratio ratio-16x9 mb-4">
+                        <iframe src="{{ sermon.youtube_embed_url }}" title="YouTube video player" allowfullscreen></iframe>
+                    </div>
+                {% elif sermon.audio_file %}
+                    <div class="mb-4">
+                        <audio controls class="w-100">
+                            <source src="{{ sermon.audio_file.url }}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                {% endif %}
+
+                <div class="content">
+                    {{ sermon.content|linebreaks }}
+                </div>
+
+                {% if sermon.pdf_notes %}
+                    <div class="mt-4">
+                        <a href="{{ sermon.pdf_notes.url }}" target="_blank" class="btn btn-outline-gold">
+                            <i class="fas fa-file-pdf"></i> Download Notes
+                        </a>
+                    </div>
+                {% endif %}
+
+                <!-- Related Sermons -->
+                {% if related_sermons %}
+                    <hr class="my-5">
+                    <h4 class="mb-3">Related Sermons</h4>
+                    <div class="row g-3">
+                        {% for rel in related_sermons %}
+                            <div class="col-md-6">
+                                <a href="{% url 'core:sermon_detail' rel.slug %}" class="text-decoration-none text-dark">
+                                    <div class="related-card">
+                                        {% if rel.thumbnail %}
+                                            <img src="{{ rel.thumbnail.url }}" alt="{{ rel.title }}">
+                                        {% else %}
+                                            <div class="bg-light" style="width:70px;height:70px;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                                                <i class="fas fa-play-circle" style="font-size:1.5rem;color:var(--gold);"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div class="info">
+                                            <h6>{{ rel.title|truncatechars:40 }}</h6>
+                                            <small>{{ rel.speaker }} • {{ rel.date_preached|date:"M d, Y" }}</small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

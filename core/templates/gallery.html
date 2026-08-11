@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Gallery - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .album-card {
+        background: #fff;
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .album-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+    }
+    .album-card img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+    }
+    .album-card .card-body {
+        padding: 1.2rem;
+    }
+    .album-card .image-count {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+    .gallery-grid img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 12px;
+        transition: transform 0.3s;
+        cursor: pointer;
+    }
+    .gallery-grid img:hover {
+        transform: scale(1.03);
+    }
+    .modal-gallery img {
+        width: 100%;
+        border-radius: 8px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <h1 class="section-title text-center">Photo Gallery</h1>
+        <p class="section-subtitle text-center mb-5">Memorable moments captured in worship and fellowship.</p>
+
+        {% if albums %}
+            <div class="row g-4">
+                {% for album in albums %}
+                    <div class="col-md-4">
+                        <div class="album-card">
+                            {% if album.cover_image %}
+                                <img src="{{ album.cover_image.url }}" alt="{{ album.title }}">
+                            {% else %}
+                                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 220px;">
+                                    <i class="fas fa-images" style="font-size: 3rem; color: #ccc;"></i>
+                                </div>
+                            {% endif %}
+                            <div class="card-body">
+                                <h5>{{ album.title }}</h5>
+                                <p class="image-count">{{ album.images.count }} images</p>
+                                <a href="#" class="btn btn-outline-gold btn-sm" data-bs-toggle="modal" data-bs-target="#albumModal{{ album.id }}">View Album</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal for album images -->
+                    <div class="modal fade" id="albumModal{{ album.id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">{{ album.title }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row g-2 gallery-grid">
+                                        {% for image in album.images.all %}
+                                            <div class="col-4 col-md-3">
+                                                <img src="{{ image.image.url }}" alt="{{ image.caption|default:'Gallery image' }}" data-bs-toggle="tooltip" title="{{ image.caption }}">
+                                            </div>
+                                        {% empty %}
+                                            <p>No images in this album.</p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if albums.paginator.num_pages > 1 %}
+                <nav class="mt-5">
+                    <ul class="pagination justify-content-center">
+                        {% if albums.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?page={{ albums.previous_page_number }}">Previous</a></li>
+                        {% endif %}
+                        {% for num in albums.paginator.page_range %}
+                            <li class="page-item {% if albums.number == num %}active{% endif %}">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endfor %}
+                        {% if albums.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ albums.next_page_number }}">Next</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        {% else %}
+            <div class="text-center">
+                <p>No albums yet. Check back soon.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize tooltips for gallery images
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (el) {
+        return new bootstrap.Tooltip(el);
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Search Results - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .result-section {
+        margin-bottom: 2rem;
+    }
+    .result-section h4 {
+        border-bottom: 2px solid var(--gold);
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+        display: inline-block;
+    }
+    .result-item {
+        background: #fff;
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+        margin-bottom: 0.8rem;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .result-item:hover {
+        background: #f8f7f4;
+    }
+    .result-item .icon {
+        color: var(--gold);
+        font-size: 1.5rem;
+        width: 40px;
+        text-align: center;
+    }
+    .result-item .info {
+        flex: 1;
+    }
+    .result-item .info h6 {
+        margin-bottom: 0;
+    }
+    .result-item .info p {
+        margin-bottom: 0;
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <h1 class="section-title text-center">Search Results</h1>
+        <form method="get" action="{% url 'core:search_results' %}" class="mb-5">
+            <div class="input-group w-50 mx-auto">
+                <input type="text" name="q" class="form-control form-control-premium" placeholder="Search..." value="{{ query }}">
+                <button class="btn btn-gold" type="submit">Search</button>
+            </div>
+        </form>
+
+        {% if query %}
+            <p class="text-muted text-center">Showing results for "<strong>{{ query }}</strong>"</p>
+
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <!-- Sermons -->
+                    {% if results.sermons %}
+                        <div class="result-section">
+                            <h4>Sermons</h4>
+                            {% for sermon in results.sermons %}
+                                <a href="{% url 'core:sermon_detail' sermon.slug %}" class="text-decoration-none text-dark">
+                                    <div class="result-item">
+                                        <div class="icon"><i class="fas fa-play-circle"></i></div>
+                                        <div class="info">
+                                            <h6>{{ sermon.title }}</h6>
+                                            <p>{{ sermon.speaker }} • {{ sermon.date_preached|date:"M d, Y" }}</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <!-- Devotionals -->
+                    {% if results.devotionals %}
+                        <div class="result-section">
+                            <h4>Devotionals</h4>
+                            {% for devotional in results.devotionals %}
+                                <a href="{% url 'core:devotional_detail' devotional.slug %}" class="text-decoration-none text-dark">
+                                    <div class="result-item">
+                                        <div class="icon"><i class="fas fa-bible"></i></div>
+                                        <div class="info">
+                                            <h6>{{ devotional.title }}</h6>
+                                            <p>{{ devotional.author|default:"Pastor" }} • {{ devotional.created_at|date:"M d, Y" }}</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <!-- Events -->
+                    {% if results.events %}
+                        <div class="result-section">
+                            <h4>Events</h4>
+                            {% for event in results.events %}
+                                <a href="{% url 'core:event_detail' event.slug %}" class="text-decoration-none text-dark">
+                                    <div class="result-item">
+                                        <div class="icon"><i class="fas fa-calendar-alt"></i></div>
+                                        <div class="info">
+                                            <h6>{{ event.title }}</h6>
+                                            <p>{{ event.venue }} • {{ event.start_date|date:"M d, Y" }}</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <!-- Testimonies -->
+                    {% if results.testimonies %}
+                        <div class="result-section">
+                            <h4>Testimonies</h4>
+                            {% for testimony in results.testimonies %}
+                                <a href="{% url 'core:testimony_detail' testimony.slug %}" class="text-decoration-none text-dark">
+                                    <div class="result-item">
+                                        <div class="icon"><i class="fas fa-heart"></i></div>
+                                        <div class="info">
+                                            <h6>{{ testimony.full_name }}</h6>
+                                            <p>{{ testimony.title|default:"Testimony" }}</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <!-- Ministries -->
+                    {% if results.ministries %}
+                        <div class="result-section">
+                            <h4>Ministries</h4>
+                            {% for ministry in results.ministries %}
+                                <a href="{% url 'core:ministries' %}" class="text-decoration-none text-dark">
+                                    <div class="result-item">
+                                        <div class="icon"><i class="fas fa-church"></i></div>
+                                        <div class="info">
+                                            <h6>{{ ministry.name }}</h6>
+                                            <p>{{ ministry.leader|default:"Ministry" }}</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if not results.sermons and not results.devotionals and not results.events and not results.testimonies and not results.ministries %}
+                        <p class="text-center">No results found for "{{ query }}".</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <p class="text-center">Please enter a search term.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

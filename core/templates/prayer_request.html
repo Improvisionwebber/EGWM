@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Prayer Request - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .prayer-form {
+        background: #fff;
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+    .prayer-form .form-check-input:checked {
+        background-color: var(--gold);
+        border-color: var(--gold);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="section-title text-center">Prayer Request</h1>
+                <p class="section-subtitle text-center mb-5">We are here to pray with you. Share your request confidentially.</p>
+
+                <div class="prayer-form">
+                    <form method="post" action="{% url 'core:prayer_request' %}">
+                        {% csrf_token %}
+                        {{ form.non_field_errors }}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.full_name.id_for_label }}" class="form-label">Your Full Name</label>
+                                {{ form.full_name }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.email.id_for_label }}" class="form-label">Email (optional)</label>
+                                {{ form.email }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.phone.id_for_label }}" class="form-label">Phone (optional)</label>
+                                {{ form.phone }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.urgency.id_for_label }}" class="form-label">Urgency</label>
+                                {{ form.urgency }}
+                            </div>
+                            <div class="col-12">
+                                <label for="{{ form.request_details.id_for_label }}" class="form-label">Request Details</label>
+                                {{ form.request_details }}
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    {{ form.confidential }}
+                                    <label class="form-check-label" for="{{ form.confidential.id_for_label }}">
+                                        {{ form.confidential.label }}
+                                    </label>
+                                    <p class="form-text text-muted">If checked, your request will be kept private and only shared with the prayer team.</p>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-gold">Submit Request</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

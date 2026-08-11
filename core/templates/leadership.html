@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Leadership - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .leadership-card {
+        background: #fff;
+        border: none;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+        transition: transform 0.3s, box-shadow 0.3s;
+        height: 100%;
+    }
+    .leadership-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+    .leadership-card img {
+        width: 100%;
+        height: 350px;
+        object-fit: cover;
+    }
+    .leadership-card .card-body {
+        padding: 1.8rem;
+    }
+    .leadership-card .position {
+        color: var(--gold);
+        font-weight: 600;
+        font-size: 1rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+    .leadership-card .quote {
+        font-style: italic;
+        color: #6c757d;
+        border-left: 3px solid var(--gold);
+        padding-left: 1rem;
+        margin-top: 0.8rem;
+    }
+    .leadership-card .social-links a {
+        color: #6c757d;
+        margin-right: 0.8rem;
+        font-size: 1.1rem;
+        transition: color 0.3s;
+    }
+    .leadership-card .social-links a:hover {
+        color: var(--gold);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <h1 class="section-title text-center">Our Leadership</h1>
+        <p class="section-subtitle text-center mb-5">Spiritual leaders dedicated to serving God and His people.</p>
+
+        {% if leadership %}
+            <div class="row g-4">
+                {% for leader in leadership %}
+                    <div class="col-lg-4 col-md-6">
+                        <div class="leadership-card">
+                            {% if leader.photo %}
+                                <img src="{{ leader.photo.url }}" alt="{{ leader.name }}">
+                            {% else %}
+                                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 350px;">
+                                    <i class="fas fa-user-circle" style="font-size: 5rem; color: #ccc;"></i>
+                                </div>
+                            {% endif %}
+                            <div class="card-body">
+                                <h4>{{ leader.name }}</h4>
+                                <p class="position">{{ leader.position }}</p>
+                                {% if leader.biography %}
+                                    <p>{{ leader.biography|truncatewords:30 }}</p>
+                                {% endif %}
+                                {% if leader.quote %}
+                                    <div class="quote">“{{ leader.quote }}”</div>
+                                {% endif %}
+                                <div class="social-links mt-3">
+                                    {% if leader.facebook %}<a href="{{ leader.facebook }}" target="_blank"><i class="fab fa-facebook-f"></i></a>{% endif %}
+                                    {% if leader.instagram %}<a href="{{ leader.instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>{% endif %}
+                                    {% if leader.email %}<a href="mailto:{{ leader.email }}"><i class="fas fa-envelope"></i></a>{% endif %}
+                                    {% if leader.phone %}<a href="tel:{{ leader.phone }}"><i class="fas fa-phone"></i></a>{% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center">
+                <p>Leadership information coming soon.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

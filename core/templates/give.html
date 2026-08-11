@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Give - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .give-card {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 16px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: 0.3s;
+        height: 100%;
+    }
+    .give-card:hover {
+        border-color: var(--gold);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    }
+    .give-card .bank-details {
+        font-size: 1.1rem;
+        color: #333;
+    }
+    .give-card .bank-details strong {
+        color: var(--gold);
+    }
+    .give-card img {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 12px;
+        margin-top: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <h1 class="section-title text-center">Give</h1>
+        <p class="section-subtitle text-center mb-5">Support the work of the ministry through your generous giving.</p>
+
+        <div class="row g-4">
+            {% if giving_info %}
+                {% for info in giving_info %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="give-card">
+                            <h5>{{ info.title }}</h5>
+                            <div class="bank-details">
+                                <p><strong>Bank:</strong> {{ info.bank_name }}</p>
+                                <p><strong>Account Name:</strong> {{ info.account_name }}</p>
+                                <p><strong>Account Number:</strong> {{ info.account_number }}</p>
+                            </div>
+                            {% if info.description %}
+                                <p>{{ info.description }}</p>
+                            {% endif %}
+                            {% if info.qr_image %}
+                                <img src="{{ info.qr_image.url }}" alt="QR Code for {{ info.title }}">
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center">
+                    <p>Giving information will be available soon.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="text-center mt-5">
+            <p class="text-muted">Thank you for your generosity. God bless you.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

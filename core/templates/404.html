@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Page Not Found - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
+
+{% block content %}
+<section class="section-padding text-center">
+    <div class="container">
+        <div style="font-size: 8rem; font-weight: 800; color: var(--gold);">404</div>
+        <h1 class="display-4">Page Not Found</h1>
+        <p class="lead">Sorry, the page you're looking for doesn't exist.</p>
+        <a href="{% url 'core:home' %}" class="btn btn-gold mt-3">Return Home</a>
+    </div>
+</section>
+{% endblock %}

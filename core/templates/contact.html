@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Contact Us - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contact-info-box {
+        background: #fff;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+        margin-bottom: 1.5rem;
+    }
+    .contact-info-box i {
+        color: var(--gold);
+        font-size: 1.5rem;
+        width: 40px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container">
+        <h1 class="section-title text-center">Contact Us</h1>
+        <p class="section-subtitle text-center mb-5">We would love to hear from you. Reach out to us.</p>
+
+        <div class="row g-5">
+            <div class="col-lg-5">
+                <div class="contact-info-box">
+                    <h4><i class="fas fa-map-marker-alt gold-text"></i> Our Location</h4>
+                    <p>{% if church_settings %}{{ church_settings.address }}{% else %}Peyi Road, opposite British Oasis International School, Ushafa Old Road, Bwari, Abuja{% endif %}</p>
+                </div>
+                <div class="contact-info-box">
+                    <h4><i class="fas fa-phone gold-text"></i> Phone</h4>
+                    <p>{% if church_settings %}{{ church_settings.phone }}{% endif %}</p>
+                    {% if church_settings and church_settings.alternate_phone %}<p>{{ church_settings.alternate_phone }}</p>{% endif %}
+                </div>
+                <div class="contact-info-box">
+                    <h4><i class="fas fa-envelope gold-text"></i> Email</h4>
+                    <p>{% if church_settings %}{{ church_settings.email }}{% endif %}</p>
+                </div>
+                {% if church_settings and church_settings.office_hours %}
+                    <div class="contact-info-box">
+                        <h4><i class="fas fa-clock gold-text"></i> Office Hours</h4>
+                        <p>{{ church_settings.office_hours }}</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-lg-7">
+                <div class="card premium-card p-4">
+                    <h4 class="mb-3">Send a Message</h4>
+                    <form method="post" action="{% url 'core:contact' %}">
+                        {% csrf_token %}
+                        {{ form.non_field_errors }}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.full_name.id_for_label }}" class="form-label">Full Name</label>
+                                {{ form.full_name }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+                                {{ form.email }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.phone.id_for_label }}" class="form-label">Phone (optional)</label>
+                                {{ form.phone }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.subject.id_for_label }}" class="form-label">Subject</label>
+                                {{ form.subject }}
+                            </div>
+                            <div class="col-12">
+                                <label for="{{ form.message.id_for_label }}" class="form-label">Message</label>
+                                {{ form.message }}
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-gold">Send Message</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
