@@ -5,27 +5,51 @@
 
 {% block extra_css %}
 <style>
+    .page-hero {
+        background: linear-gradient(160deg, var(--black) 0%, var(--charcoal) 100%);
+        color: #fff;
+        padding: calc(var(--nav-h) + 4rem) 0 6rem;
+        margin-top: calc(-1 * var(--nav-h));
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    .page-hero h1 { color: #fff; font-size: clamp(2rem, 4.5vw, 3.1rem); max-width: 720px; margin: 0 auto; }
+    .page-hero p.lead-text { color: rgba(255,255,255,0.7); max-width: 560px; margin: 1rem auto 0; }
+
+    .prayer-form-wrap { margin-top: -3.5rem; position: relative; z-index: 5; }
     .prayer-form {
         background: #fff;
-        border-radius: 20px;
-        padding: 2.5rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        border-radius: var(--radius-lg);
+        padding: 2.75rem;
+        box-shadow: var(--shadow-lg);
     }
-    .prayer-form .form-check-input:checked {
-        background-color: var(--gold);
-        border-color: var(--gold);
-    }
+    .prayer-form .form-check-input:checked { background-color: var(--gold); border-color: var(--gold); }
+    .prayer-form .form-label { font-weight: 600; font-size: .88rem; color: var(--black); }
+
+    .prayer-form-wrap .particle-field { position: absolute; inset: -6rem 0 auto; height: 12rem; }
 </style>
 {% endblock %}
 
 {% block content %}
-<section class="section-padding">
+<section class="page-hero">
+    <div class="particle-field" aria-hidden="true">
+        <span class="float-particle" style="width:5px;height:5px;left:15%;top:30%;"></span>
+        <span class="float-particle" style="width:3px;height:3px;left:35%;top:60%;animation-delay:2s;"></span>
+        <span class="float-particle" style="width:4px;height:4px;left:65%;top:20%;animation-delay:1s;"></span>
+        <span class="float-particle" style="width:6px;height:6px;left:85%;top:50%;animation-delay:3s;"></span>
+    </div>
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <h1 class="section-title text-center">Prayer Request</h1>
-                <p class="section-subtitle text-center mb-5">We are here to pray with you. Share your request confidentially.</p>
+        <p class="eyebrow on-dark center justify-content-center d-flex">You Are Not Alone</p>
+        <h1>We Would Love To Pray With You</h1>
+        <p class="lead-text">Share your request confidentially, and let our prayer team stand with you in faith.</p>
+    </div>
+</section>
 
+<section class="section-padding" style="padding-top: 3.5rem;">
+    <div class="container">
+        <div class="row justify-content-center prayer-form-wrap">
+            <div class="col-lg-8" data-reveal>
                 <div class="prayer-form">
                     <form method="post" action="{% url 'core:prayer_request' %}">
                         {% csrf_token %}
@@ -57,7 +81,7 @@
                                     <label class="form-check-label" for="{{ form.confidential.id_for_label }}">
                                         {{ form.confidential.label }}
                                     </label>
-                                    <p class="form-text text-muted">If checked, your request will be kept private and only shared with the prayer team.</p>
+                                    <p class="form-text" style="color: var(--muted);">If checked, your request will be kept private and only shared with the prayer team.</p>
                                 </div>
                             </div>
                             <div class="col-12">

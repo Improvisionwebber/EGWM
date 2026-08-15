@@ -6,7 +6,11 @@ from django.utils import timezone
 from django.http import Http404
 from django.contrib.auth.decorators import login_required
 import requests
-
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.forms import modelform_factory
 IMGBB_API_KEY = "b15da317474447e69e6859a9ad6ba545"
 from .models import (
     ChurchSettings,
@@ -31,10 +35,14 @@ from .models import (
 from .forms import (
     ContactForm,
     DevotionalForm,
+     GalleryAlbumForm,
     PrayerRequestForm,
     FirstVisitForm,
+    GalleryImageForm,
+    TestimonyForm,
     NewsletterForm,
     SearchForm,
+    EventForm,
 )
 
 
@@ -156,82 +164,6 @@ def leadership_view(request):
     context['leadership'] = leadership
     return render(request, 'leadership.html', context)
 
-
-# ---------- Ministries View ----------
-def ministries_view(request):
-    context = get_global_context(request)
-    ministries = Ministry.objects.all().order_by('display_order', 'name')
-    context['ministries'] = ministries
-    return render(request, 'ministries.html', context)
-
-
-# ---------- Sermons List View ----------
-def sermons_view(request):
-    context = get_global_context(request)
-
-    # Base queryset: published sermons, select category
-    sermons_qs = Sermon.objects.filter(published=True).select_related('category')
-
-    # Category filter
-    category_slug = request.GET.get('category')
-    if category_slug:
-        sermons_qs = sermons_qs.filter(category__slug=category_slug)
-
-    # Search
-    search_query = request.GET.get('q')
-    if search_query:
-        sermons_qs = sermons_qs.filter(
-            Q(title__icontains=search_query) |
-            Q(speaker__icontains=search_query) |
-            Q(bible_reference__icontains=search_query) |
-            Q(summary__icontains=search_query)
-        )
-
-    # Order by date preached descending
-    sermons_qs = sermons_qs.order_by('-date_preached')
-
-    # Pagination
-    paginator = Paginator(sermons_qs, 12)
-    page = request.GET.get('page')
-    try:
-        sermons = paginator.page(page)
-    except PageNotAnInteger:
-        sermons = paginator.page(1)
-    except EmptyPage:
-        sermons = paginator.page(paginator.num_pages)
-
-    # Categories for filter sidebar
-    categories = SermonCategory.objects.all().order_by('title')
-
-    context.update({
-        'sermons': sermons,
-        'categories': categories,
-        'current_category': category_slug,
-        'search_query': search_query,
-    })
-    return render(request, 'sermons.html', context)
-
-
-# ---------- Sermon Detail View ----------
-def sermon_detail(request, slug):
-    context = get_global_context(request)
-    sermon = get_object_or_404(Sermon, slug=slug, published=True)
-
-    # Increment view count
-    sermon.views += 1
-    sermon.save(update_fields=['views'])
-
-    # Related sermons: same category, exclude current, limit 5
-    related = Sermon.objects.filter(
-        category=sermon.category,
-        published=True
-    ).exclude(id=sermon.id).order_by('-date_preached')[:5]
-
-    context.update({
-        'sermon': sermon,
-        'related_sermons': related,
-    })
-    return render(request, 'sermon_detail.html', context)
 
 
 # ---------- Devotionals List View ----------
@@ -456,7 +388,7 @@ def prayer_request_view(request):
             prayer = form.save(commit=False)
             prayer.save()
             messages.success(request, "Your prayer request has been submitted. We are praying with you.")
-            return redirect('prayer_request')
+            return redirect('core:prayer_request')
         else:
             messages.error(request, "Please correct the errors below.")
     else:
@@ -606,6 +538,7 @@ def dashboard(request):
         "devotional_count": Devotional.objects.count(),
         "leadership_count": Leadership.objects.count(),
         "event_count": Event.objects.count(),
+        "pending_prayers": PrayerRequest.objects.filter(status="pending").count(),
         "sermon_count": Sermon.objects.count(),
         "ministry_count": Ministry.objects.count(),
         "testimony_count": Testimony.objects.count(),
@@ -772,7 +705,6 @@ def dashboard_delete_leadership(request, pk):
 
     return redirect("core:dashboard")
 
-
 # ============================================================
 # EVENTS
 # ============================================================
@@ -782,100 +714,449 @@ def dashboard_add_event(request):
 
     if request.method == "POST":
 
-        title = request.POST.get("title", "").strip()
-        event_type = request.POST.get("event_type", "service")
-        description = request.POST.get("description", "").strip()
-        venue = request.POST.get("venue", "").strip()
-
-        start_date = request.POST.get("start_date")
-        end_date = request.POST.get("end_date")
-
-        registration_link = request.POST.get("registration_link", "").strip()
-        google_maps_link = request.POST.get("google_maps_link", "").strip()
-
-        featured = request.POST.get("featured") == "on"
-        published = request.POST.get("published") == "on"
-
-        banner = request.FILES.get("banner")
-
-        if not title:
-            messages.error(request, "Event title is required.")
-            return redirect("core:dashboard_add_event")
-
-        if not start_date:
-            messages.error(request, "Event start date is required.")
-            return redirect("core:dashboard_add_event")
-
-        event = Event(
-            title=title,
-            event_type=event_type,
-            description=description,
-            venue=venue,
-            start_date=start_date,
-            end_date=end_date or None,
-            registration_link=registration_link,
-            google_maps_link=google_maps_link,
-            featured=featured,
-            published=published,
-            banner=banner,
+        form = EventForm(
+            request.POST,
+            request.FILES
         )
 
-        event.save()
+        if form.is_valid():
 
-        messages.success(request, "Event added successfully.")
-        return redirect("core:dashboard")
+            form.save()
 
-    return render(request, "dashboard/event_form.html")
+            messages.success(
+                request,
+                "Event added successfully."
+            )
+
+            return redirect("core:dashboard")
+
+    else:
+        form = EventForm()
+
+    return render(
+        request,
+        "dashboard/event_form.html",
+        {
+            "form": form,
+            "event": None,
+            "is_edit": False,
+        }
+    )
 
 
 @login_required
 def dashboard_edit_event(request, pk):
 
-    event = get_object_or_404(Event, pk=pk)
+    event = get_object_or_404(
+        Event,
+        pk=pk
+    )
 
     if request.method == "POST":
 
-        event.title = request.POST.get("title", "").strip()
-        event.event_type = request.POST.get("event_type", "service")
-        event.description = request.POST.get("description", "").strip()
-        event.venue = request.POST.get("venue", "").strip()
+        form = EventForm(
+            request.POST,
+            request.FILES,
+            instance=event
+        )
 
-        event.start_date = request.POST.get("start_date")
-        event.end_date = request.POST.get("end_date") or None
+        if form.is_valid():
 
-        event.registration_link = request.POST.get(
-            "registration_link", ""
-        ).strip()
+            form.save()
 
-        event.google_maps_link = request.POST.get(
-            "google_maps_link", ""
-        ).strip()
+            messages.success(
+                request,
+                "Event updated successfully."
+            )
 
-        event.featured = request.POST.get("featured") == "on"
-        event.published = request.POST.get("published") == "on"
+            return redirect("core:dashboard")
 
-        if request.FILES.get("banner"):
-            event.banner = request.FILES.get("banner")
+    else:
 
-        event.save()
-
-        messages.success(request, "Event updated successfully.")
-        return redirect("core:dashboard")
+        form = EventForm(
+            instance=event
+        )
 
     return render(
         request,
         "dashboard/event_form.html",
-        {"event": event}
+        {
+            "form": form,
+            "event": event,
+            "is_edit": True,
+        }
     )
 
 
 @login_required
 def dashboard_delete_event(request, pk):
 
-    event = get_object_or_404(Event, pk=pk)
+    event = get_object_or_404(
+        Event,
+        pk=pk
+    )
 
     if request.method == "POST":
+
         event.delete()
-        messages.success(request, "Event deleted successfully.")
+
+        messages.success(
+            request,
+            "Event deleted successfully."
+        )
 
     return redirect("core:dashboard")
+# ============================================================
+# PRAYER REQUESTS DASHBOARD
+# ============================================================
+
+def is_admin(user):
+    return user.is_authenticated and user.is_staff
+
+
+@login_required
+@user_passes_test(is_admin)
+def dashboard_prayer_requests(request):
+    prayer_requests = PrayerRequest.objects.all().order_by("-submitted_date")
+
+    context = {
+        "prayer_requests": prayer_requests,
+        "pending_prayers": PrayerRequest.objects.filter(
+            status="pending"
+        ).count(),
+    }
+
+    return render(
+        request,
+        "dashboard/prayer_requests.html",
+        context
+    )
+
+
+@login_required
+@user_passes_test(is_admin)
+def dashboard_prayer_request_detail(request, pk):
+    prayer_request = get_object_or_404(
+        PrayerRequest,
+        pk=pk
+    )
+
+    if request.method == "POST":
+        status = request.POST.get("status")
+        admin_notes = request.POST.get("admin_notes", "").strip()
+
+        valid_statuses = dict(PrayerRequest.STATUS_CHOICES)
+
+        if status in valid_statuses:
+            prayer_request.status = status
+
+        prayer_request.admin_notes = admin_notes
+        prayer_request.save()
+
+        messages.success(
+            request,
+            "Prayer request updated successfully."
+        )
+
+        return redirect(
+            "core:dashboard_prayer_request_detail",
+            pk=prayer_request.pk
+        )
+
+    context = {
+        "prayer_request": prayer_request,
+        "status_choices": PrayerRequest.STATUS_CHOICES,
+    }
+
+    return render(
+        request,
+        "dashboard/prayer_request_detail.html",
+        context
+    )
+# ============================================================
+# GALLERY
+# ============================================================
+
+@login_required
+@user_passes_test(is_admin)
+def dashboard_gallery(request):
+
+    albums = GalleryAlbum.objects.all().order_by(
+        "display_order",
+        "-created_at"
+    )
+
+    context = {
+        "albums": albums,
+        "album_count": GalleryAlbum.objects.count(),
+        "image_count": GalleryImage.objects.count(),
+    }
+
+    return render(
+        request,
+        "dashboard/gallery.html",
+        context
+    )
+
+
+@login_required
+@user_passes_test(is_admin)
+def dashboard_add_gallery_album(request):
+
+    if request.method == "POST":
+
+        form = GalleryAlbumForm(
+            request.POST,
+            request.FILES
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                "Gallery album created successfully."
+            )
+
+            return redirect("core:dashboard_gallery")
+
+    else:
+        form = GalleryAlbumForm()
+
+    return render(
+        request,
+        "dashboard/gallery_album_form.html",
+        {
+            "form": form,
+            "is_edit": False,
+        }
+    )
+
+
+@login_required
+@user_passes_test(is_admin)
+def dashboard_edit_gallery_album(request, pk):
+
+    album = get_object_or_404(
+        GalleryAlbum,
+        pk=pk
+    )
+
+    if request.method == "POST":
+
+        form = GalleryAlbumForm(
+            request.POST,
+            request.FILES,
+            instance=album
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                "Gallery album updated successfully."
+            )
+
+            return redirect("core:dashboard_gallery")
+
+    else:
+
+        form = GalleryAlbumForm(
+            instance=album
+        )
+
+    return render(
+        request,
+        "dashboard/gallery_album_form.html",
+        {
+            "form": form,
+            "album": album,
+            "is_edit": True,
+        }
+    )
+
+
+@login_required
+@user_passes_test(is_admin)
+def dashboard_add_gallery_image(request):
+
+    if request.method == "POST":
+
+        form = GalleryImageForm(
+            request.POST,
+            request.FILES
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                "Gallery image uploaded successfully."
+            )
+
+            return redirect("core:dashboard_gallery")
+
+    else:
+        form = GalleryImageForm()
+
+    return render(
+        request,
+        "dashboard/gallery_image_form.html",
+        {
+            "form": form,
+        }
+    )
+
+
+@login_required
+@user_passes_test(is_admin)
+def dashboard_delete_gallery_image(request, pk):
+
+    image = get_object_or_404(
+        GalleryImage,
+        pk=pk
+    )
+
+    if request.method == "POST":
+
+        image.delete()
+
+        messages.success(
+            request,
+            "Gallery image deleted successfully."
+        )
+
+    return redirect("core:dashboard_gallery")
+
+
+# ============================================================
+# TESTIMONIES
+# ============================================================
+
+@login_required
+@user_passes_test(is_admin)
+def dashboard_testimonies(request):
+
+    testimonies = Testimony.objects.all().order_by(
+        "-published_date"
+    )
+
+    context = {
+        "testimonies": testimonies,
+        "testimony_count": Testimony.objects.count(),
+        "pending_testimonies": Testimony.objects.filter(
+            approved=False
+        ).count(),
+    }
+
+    return render(
+        request,
+        "dashboard/testimonies.html",
+        context
+    )
+
+
+@login_required
+@user_passes_test(is_admin)
+def dashboard_add_testimony(request):
+
+    if request.method == "POST":
+
+        form = TestimonyForm(
+            request.POST,
+            request.FILES
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                "Testimony added successfully."
+            )
+
+            return redirect("core:dashboard_testimonies")
+
+    else:
+        form = TestimonyForm()
+
+    return render(
+        request,
+        "dashboard/testimony_form.html",
+        {
+            "form": form,
+            "is_edit": False,
+        }
+    )
+
+
+@login_required
+@user_passes_test(is_admin)
+def dashboard_edit_testimony(request, pk):
+
+    testimony = get_object_or_404(
+        Testimony,
+        pk=pk
+    )
+
+    if request.method == "POST":
+
+        form = TestimonyForm(
+            request.POST,
+            request.FILES,
+            instance=testimony
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                "Testimony updated successfully."
+            )
+
+            return redirect("core:dashboard_testimonies")
+
+    else:
+
+        form = TestimonyForm(
+            instance=testimony
+        )
+
+    return render(
+        request,
+        "dashboard/testimony_form.html",
+        {
+            "form": form,
+            "testimony": testimony,
+            "is_edit": True,
+        }
+    )
+
+
+@login_required
+@user_passes_test(is_admin)
+def dashboard_delete_testimony(request, pk):
+
+    testimony = get_object_or_404(
+        Testimony,
+        pk=pk
+    )
+
+    if request.method == "POST":
+
+        testimony.delete()
+
+        messages.success(
+            request,
+            "Testimony deleted successfully."
+        )
+
+    return redirect("core:dashboard_testimonies")

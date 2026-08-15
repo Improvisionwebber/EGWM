@@ -553,21 +553,34 @@ class Event(TimeStampedModel, SEOModel):
     def get_absolute_url(self):
         return reverse("event_detail", kwargs={"slug": self.slug})
 
+class GalleryAlbum(TimeStampedModel):
+    title = models.CharField(
+        _("title"),
+        max_length=255
+    )
 
-# ---------- Gallery Album ----------
-class GalleryAlbum(TimeStampedModel, SEOModel):
-    title = models.CharField(_("title"), max_length=255)
-    slug = models.SlugField(_("slug"), max_length=255, unique=True, blank=True)
+    description = models.TextField(
+        _("description"),
+        blank=True
+    )
+
     cover_image = models.ImageField(
         _("cover image"),
-        upload_to="gallery/covers/",
+        upload_to="gallery/albums/",
         storage=ImgBBStorage(),
         blank=True,
         null=True
     )
-    description = models.TextField(_("description"), blank=True)
-    published = models.BooleanField(_("published"), default=True)
-    display_order = models.PositiveIntegerField(_("display order"), default=0)
+
+    published = models.BooleanField(
+        _("published"),
+        default=True
+    )
+
+    display_order = models.PositiveIntegerField(
+        _("display order"),
+        default=0
+    )
 
     class Meta:
         ordering = ["display_order", "-created_at"]
@@ -577,30 +590,31 @@ class GalleryAlbum(TimeStampedModel, SEOModel):
     def __str__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)
-            original_slug = self.slug
-            counter = 1
-            while GalleryAlbum.objects.filter(slug=self.slug).exists():
-                self.slug = f"{original_slug}-{counter}"
-                counter += 1
-        super().save(*args, **kwargs)
 
-    def get_absolute_url(self):
-        return reverse("gallery_album_detail", kwargs={"slug": self.slug})
-
-
-# ---------- Gallery Image ----------
 class GalleryImage(TimeStampedModel):
-    album = models.ForeignKey(GalleryAlbum, on_delete=models.CASCADE, related_name="images", verbose_name=_("album"))
+    album = models.ForeignKey(
+        GalleryAlbum,
+        on_delete=models.CASCADE,
+        related_name="images",
+        verbose_name=_("album")
+    )
+
     image = models.ImageField(
         _("image"),
         upload_to="gallery/images/",
         storage=ImgBBStorage(),
     )
-    caption = models.CharField(_("caption"), max_length=255, blank=True)
-    display_order = models.PositiveIntegerField(_("display order"), default=0)
+
+    caption = models.CharField(
+        _("caption"),
+        max_length=255,
+        blank=True
+    )
+
+    display_order = models.PositiveIntegerField(
+        _("display order"),
+        default=0
+    )
 
     class Meta:
         ordering = ["display_order", "-created_at"]
@@ -608,7 +622,7 @@ class GalleryImage(TimeStampedModel):
         verbose_name_plural = _("Gallery Images")
 
     def __str__(self):
-        return f"{self.album.title} - {self.caption or 'Image'}" if self.album else self.caption or "Image"
+        return self.caption or "Gallery Image"
 
 
 # ---------- Testimony ----------

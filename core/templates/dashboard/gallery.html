@@ -1,0 +1,368 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .egwm-page {
+        max-width: 1400px;
+        margin: auto;
+        padding: 30px;
+    }
+
+    .egwm-hero {
+        background: linear-gradient(135deg, #151515, #080808);
+        border: 1px solid rgba(212,175,55,.25);
+        border-radius: 18px;
+        padding: 28px;
+        margin-bottom: 25px;
+        color: #fff;
+    }
+
+    .egwm-hero h2 {
+        color: #d4af37;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+
+    .egwm-hero p {
+        color: #aaa;
+        margin: 0;
+    }
+
+    .hero-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 22px;
+        flex-wrap: wrap;
+    }
+
+    .gold-btn,
+    .dark-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 16px;
+        border-radius: 9px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: .2s;
+    }
+
+    .gold-btn {
+        background: #d4af37;
+        color: #111;
+    }
+
+    .gold-btn:hover {
+        background: #e2c35c;
+        color: #111;
+    }
+
+    .dark-btn {
+        background: #222;
+        color: #d4af37;
+        border: 1px solid #333;
+    }
+
+    .dark-btn:hover {
+        background: #d4af37;
+        color: #111;
+    }
+
+    .stats {
+        display: flex;
+        gap: 15px;
+        margin-top: 22px;
+        flex-wrap: wrap;
+    }
+
+    .stat {
+        background: #111;
+        border: 1px solid #292929;
+        border-radius: 12px;
+        padding: 13px 20px;
+        min-width: 130px;
+    }
+
+    .stat strong {
+        display: block;
+        color: #d4af37;
+        font-size: 23px;
+    }
+
+    .stat span {
+        color: #888;
+        font-size: 12px;
+    }
+
+    .albums-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+        gap: 22px;
+    }
+
+    .album-card {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0,0,0,.05);
+        transition: .25s;
+    }
+
+    .album-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 15px 35px rgba(0,0,0,.1);
+    }
+
+    .album-cover {
+        height: 190px;
+        background: #151515;
+        overflow: hidden;
+    }
+
+    .album-cover img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .no-cover {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #d4af37;
+        font-size: 40px;
+    }
+
+    .album-body {
+        padding: 18px;
+    }
+
+    .album-body h5 {
+        margin: 0 0 7px;
+        font-weight: 700;
+        color: #151515;
+    }
+
+    .album-body p {
+        color: #888;
+        font-size: 13px;
+        line-height: 1.5;
+        min-height: 40px;
+    }
+
+    .album-meta {
+        color: #999;
+        font-size: 12px;
+        margin-bottom: 15px;
+    }
+
+    .album-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .small-btn {
+        padding: 8px 11px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .edit-btn {
+        background: #151515;
+        color: #d4af37;
+    }
+
+    .edit-btn:hover {
+        color: #d4af37;
+    }
+
+    .empty {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 18px;
+        padding: 70px 20px;
+        text-align: center;
+    }
+
+    .empty-icon {
+        font-size: 45px;
+        margin-bottom: 15px;
+    }
+
+    .empty h5 {
+        font-weight: 700;
+    }
+
+    .empty p {
+        color: #999;
+    }
+
+    @media(max-width:768px) {
+        .egwm-page {
+            padding: 18px;
+        }
+    }
+</style>
+
+<div class="egwm-page">
+
+    <div class="egwm-hero">
+
+        <h2>
+            <i class="bi bi-images"></i>
+            Gallery
+        </h2>
+
+        <p>
+            Manage EGWM albums and upload ministry photos.
+        </p>
+
+        <div class="stats">
+
+            <div class="stat">
+                <strong>{{ album_count }}</strong>
+                <span>Albums</span>
+            </div>
+
+            <div class="stat">
+                <strong>{{ image_count }}</strong>
+                <span>Images</span>
+            </div>
+
+        </div>
+
+        <div class="hero-actions">
+
+            <a
+                href="{% url 'core:dashboard_add_gallery_album' %}"
+                class="gold-btn"
+            >
+                <i class="bi bi-plus-lg"></i>
+                New Album
+            </a>
+
+            <a
+                href="{% url 'core:dashboard_add_gallery_image' %}"
+                class="dark-btn"
+            >
+                <i class="bi bi-cloud-arrow-up"></i>
+                Upload Image
+            </a>
+
+            <a
+                href="{% url 'core:dashboard' %}"
+                class="dark-btn"
+            >
+                <i class="bi bi-arrow-left"></i>
+                Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+
+    {% if albums %}
+
+    <div class="albums-grid">
+
+        {% for album in albums %}
+
+        <div class="album-card">
+
+            <div class="album-cover">
+
+                {% if album.cover_image %}
+                    <img
+                        src="{{ album.cover_image.url }}"
+                        alt="{{ album.title }}"
+                    >
+                {% else %}
+                    <div class="no-cover">
+                        <i class="bi bi-images"></i>
+                    </div>
+                {% endif %}
+
+            </div>
+
+            <div class="album-body">
+
+                <h5>{{ album.title }}</h5>
+
+                <p>
+                    {{ album.description|default:"No description added."|truncatechars:100 }}
+                </p>
+
+                <div class="album-meta">
+                    <i class="bi bi-image"></i>
+                    {{ album.images.count }} image{{ album.images.count|pluralize }}
+                    &nbsp; • &nbsp;
+                    {% if album.published %}
+                        Published
+                    {% else %}
+                        Draft
+                    {% endif %}
+                </div>
+
+                <div class="album-actions">
+
+                    <a
+                        href="{% url 'core:dashboard_edit_gallery_album' album.pk %}"
+                        class="small-btn edit-btn"
+                    >
+                        <i class="bi bi-pencil"></i>
+                        Edit Album
+                    </a>
+
+                    <a
+                        href="{% url 'core:dashboard_add_gallery_image' %}"
+                        class="small-btn edit-btn"
+                    >
+                        <i class="bi bi-plus"></i>
+                        Add Image
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div class="empty">
+
+        <div class="empty-icon">📸</div>
+
+        <h5>No Gallery Albums Yet</h5>
+
+        <p>
+            Create your first album and start uploading EGWM memories.
+        </p>
+
+        <a
+            href="{% url 'core:dashboard_add_gallery_album' %}"
+            class="gold-btn"
+        >
+            <i class="bi bi-plus-lg"></i>
+            Create First Album
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .upload-page {
+        max-width: 800px;
+        margin: auto;
+        padding: 30px;
+    }
+
+    .upload-hero {
+        background: linear-gradient(135deg,#151515,#080808);
+        border-radius: 18px;
+        padding: 25px;
+        margin-bottom: 22px;
+        color: white;
+    }
+
+    .upload-hero h2 {
+        color: #d4af37;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .upload-hero p {
+        margin: 0;
+        color: #aaa;
+    }
+
+    .upload-card {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 18px;
+        padding: 28px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.05);
+    }
+
+    .form-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #444;
+    }
+
+    .form-control,
+    .form-select {
+        border-radius: 10px;
+        padding: 12px;
+        border: 1px solid #ddd;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #d4af37;
+        box-shadow: 0 0 0 3px rgba(212,175,55,.12);
+    }
+
+    .upload-btn {
+        background: #151515;
+        color: #d4af37;
+        border: 0;
+        border-radius: 10px;
+        padding: 12px 22px;
+        font-weight: 700;
+    }
+
+    .upload-btn:hover {
+        background: #d4af37;
+        color: #111;
+    }
+
+    .back-link {
+        color: #777;
+        text-decoration: none;
+        font-size: 13px;
+    }
+
+    .back-link:hover {
+        color: #d4af37;
+    }
+
+    .upload-info {
+        background: #fffaf0;
+        border: 1px solid #f0dfaa;
+        border-radius: 12px;
+        padding: 14px;
+        margin-bottom: 22px;
+        color: #75601b;
+        font-size: 13px;
+    }
+
+    @media(max-width:768px) {
+        .upload-page {
+            padding: 18px;
+        }
+    }
+</style>
+
+<div class="upload-page">
+
+    <div class="upload-hero">
+
+        <h2>
+            <i class="bi bi-cloud-arrow-up"></i>
+            Upload Gallery Image
+        </h2>
+
+        <p>
+            Add a new image to an EGWM gallery album.
+        </p>
+
+    </div>
+
+
+    <div class="upload-card">
+
+{% if form.album.field.queryset.exists %}
+    <div class="upload-info">
+        <i class="bi bi-info-circle me-1"></i>
+        Choose the album where this image should appear.
+    </div>
+{% else %}
+    <div class="upload-info">
+        <i class="bi bi-images me-1"></i>
+        <strong>No gallery albums yet.</strong>
+        Create an album first before uploading images.
+        <div class="mt-2">
+            <a href="{% url 'core:dashboard_add_gallery_album' %}"
+               class="btn btn-sm btn-dark">
+                <i class="bi bi-plus-circle"></i>
+                Create First Album
+            </a>
+        </div>
+    </div>
+{% endif %}
+
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            {% csrf_token %}
+
+            {% for field in form %}
+
+            <div class="mb-4">
+
+                <label class="form-label">
+                    {{ field.label }}
+                </label>
+
+                {{ field }}
+
+                {% if field.help_text %}
+                    <div class="form-text">
+                        {{ field.help_text }}
+                    </div>
+                {% endif %}
+
+                {% for error in field.errors %}
+                    <div class="text-danger small mt-1">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+
+            </div>
+
+            {% endfor %}
+
+
+            <div class="d-flex gap-3 flex-wrap">
+
+                <button
+                    type="submit"
+                    class="upload-btn"
+                >
+                    <i class="bi bi-upload"></i>
+                    Upload Image
+                </button>
+
+                <a
+                    href="{% url 'core:dashboard_gallery' %}"
+                    class="back-link align-self-center"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

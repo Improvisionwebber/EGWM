@@ -1,0 +1,543 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ page_title }} - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+    .event-form-section {
+        padding: 80px 0;
+        background: #f8f9fa;
+        min-height: 100vh;
+    }
+
+    .event-form-wrapper {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .event-form-card {
+        background: #ffffff;
+        border-radius: 22px;
+        padding: 40px;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.07);
+    }
+
+    .event-form-header {
+        margin-bottom: 35px;
+    }
+
+    .event-form-header h1 {
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .event-form-header p {
+        color: #777;
+        margin: 0;
+    }
+
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .form-control,
+    .form-select {
+        border-radius: 10px;
+        padding: 12px 14px;
+        border: 1px solid #ddd;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 0.2rem rgba(212,175,55,0.12);
+    }
+
+    .form-group {
+        margin-bottom: 22px;
+    }
+
+    .form-help {
+        font-size: 0.85rem;
+        color: #888;
+        margin-top: 6px;
+    }
+
+    .required-star {
+        color: #dc3545;
+    }
+
+    .image-preview {
+        margin-top: 15px;
+        border-radius: 12px;
+        overflow: hidden;
+        max-width: 300px;
+    }
+
+    .image-preview img {
+        width: 100%;
+        display: block;
+    }
+
+    .checkbox-box {
+        background: #fafafa;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        padding: 18px;
+        margin-bottom: 15px;
+    }
+
+    .checkbox-box .form-check {
+        margin: 0;
+    }
+
+    .checkbox-box label {
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-top: 35px;
+        padding-top: 25px;
+        border-top: 1px solid #eee;
+    }
+
+    .cancel-btn {
+        text-decoration: none;
+        color: #666;
+        font-weight: 600;
+        padding: 12px 22px;
+    }
+
+    .submit-btn {
+        border: none;
+        background: var(--gold);
+        color: #fff;
+        padding: 13px 28px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    .current-banner {
+        margin-top: 15px;
+    }
+
+    .current-banner p {
+        font-size: 0.85rem;
+        color: #777;
+        margin-bottom: 8px;
+    }
+
+    .error-message {
+        color: #dc3545;
+        font-size: 0.85rem;
+        margin-top: 5px;
+    }
+
+    @media (max-width: 768px) {
+
+        .event-form-section {
+            padding: 50px 15px;
+        }
+
+        .event-form-card {
+            padding: 25px;
+            border-radius: 16px;
+        }
+
+        .form-actions {
+            flex-direction: column-reverse;
+            align-items: stretch;
+        }
+
+        .submit-btn,
+        .cancel-btn {
+            width: 100%;
+            text-align: center;
+        }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<section class="event-form-section">
+
+    <div class="container">
+
+        <div class="event-form-wrapper">
+
+            <div class="event-form-card">
+
+                <!-- HEADER -->
+
+                <div class="event-form-header">
+
+                    <h1>
+                        {% if event %}
+                            Edit Event
+                        {% else %}
+                            Add New Event
+                        {% endif %}
+                    </h1>
+
+                    <p>
+                        {% if event %}
+                            Update the details of this church event.
+                        {% else %}
+                            Create and publish a new church event.
+                        {% endif %}
+                    </p>
+
+                </div>
+
+
+                <!-- FORM -->
+
+                <form method="post" enctype="multipart/form-data">
+
+                    {% csrf_token %}
+
+
+                    <!-- TITLE -->
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Event Title
+                            <span class="required-star">*</span>
+                        </label>
+
+                        {{ form.title }}
+
+                        {% if form.title.errors %}
+                            <div class="error-message">
+                                {{ form.title.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- EVENT TYPE -->
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Event Type
+                        </label>
+
+                        {{ form.event_type }}
+
+                        {% if form.event_type.errors %}
+                            <div class="error-message">
+                                {{ form.event_type.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- DESCRIPTION -->
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Event Description
+                            <span class="required-star">*</span>
+                        </label>
+
+                        {{ form.description }}
+
+                        {% if form.description.errors %}
+                            <div class="error-message">
+                                {{ form.description.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- VENUE -->
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Venue
+                            <span class="required-star">*</span>
+                        </label>
+
+                        {{ form.venue }}
+
+                        {% if form.venue.errors %}
+                            <div class="error-message">
+                                {{ form.venue.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- DATES -->
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+
+                                <label class="form-label">
+                                    Start Date & Time
+                                    <span class="required-star">*</span>
+                                </label>
+
+                                {{ form.start_date }}
+
+                                {% if form.start_date.errors %}
+                                    <div class="error-message">
+                                        {{ form.start_date.errors }}
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+
+                                <label class="form-label">
+                                    End Date & Time
+                                </label>
+
+                                {{ form.end_date }}
+
+                                <div class="form-help">
+                                    Optional
+                                </div>
+
+                                {% if form.end_date.errors %}
+                                    <div class="error-message">
+                                        {{ form.end_date.errors }}
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- BANNER -->
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Event Banner
+                        </label>
+
+                        {{ form.banner }}
+
+                        <div class="form-help">
+                            Optional. The image will be uploaded directly to ImgBB.
+                        </div>
+
+
+                        {% if event and event.banner %}
+
+                            <div class="current-banner">
+
+                                <p>Current banner:</p>
+
+                                <div class="image-preview">
+
+                                    <img
+                                        src="{{ event.banner.url }}"
+                                        alt="{{ event.title }}"
+                                    >
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if form.banner.errors %}
+                            <div class="error-message">
+                                {{ form.banner.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- REGISTRATION -->
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Registration Link
+                        </label>
+
+                        {{ form.registration_link }}
+
+                        <div class="form-help">
+                            Optional
+                        </div>
+
+                        {% if form.registration_link.errors %}
+                            <div class="error-message">
+                                {{ form.registration_link.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- GOOGLE MAPS -->
+
+                    <div class="form-group">
+
+                        <label class="form-label">
+                            Google Maps Link
+                        </label>
+
+                        {{ form.google_maps_link }}
+
+                        <div class="form-help">
+                            Optional. Add the Google Maps location for the venue.
+                        </div>
+
+                        {% if form.google_maps_link.errors %}
+                            <div class="error-message">
+                                {{ form.google_maps_link.errors }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- FEATURED -->
+
+                    <div class="checkbox-box">
+
+                        <div class="form-check">
+
+                            {{ form.featured }}
+
+                            <label
+                                class="form-check-label"
+                                for="{{ form.featured.id_for_label }}"
+                            >
+                                ⭐ Feature this event
+                            </label>
+
+                        </div>
+
+                        <div class="form-help">
+                            Featured events can be highlighted on the website.
+                        </div>
+
+                    </div>
+
+
+                    <!-- PUBLISHED -->
+
+                    <div class="checkbox-box">
+
+                        <div class="form-check">
+
+                            {{ form.published }}
+
+                            <label
+                                class="form-check-label"
+                                for="{{ form.published.id_for_label }}"
+                            >
+                                👁 Publish this event
+                            </label>
+
+                        </div>
+
+                        <div class="form-help">
+                            Uncheck this if you want to save the event without making it public.
+                        </div>
+
+                    </div>
+
+
+                    <!-- FORM ERRORS -->
+
+                    {% if form.non_field_errors %}
+
+                        <div class="alert alert-danger">
+
+                            {{ form.non_field_errors }}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- ACTIONS -->
+
+                    <div class="form-actions">
+
+                        <a
+                            href="{% url 'core:dashboard' %}"
+                            class="cancel-btn"
+                        >
+                            ← Cancel
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="submit-btn"
+                        >
+
+                            {% if event %}
+                                <i class="bi bi-check2-circle"></i>
+                                Update Event
+                            {% else %}
+                                <i class="bi bi-calendar-plus"></i>
+                                Publish Event
+                            {% endif %}
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

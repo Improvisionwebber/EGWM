@@ -3,318 +3,578 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0A0A0A">
     <title>{% block title %}Embassy of God's Word Ministry{% endblock %}</title>
     <meta name="description" content="{% block meta_description %}{% if church_settings and church_settings.meta_description %}{{ church_settings.meta_description }}{% else %}Embassy of God's Word Ministry – Abuja, Nigeria. Pastor Kingsley Nwekwo. Worship, prayer, and community.{% endif %}{% endblock %}">
-    <link rel="icon" href="{% if church_settings and church_settings.favicon %}{{ church_settings.favicon.url }}{% else %}#{% endif %}" type="image/x-icon">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}">
+    <link rel="icon" href="{% if church_settings and church_settings.favicon %}{{ church_settings.favicon.url }}{% else %}data:,{% endif %}" type="image/x-icon">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Display serif for editorial headings + Inter for body/UI -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome 6 (free) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Google Fonts: Inter for modern clean look -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
 
     {% block extra_head %}{% endblock %}
 
     <style>
-        /* ---------- Global Premium Styles ---------- */
+        /* ==========================================================
+           ROOT / DESIGN TOKENS
+           Premium ministry system -- white + black + gold.
+           Names kept identical to the original stylesheet so every
+           page-level "extra css" block keeps working unchanged.
+           ========================================================== */
         :root {
-            --gold: #D4AF37;
-            --gold-light: #E8C84E;
-            --gold-dark: #B8960F;
-            --black: #0D0D0D;
-            --charcoal: #1A1A1A;
+            --gold: #C9A227;
+            --gold-light: #E7D18A;   /* soft gold */
+            --gold-dark: #8F6F12;
+            --black: #0A0A0A;
+            --charcoal: #111111;
             --dark-gray: #2D2D2D;
             --white: #FFFFFF;
             --off-white: #F8F7F4;
+            --muted: #6B6B6B;
+            --border: rgba(0,0,0,0.08);
+            --border-invert: rgba(255,255,255,0.14);
+            --shadow-sm: 0 5px 20px rgba(10,10,10,0.05);
+            --shadow-md: 0 20px 45px rgba(10,10,10,0.10);
+            --shadow-lg: 0 30px 70px rgba(10,10,10,0.16);
+            --radius: 16px;
+            --radius-lg: 24px;
+            --ease: cubic-bezier(.16,.84,.44,1);
+            --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --nav-h: 84px;
         }
 
+        * { box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--off-white);
+            font-family: var(--font-body);
+            background-color: var(--white);
             color: var(--black);
-            padding-top: 76px; /* fixed navbar height */
+            padding-top: var(--nav-h);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
         h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-display);
             font-weight: 700;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.01em;
+            color: var(--black);
         }
 
-        a {
-            text-decoration: none;
-            transition: all 0.3s ease;
+        a { text-decoration: none; transition: color .25s var(--ease); }
+
+        p { line-height: 1.75; }
+
+        ::selection { background: var(--gold); color: var(--black); }
+
+        :focus-visible {
+            outline: 2px solid var(--gold);
+            outline-offset: 3px;
         }
 
-        .gold-text {
+        .skip-link {
+            position: absolute;
+            left: -999px;
+            top: 0;
+            background: var(--black);
             color: var(--gold);
+            padding: 12px 20px;
+            z-index: 2000;
+            border-radius: 0 0 8px 0;
         }
-        .gold-bg {
-            background-color: var(--gold);
+        .skip-link:focus { left: 0; }
+
+        .gold-text { color: var(--gold); }
+        .gold-bg { background-color: var(--gold); }
+        .black-bg { background-color: var(--black); }
+        .charcoal-bg { background-color: var(--charcoal); }
+
+        /* ==========================================================
+           EYEBROW / SIGNATURE MARK
+           Small tracked-out label + hairline rule used throughout as
+           the site's recurring structural device — echoes an official
+           letterhead, fitting for an "Embassy."
+           ========================================================== */
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+            font-family: var(--font-body);
+            font-size: .78rem;
+            font-weight: 600;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            color: var(--gold-dark);
+            margin-bottom: 1rem;
         }
-        .black-bg {
-            background-color: var(--black);
+        .eyebrow::before {
+            content: '';
+            display: inline-block;
+            width: 34px;
+            height: 1px;
+            background: linear-gradient(90deg, var(--gold), transparent);
         }
-        .charcoal-bg {
-            background-color: var(--charcoal);
+        .eyebrow.center { justify-content: center; }
+        .eyebrow.on-dark { color: var(--gold-light); }
+
+        .gold-rule {
+            width: 56px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold), var(--gold-light));
+            border: none;
+            margin: 0 0 1.25rem;
+        }
+        .gold-rule.center { margin-left: auto; margin-right: auto; }
+
+        /* The EGWM seal — a minimal ring + open-book mark, reused as a
+           watermark / divider so the brand has one consistent signature
+           beyond typography. Pure SVG/CSS, no external asset. */
+        .seal-mark { display: inline-block; line-height: 0; }
+        .seal-watermark {
+            position: absolute;
+            pointer-events: none;
+            opacity: .06;
+            z-index: 1;
         }
 
-        .section-padding {
-            padding: 80px 0;
-        }
+        /* ==========================================================
+           TYPOGRAPHY UTILITIES
+           ========================================================== */
+        .section-padding { padding: 7rem 0; }
         .section-title {
-            font-size: 2.8rem;
-            font-weight: 800;
+            font-size: clamp(2rem, 3.6vw, 2.9rem);
+            font-weight: 700;
+            line-height: 1.15;
             margin-bottom: 1rem;
         }
         .section-subtitle {
-            font-size: 1.1rem;
-            color: #6c757d;
+            font-family: var(--font-body);
+            font-size: 1.08rem;
+            color: var(--muted);
             max-width: 700px;
             margin-left: auto;
             margin-right: auto;
         }
+        .display-serif { font-family: var(--font-display); }
 
-        /* Buttons */
+        /* ==========================================================
+           BUTTONS
+           ========================================================== */
         .btn-gold {
+            background-color: var(--black);
+            border: 1px solid var(--black);
+            color: var(--white);
+            font-weight: 600;
+            font-size: .95rem;
+            letter-spacing: .01em;
+            padding: .85rem 2.1rem;
+            border-radius: 50px;
+            transition: all .35s var(--ease);
+        }
+        .btn-gold:hover, .btn-gold:focus-visible {
             background-color: var(--gold);
             border-color: var(--gold);
             color: var(--black);
-            font-weight: 600;
-            padding: 0.75rem 2rem;
-            border-radius: 50px;
-            transition: all 0.3s;
-        }
-        .btn-gold:hover {
-            background-color: var(--gold-dark);
-            border-color: var(--gold-dark);
-            color: var(--white);
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 14px 26px rgba(201,162,39,.30);
         }
         .btn-outline-gold {
-            border: 2px solid var(--gold);
-            color: var(--gold);
+            border: 1.5px solid var(--gold);
+            color: var(--black);
             background: transparent;
             font-weight: 600;
-            padding: 0.75rem 2rem;
+            font-size: .95rem;
+            padding: .8rem 2rem;
             border-radius: 50px;
-            transition: all 0.3s;
+            transition: all .35s var(--ease);
         }
-        .btn-outline-gold:hover {
+        .btn-outline-gold:hover, .btn-outline-gold:focus-visible {
             background-color: var(--gold);
+            border-color: var(--gold);
             color: var(--black);
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
+            box-shadow: 0 14px 26px rgba(201,162,39,.20);
+        }
+        .btn-ghost-invert {
+            border: 1.5px solid rgba(255,255,255,.5);
+            color: var(--white);
+            background: transparent;
+            font-weight: 600;
+            padding: .8rem 2rem;
+            border-radius: 50px;
+            transition: all .35s var(--ease);
+        }
+        .btn-ghost-invert:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            transform: translateY(-2px);
         }
 
-        /* Cards */
+        /* ==========================================================
+           CARDS
+           ========================================================== */
         .premium-card {
             background: var(--white);
-            border: none;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            transition: transform .45s var(--ease), box-shadow .45s var(--ease);
             overflow: hidden;
         }
         .premium-card:hover {
             transform: translateY(-6px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-md);
         }
-
         .premium-card .card-img-top {
-            border-top-left-radius: 16px;
-            border-top-right-radius: 16px;
+            border-radius: 0;
             object-fit: cover;
             height: 220px;
         }
 
-        /* Navbar */
-        .navbar-premium {
-            background-color: var(--black);
-            box-shadow: 0 2px 15px rgba(0,0,0,0.3);
-            padding: 0.8rem 0;
+        /* Shared contact-detail block (previously duplicated only on
+           contact.html and silently unstyled on about.html — now global) */
+        .contact-info-box {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.75rem;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.25rem;
         }
-        .navbar-premium .navbar-brand {
-            font-weight: 800;
-            color: var(--gold) !important;
-            font-size: 1.5rem;
-            letter-spacing: -0.5px;
+        .contact-info-box i { color: var(--gold); font-size: 1.4rem; width: 38px; }
+        .contact-info-box h4 { font-size: 1.05rem; margin-bottom: .4rem; }
+
+        /* ==========================================================
+           FORMS
+           ========================================================== */
+        .form-control-premium {
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: .85rem 1.1rem;
+            font-size: 1rem;
+            font-family: var(--font-body);
+            transition: all .25s var(--ease);
+            background: #fff;
         }
-        .navbar-premium .navbar-brand img {
-            max-height: 45px;
-            margin-right: 10px;
+        .form-control-premium:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(201,162,39,.14);
+            outline: none;
         }
-        .navbar-premium .nav-link {
-            color: rgba(255,255,255,0.8) !important;
-            font-weight: 500;
-            font-size: 0.95rem;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            transition: all 0.2s;
+        select.form-control-premium { cursor: pointer; }
+
+        /* ==========================================================
+           TAGS / BADGES (countdown-tag existed on events.html only —
+           now defined once, globally, so event_detail.html renders it too)
+           ========================================================== */
+        .countdown-tag {
+            background: var(--black);
+            color: var(--gold-light);
+            padding: .3rem 1rem;
+            border-radius: 50px;
+            font-size: .8rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
         }
-        .navbar-premium .nav-link:hover,
-        .navbar-premium .nav-link.active {
-            color: var(--gold) !important;
-            background: rgba(212, 175, 55, 0.1);
-        }
-        .navbar-premium .dropdown-menu {
-            background: var(--charcoal);
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
-        }
-        .navbar-premium .dropdown-item {
-            color: rgba(255,255,255,0.8);
-            padding: 0.6rem 1.5rem;
-        }
-        .navbar-premium .dropdown-item:hover {
-            background: rgba(212, 175, 55, 0.15);
-            color: var(--gold);
+        .badge-featured {
+            background: var(--gold);
+            color: var(--black);
+            font-weight: 700;
+            font-size: .7rem;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            padding: .35rem .8rem;
+            border-radius: 50px;
         }
 
-        /* Footer */
+        /* ==========================================================
+           SCROLL-REVEAL + MOTION
+           Respects prefers-reduced-motion throughout.
+           ========================================================== */
+        [data-reveal] {
+            opacity: 0;
+            transform: translateY(26px);
+            transition: opacity .9s var(--ease), transform .9s var(--ease);
+        }
+        [data-reveal].is-visible { opacity: 1; transform: none; }
+        [data-reveal="fade"] { transform: none; }
+        [data-reveal="scale"] { transform: scale(.95); }
+        [data-reveal="scale"].is-visible { transform: scale(1); }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            [data-reveal] { opacity: 1 !important; transform: none !important; transition: none !important; }
+            .float-particle, .ken-burns { animation: none !important; }
+        }
+
+        /* Ambient floating gold particles used in hero/CTA sections */
+        .particle-field { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
+        .float-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, var(--gold-light), var(--gold) 70%);
+            filter: blur(1px);
+            opacity: .55;
+            animation: floatUp 12s ease-in-out infinite;
+        }
+        @keyframes floatUp {
+            0%, 100% { transform: translate3d(0,0,0); opacity: .25; }
+            50% { transform: translate3d(6px,-26px,0); opacity: .7; }
+        }
+        .ken-burns { animation: kenBurns 22s ease-in-out infinite alternate; }
+        @keyframes kenBurns {
+            0% { transform: scale(1) translate(0,0); }
+            100% { transform: scale(1.09) translate(-1%,-1%); }
+        }
+
+        /* ==========================================================
+           NAVBAR — clean, white, minimal, glass-blur once scrolled
+           ========================================================== */
+        .navbar-premium {
+            background-color: rgba(255,255,255,0.96);
+            box-shadow: 0 1px 0 var(--border);
+            padding: 0;
+            height: var(--nav-h);
+            transition: background-color .4s var(--ease), box-shadow .4s var(--ease), height .3s var(--ease);
+        }
+        .navbar-premium .container { height: var(--nav-h); display: flex; align-items: center; }
+        .navbar-premium.scrolled {
+            background-color: rgba(255,255,255,0.85);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            box-shadow: 0 5px 24px rgba(10,10,10,0.06);
+            height: 72px;
+        }
+        .navbar-premium.scrolled .container { height: 72px; }
+        .navbar-premium .navbar-brand {
+            font-family: var(--font-display);
+            font-weight: 700;
+            color: var(--black) !important;
+            font-size: 1.35rem;
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+        }
+        .navbar-premium .navbar-brand img { max-height: 42px; margin-right: 4px; }
+        .navbar-premium .navbar-brand .brand-mark { color: var(--gold); }
+        .navbar-premium .nav-link {
+            color: var(--black) !important;
+            font-weight: 500;
+            font-size: .88rem;
+            letter-spacing: .02em;
+            padding: .5rem .95rem !important;
+            border-radius: 8px;
+            position: relative;
+        }
+        .navbar-premium .nav-link::after {
+            content: '';
+            position: absolute;
+            left: .95rem; right: .95rem; bottom: .28rem;
+            height: 1.5px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform .3s var(--ease);
+        }
+        .navbar-premium .nav-link:hover::after,
+        .navbar-premium .nav-link.active::after { transform: scaleX(1); }
+        .navbar-premium .nav-link:hover,
+        .navbar-premium .nav-link.active { color: var(--gold-dark) !important; }
+        .navbar-premium .dropdown-menu {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: var(--shadow-md);
+            padding: .5rem;
+            margin-top: 10px !important;
+        }
+        .navbar-premium .dropdown-item {
+            color: var(--black);
+            padding: .65rem 1rem;
+            border-radius: 8px;
+            font-size: .9rem;
+        }
+        .navbar-premium .dropdown-item:hover,
+        .navbar-premium .dropdown-item:focus {
+            background: var(--off-white);
+            color: var(--gold-dark);
+        }
+        .navbar-premium .btn-give {
+            background: var(--black);
+            color: var(--white) !important;
+            font-weight: 600;
+            font-size: .85rem;
+            letter-spacing: .04em;
+            padding: .55rem 1.4rem !important;
+            border-radius: 50px;
+            margin-left: .35rem;
+            transition: all .3s var(--ease);
+        }
+        .navbar-premium .btn-give:hover {
+            background: var(--gold);
+            color: var(--black) !important;
+        }
+        .navbar-premium .btn-give::after { display: none; }
+        .navbar-premium .nav-prayer {
+            font-size: .78rem;
+            font-weight: 700;
+            letter-spacing: .04em;
+            text-transform: uppercase;
+            color: var(--gold-dark) !important;
+            border: 1px solid var(--gold);
+            border-radius: 50px;
+            padding: .45rem 1rem !important;
+        }
+        .navbar-premium .nav-prayer::after { display: none; }
+        .navbar-premium .nav-search-form { max-width: 190px; }
+        .navbar-premium .nav-search-form .form-control {
+            border: none;
+            border-bottom: 1px solid var(--border);
+            border-radius: 0;
+            font-size: .85rem;
+            padding-left: 0;
+        }
+        .navbar-premium .nav-search-form .form-control:focus {
+            box-shadow: none;
+            border-color: var(--gold);
+        }
+        .navbar-premium .nav-search-form .btn {
+            border: none;
+            color: var(--muted);
+            background: transparent;
+        }
+        .navbar-toggler { border: none; padding: 0; }
+        .navbar-toggler:focus { box-shadow: none; }
+        .navbar-toggler-icon {
+            background-image: none !important;
+            position: relative;
+            width: 24px; height: 18px;
+        }
+        .navbar-toggler-icon::before, .navbar-toggler-icon::after {
+            content: '';
+            position: absolute; left: 0; width: 24px; height: 2px;
+            background: var(--black); transition: all .3s var(--ease);
+        }
+        .navbar-toggler-icon::before { top: 0; }
+        .navbar-toggler-icon::after { bottom: 0; }
+        .navbar-toggler-icon { border-top: 2px solid var(--black); }
+
+        @media (max-width: 1199px) {
+            .navbar-premium .navbar-collapse {
+                background: var(--white);
+                margin-top: 1px;
+                padding: 1.25rem 0 1.75rem;
+                border-top: 1px solid var(--border);
+            }
+            .navbar-premium .nav-link { padding: .8rem 0.25rem !important; }
+            .navbar-premium .nav-link::after { display: none; }
+            .navbar-premium .nav-search-form { max-width: 100%; margin: 1rem 0 0 !important; }
+            .navbar-premium .btn-give, .navbar-premium .nav-prayer { display: inline-block; margin: .5rem .5rem 0 0; }
+        }
+
+        /* ==========================================================
+           FOOTER
+           ========================================================== */
         .footer-premium {
             background-color: var(--black);
-            color: rgba(255,255,255,0.8);
-            padding: 60px 0 30px;
+            color: rgba(255,255,255,0.72);
+            padding: 5.5rem 0 2rem;
+            position: relative;
+        }
+        .footer-premium .footer-tagline {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: 1.05rem;
+            color: var(--gold-light);
         }
         .footer-premium h5 {
-            color: var(--gold);
+            color: var(--white);
+            font-family: var(--font-body);
             font-weight: 700;
-            margin-bottom: 1.5rem;
+            font-size: .82rem;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            margin-bottom: 1.4rem;
         }
-        .footer-premium a {
-            color: rgba(255,255,255,0.6);
-            transition: color 0.3s;
-        }
-        .footer-premium a:hover {
-            color: var(--gold);
-        }
+        .footer-premium a { color: rgba(255,255,255,0.62); }
+        .footer-premium a:hover { color: var(--gold); }
+        .footer-premium ul { margin: 0; }
+        .footer-premium ul li { margin-bottom: .7rem; }
         .footer-premium .social-icons a {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            line-height: 40px;
-            text-align: center;
-            background: rgba(255,255,255,0.05);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px; height: 40px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--border-invert);
             border-radius: 50%;
             margin-right: 10px;
-            color: rgba(255,255,255,0.7);
-            transition: all 0.3s;
+            color: rgba(255,255,255,0.8);
+            transition: all .3s var(--ease);
         }
         .footer-premium .social-icons a:hover {
             background: var(--gold);
+            border-color: var(--gold);
             color: var(--black);
             transform: translateY(-3px);
         }
         .footer-bottom {
-            border-top: 1px solid rgba(255,255,255,0.08);
+            border-top: 1px solid var(--border-invert);
             padding-top: 1.5rem;
-            margin-top: 2rem;
-            font-size: 0.9rem;
+            margin-top: 3rem;
+            font-size: .85rem;
+            color: rgba(255,255,255,0.45);
         }
 
-        /* Hero slider */
-        .hero-slide {
-            position: relative;
-            background-size: cover;
-            background-position: center;
-            min-height: 85vh;
-            display: flex;
-            align-items: center;
-            background-color: var(--charcoal);
-        }
-        .hero-slide::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 100%);
-            z-index: 1;
-        }
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            color: var(--white);
-            max-width: 700px;
-        }
-        .hero-content h1 {
-            font-size: 4rem;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-        }
-        .hero-content h1 .gold-text {
-            display: inline-block;
-        }
-        .hero-content p {
-            font-size: 1.25rem;
-            opacity: 0.9;
-            margin-bottom: 2rem;
-        }
-
-        /* Back to top */
+        /* ==========================================================
+           BACK TO TOP
+           ========================================================== */
         #back-to-top {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: var(--gold);
-            color: var(--black);
-            width: 50px;
-            height: 50px;
+            bottom: 28px; right: 28px;
+            background: var(--black);
+            color: var(--gold);
+            width: 48px; height: 48px;
             border-radius: 50%;
-            border: none;
-            font-size: 1.2rem;
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
-            transition: all 0.3s;
+            border: 1px solid var(--gold);
+            font-size: 1.05rem;
+            box-shadow: var(--shadow-md);
+            transition: all .3s var(--ease);
             z-index: 1000;
             display: none;
+            opacity: 0;
         }
-        #back-to-top:hover {
-            background: var(--gold-dark);
-            color: var(--white);
-            transform: translateY(-4px);
-        }
+        #back-to-top.show { display: flex; align-items: center; justify-content: center; opacity: 1; }
+        #back-to-top:hover { background: var(--gold); color: var(--black); transform: translateY(-4px); }
 
         /* Messages */
-        .alert-premium {
-            border-radius: 12px;
-            border: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        }
+        .alert-premium { border-radius: 12px; border: none; box-shadow: var(--shadow-sm); }
 
-        /* Forms */
-        .form-control-premium {
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 0.8rem 1.2rem;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-        .form-control-premium:focus {
-            border-color: var(--gold);
-            box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
-        }
-
-        /* Responsive tweaks */
+        /* ==========================================================
+           RESPONSIVE
+           ========================================================== */
         @media (max-width: 991px) {
-            .hero-content h1 {
-                font-size: 2.8rem;
-            }
-            .section-title {
-                font-size: 2.2rem;
-            }
-            body {
-                padding-top: 66px;
-            }
+            .section-title { font-size: 2.1rem; }
+            .section-padding { padding: 4.5rem 0; }
         }
         @media (max-width: 576px) {
-            .hero-content h1 {
-                font-size: 2rem;
-            }
-            .section-padding {
-                padding: 50px 0;
-            }
+            :root { --nav-h: 72px; }
+            .section-padding { padding: 3.25rem 0; }
         }
     </style>
 
@@ -322,187 +582,282 @@
 </head>
 <body>
 
-    <!-- ==================== NAVBAR ==================== -->
-    <nav class="navbar navbar-expand-lg navbar-premium fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'core:home' %}">
-                {% if church_settings and church_settings.logo %}
-                    <img src="{{ church_settings.logo.url }}" alt="{{ church_settings.church_name }}">
-                {% endif %}
-                <span>{% if church_settings %}{{ church_settings.short_name|default:church_settings.church_name }}{% else %}Embassy of God's Word{% endif %}</span>
-            </a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
-                    <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'core:home' %}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'core:about' %}">About</a></li>
-                    <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'leadership' %}active{% endif %}" href="{% url 'core:leadership' %}">Leadership</a></li>
-                    <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'ministries' %}active{% endif %}" href="{% url 'core:ministries' %}">Ministries</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle {% if request.resolver_match.app_name == 'core' and request.resolver_match.url_name in 'sermons,sermon_detail,devotionals,devotional_detail,events,event_detail' %}active{% endif %}" href="#" id="mediaDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Media
+<a href="#main-content" class="skip-link">Skip to content</a>
+
+<!-- ==================== NAVBAR ==================== -->
+<nav class="navbar navbar-expand-xl navbar-premium fixed-top" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'core:home' %}">
+            {% if church_settings and church_settings.logo %}
+                <img src="{{ church_settings.logo.url }}" alt="{{ church_settings.church_name }}">
+            {% else %}
+                <span class="seal-mark brand-mark" aria-hidden="true">
+                    <svg width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="20" cy="20" r="18.5" stroke="currentColor" stroke-width="1.4"/>
+                        <path d="M11 15.5C14 14 17 14.6 20 16.5C23 14.6 26 14 29 15.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                        <path d="M20 16.5V27" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                        <path d="M11 15.5V25.5C14 24 17 24.6 20 26.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M29 15.5V25.5C26 24 23 24.6 20 26.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </span>
+            {% endif %}
+            <span>{% if church_settings %}{{ church_settings.short_name|default:church_settings.church_name }}{% else %}Embassy of God's Word{% endif %}</span>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav-collapse" aria-controls="mainNav-collapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav-collapse">
+            <ul class="navbar-nav ms-auto mb-2 mb-xl-0 align-items-xl-center">
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'core:home' %}">Home</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'core:about' %}">About</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'leadership' %}active{% endif %}" href="{% url 'core:leadership' %}">Leadership</a></li>
+                {% comment %} <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'ministries' %}active{% endif %}" href="{% url 'core:ministries' %}">Ministries</a></li> {% endcomment %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if request.resolver_match.app_name == 'core' and request.resolver_match.url_name in 'devotionals,devotional_detail,events,event_detail' %}active{% endif %}" href="#" id="mediaDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Media
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="mediaDropdown">
+                        <li><a class="dropdown-item" href="{% url 'core:devotionals' %}">Devotionals</a></li>
+                        <li><a class="dropdown-item" href="{% url 'core:events' %}">Events</a></li>
+                        <li><a class="dropdown-item" href="{% url 'core:gallery' %}">Gallery</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'testimonies' %}active{% endif %}" href="{% url 'core:testimonies' %}">Testimonies</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'core:contact' %}">Contact</a></li>
+                <li class="nav-item">
+                    <a class="nav-link nav-prayer" href="{% url 'core:prayer_request' %}">Prayer</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn-give" href="{% url 'core:give' %}">Give</a>
+                </li>
+            </ul>
+            <form class="d-flex ms-xl-3 nav-search-form" action="{% url 'core:search_results' %}" method="get" role="search">
+                <div class="input-group">
+                    <input class="form-control form-control-sm" type="search" name="q" placeholder="Search…" aria-label="Search">
+                    <button class="btn btn-sm" type="submit" aria-label="Submit search"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<!-- ==================== MESSAGES ==================== -->
+{% if messages %}
+    <div class="container" style="margin-top: calc(var(--nav-h) + 1.25rem);">
+        {% for message in messages %}
+            <div class="alert alert-premium alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<!-- ==================== MAIN CONTENT ==================== -->
+<main id="main-content">
+{% block content %}
+{% endblock %}
+</main>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="footer-premium">
+    <div class="container">
+        <div class="seal-mark mb-3" style="color: var(--gold);" aria-hidden="true">
+            <svg width="34" height="34" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="20" cy="20" r="18.5" stroke="currentColor" stroke-width="1.2"/>
+                <path d="M11 15.5C14 14 17 14.6 20 16.5C23 14.6 26 14 29 15.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                <path d="M20 16.5V27" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                <path d="M11 15.5V25.5C14 24 17 24.6 20 26.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M29 15.5V25.5C26 24 23 24.6 20 26.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <div class="row g-5">
+            <div class="col-lg-4">
+                <h5 style="color:var(--white); font-size:1.15rem; letter-spacing:0; text-transform:none; font-family:var(--font-display);">
+                    {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}
+                </h5>
+                <p class="footer-tagline mb-3">Built on the Word. Led by faith. Driven by purpose.</p>
+                <p class="mb-2">
+                    <i class="fas fa-map-marker-alt gold-text me-2"></i>
+                    {% if church_settings %}{{ church_settings.address }}{% else %}Peyi Road, Ushafa, Bwari, Abuja{% endif %}
+                </p>
+                <p class="mb-2">
+                    <i class="fas fa-phone gold-text me-2"></i>
+                    {% if church_settings %}{{ church_settings.phone }}{% endif %}
+                </p>
+                <p class="mb-3">
+                    <i class="fas fa-envelope gold-text me-2"></i>
+                    {% if church_settings %}{{ church_settings.email }}{% endif %}
+                </p>
+                <div class="social-icons">
+                    {% for link in social_links %}
+                        <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ link.get_platform_display }}">
+                            <i class="fab fa-{{ link.platform }}"></i>
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="mediaDropdown">
-                            <li><a class="dropdown-item" href="{% url 'core:sermons' %}">Sermons</a></li>
-                            <li><a class="dropdown-item" href="{% url 'core:devotionals' %}">Devotionals</a></li>
-                            <li><a class="dropdown-item" href="{% url 'core:events' %}">Events</a></li>
-                            <li><a class="dropdown-item" href="{% url 'core:gallery' %}">Gallery</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'testimonies' %}active{% endif %}" href="{% url 'core:testimonies' %}">Testimonies</a></li>
-                    <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'give' %}active{% endif %}" href="{% url 'core:give' %}">Give</a></li>
-                    <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'core:contact' %}">Contact</a></li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'core:prayer_request' %}">
-                            <span class="badge bg-gold text-dark px-3 py-2" style="background-color: var(--gold);">Prayer</span>
-                        </a>
-                    </li>
+                    {% empty %}
+                        {% if church_settings %}
+                            {% if church_settings.facebook %}<a href="{{ church_settings.facebook }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>{% endif %}
+                            {% if church_settings.instagram %}<a href="{{ church_settings.instagram }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>{% endif %}
+                            {% if church_settings.youtube %}<a href="{{ church_settings.youtube }}" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fab fa-youtube"></i></a>{% endif %}
+                            {% if church_settings.tiktok %}<a href="{{ church_settings.tiktok }}" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>{% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-6">
+                <h5>Explore</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'core:home' %}">Home</a></li>
+                    <li><a href="{% url 'core:about' %}">About</a></li>
+                    <li><a href="{% url 'core:leadership' %}">Leadership</a></li>
+                    <li><a href="{% url 'core:events' %}">Events</a></li>
+                    <li><a href="{% url 'core:gallery' %}">Gallery</a></li>
                 </ul>
-                <!-- Search form in navbar (optional) -->
-                <form class="d-flex ms-lg-3" action="{% url 'core:search_results' %}" method="get">
+            </div>
+            <div class="col-lg-2 col-md-4 col-6">
+                <h5>Connect</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'core:testimonies' %}">Testimonies</a></li>
+                    <li><a href="{% url 'core:prayer_request' %}">Prayer Request</a></li>
+                    <li><a href="{% url 'core:contact' %}">Contact Us</a></li>
+                    <li><a href="{% url 'core:give' %}">Give</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-4 col-md-4">
+                <h5>Service Times</h5>
+                {% if service_schedule %}
+                    <ul class="list-unstyled">
+                        {% for service in service_schedule %}
+                            <li><strong style="color:var(--white);">{{ service.get_day_display }}</strong> — {{ service.start_time|time:"g:i A" }} – {{ service.end_time|time:"g:i A" }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="mb-1">Sunday Worship: 9:00 AM &amp; 11:00 AM</p>
+                    <p>Wednesday Bible Study: 6:00 PM</p>
+                {% endif %}
+                <form action="{% url 'core:newsletter_subscribe' %}" method="post" class="mt-3">
+                    {% csrf_token %}
+                    <label class="small mb-2 d-block" style="color: rgba(255,255,255,0.55);">Get devotionals &amp; updates by email</label>
                     <div class="input-group">
-                        <input class="form-control form-control-sm" type="search" name="q" placeholder="Search..." aria-label="Search">
-                        <button class="btn btn-outline-gold btn-sm" type="submit"><i class="fas fa-search"></i></button>
+                        <input type="email" name="email" class="form-control form-control-sm" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-invert); color: #fff;" placeholder="Your email" required>
+                        <button type="submit" class="btn btn-sm btn-gold">Subscribe</button>
                     </div>
                 </form>
             </div>
         </div>
-    </nav>
-
-    <!-- ==================== MESSAGES ==================== -->
-    {% if messages %}
-        <div class="container mt-3">
-            {% for message in messages %}
-                <div class="alert alert-premium alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
+        <div class="footer-bottom text-center">
+            <p class="mb-0">
+                &copy; {% now "Y" %}
+                {% if church_settings and church_settings.copyright_text %}
+                    {{ church_settings.copyright_text }}
+                {% else %}
+                    Embassy of God's Word Ministry. All rights reserved.
+                {% endif %}
+            </p>
         </div>
-    {% endif %}
+    </div>
+</footer>
 
-    <!-- ==================== MAIN CONTENT ==================== -->
-    {% block content %}
-    {% endblock %}
+<!-- ==================== BACK TO TOP ==================== -->
+<button id="back-to-top" aria-label="Back to top">
+    <i class="fas fa-arrow-up"></i>
+</button>
 
-    <!-- ==================== FOOTER ==================== -->
-    <footer class="footer-premium">
-        <div class="container">
-            <div class="row g-4">
-                <div class="col-lg-4">
-                    <h5>{% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}</h5>
-                    <p class="mb-2">
-                        <i class="fas fa-map-marker-alt gold-text me-2"></i>
-                        {% if church_settings %}{{ church_settings.address }}{% else %}Peyi Road, Ushafa, Bwari, Abuja{% endif %}
-                    </p>
-                    <p class="mb-2">
-                        <i class="fas fa-phone gold-text me-2"></i>
-                        {% if church_settings %}{{ church_settings.phone }}{% endif %}
-                    </p>
-                    <p class="mb-2">
-                        <i class="fas fa-envelope gold-text me-2"></i>
-                        {% if church_settings %}{{ church_settings.email }}{% endif %}
-                    </p>
-                    <div class="social-icons mt-3">
-                        {% for link in social_links %}
-                            <a href="{{ link.url }}" target="_blank" aria-label="{{ link.get_platform_display }}">
-                                <i class="fab fa-{{ link.platform }}"></i>
-                            </a>
-                        {% empty %}
-                            <!-- Fallback social links from church settings -->
-                            {% if church_settings %}
-                                {% if church_settings.facebook %}<a href="{{ church_settings.facebook }}" target="_blank"><i class="fab fa-facebook-f"></i></a>{% endif %}
-                                {% if church_settings.instagram %}<a href="{{ church_settings.instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>{% endif %}
-                                {% if church_settings.youtube %}<a href="{{ church_settings.youtube }}" target="_blank"><i class="fab fa-youtube"></i></a>{% endif %}
-                                {% if church_settings.tiktok %}<a href="{{ church_settings.tiktok }}" target="_blank"><i class="fab fa-tiktok"></i></a>{% endif %}
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-6">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="{% url 'core:home' %}">Home</a></li>
-                        <li><a href="{% url 'core:about' %}">About</a></li>
-                        <li><a href="{% url 'core:sermons' %}">Sermons</a></li>
-                        <li><a href="{% url 'core:events' %}">Events</a></li>
-                        <li><a href="{% url 'core:give' %}">Give</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <h5>Service Times</h5>
-                    {% if service_schedule %}
-                        <ul class="list-unstyled">
-                            {% for service in service_schedule %}
-                                <li><strong>{{ service.get_day_display }}</strong> {{ service.start_time|time:"g:i A" }} – {{ service.end_time|time:"g:i A" }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p>Sunday Worship: 9:00 AM &amp; 11:00 AM</p>
-                        <p>Wednesday Bible Study: 6:00 PM</p>
-                    {% endif %}
-                </div>
-                <div class="col-lg-3">
-                    <h5>Newsletter</h5>
-                    <p>Subscribe to receive updates and devotionals.</p>
-                    <form action="{% url 'core:newsletter_subscribe' %}" method="post" class="newsletter-form">
-                        {% csrf_token %}
-                        <div class="mb-2">
-                            <input type="email" name="email" class="form-control form-control-sm" placeholder="Your email" required>
-                        </div>
-                        <button type="submit" class="btn btn-gold btn-sm w-100">Subscribe</button>
-                    </form>
-                </div>
-            </div>
-            <div class="footer-bottom text-center">
-                <p class="mb-0">
-                    &copy; {% now "Y" %} 
-                    {% if church_settings and church_settings.copyright_text %}
-                        {{ church_settings.copyright_text }}
-                    {% else %}
-                        Embassy of God's Word Ministry. All rights reserved.
-                    {% endif %}
-                </p>
-            </div>
-        </div>
-    </footer>
+<!-- ==================== SCRIPTS ==================== -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    (function () {
+        var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    <!-- ==================== BACK TO TOP ==================== -->
-    <button id="back-to-top" class="btn" aria-label="Back to top">
-        <i class="fas fa-chevron-up"></i>
-    </button>
+        // ---- Navbar blur-on-scroll ----
+        var nav = document.getElementById('mainNav');
+        function onScroll() {
+            if (nav) nav.classList.toggle('scrolled', window.scrollY > 30);
+            var backBtn = document.getElementById('back-to-top');
+            if (backBtn) backBtn.classList.toggle('show', window.scrollY > 400);
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
 
-    <!-- ==================== SCRIPTS ==================== -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Back to top button
-        const backBtn = document.getElementById('back-to-top');
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 300) {
-                backBtn.style.display = 'block';
-            } else {
-                backBtn.style.display = 'none';
-            }
-        });
-        backBtn.addEventListener('click', function() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        // ---- Back to top ----
+        var backBtn = document.getElementById('back-to-top');
+        if (backBtn) {
+            backBtn.addEventListener('click', function () {
+                window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+            });
+        }
 
-        // Auto-dismiss alerts after 5 seconds
-        document.addEventListener('DOMContentLoaded', function() {
-            const alerts = document.querySelectorAll('.alert');
-            alerts.forEach(function(alert) {
-                setTimeout(function() {
-                    const closeBtn = alert.querySelector('.btn-close');
+        // ---- Close mobile menu after a link is tapped ----
+        var collapseEl = document.getElementById('mainNav-collapse');
+        if (collapseEl) {
+            collapseEl.querySelectorAll('.nav-link:not(.dropdown-toggle)').forEach(function (link) {
+                link.addEventListener('click', function () {
+                    if (collapseEl.classList.contains('show') && window.bootstrap) {
+                        var inst = bootstrap.Collapse.getOrCreateInstance(collapseEl);
+                        inst.hide();
+                    }
+                });
+            });
+        }
+
+        // ---- Auto-dismiss alerts after 6 seconds ----
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.alert').forEach(function (alert) {
+                setTimeout(function () {
+                    var closeBtn = alert.querySelector('.btn-close');
                     if (closeBtn) closeBtn.click();
-                }, 5000);
+                }, 6000);
             });
         });
 
-        // Placeholder for any additional JS
+        // ---- Scroll-reveal ----
+        if ('IntersectionObserver' in window && !reduceMotion) {
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        io.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+            document.querySelectorAll('[data-reveal]').forEach(function (el) { io.observe(el); });
+        } else {
+            document.querySelectorAll('[data-reveal]').forEach(function (el) { el.classList.add('is-visible'); });
+        }
+
+        // ---- Shared clipboard helper (used on the Give page) ----
+        window.egwmCopy = function (btn, text) {
+            if (!navigator.clipboard) return;
+            navigator.clipboard.writeText(text).then(function () {
+                var original = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> Copied';
+                btn.classList.add('copied');
+                setTimeout(function () {
+                    btn.innerHTML = original;
+                    btn.classList.remove('copied');
+                }, 2200);
+            });
+        };
+
+        // ---- Subtle mouse-parallax for elements marked [data-parallax] ----
+        if (window.matchMedia('(pointer:fine)').matches && !reduceMotion) {
+            document.querySelectorAll('[data-parallax-scope]').forEach(function (scope) {
+                var targets = scope.querySelectorAll('[data-parallax]');
+                if (!targets.length) return;
+                scope.addEventListener('mousemove', function (e) {
+                    var r = scope.getBoundingClientRect();
+                    var x = (e.clientX - r.left - r.width / 2) / r.width;
+                    var y = (e.clientY - r.top - r.height / 2) / r.height;
+                    targets.forEach(function (t) {
+                        var strength = parseFloat(t.getAttribute('data-parallax')) || 12;
+                        t.style.transform = 'translate3d(' + (x * strength) + 'px,' + (y * strength) + 'px,0)';
+                    });
+                });
+            });
+        }
+
         {% block extra_js %}{% endblock %}
-    </script>
+    })();
+</script>
 </body>
 </html>

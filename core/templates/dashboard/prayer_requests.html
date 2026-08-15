@@ -1,0 +1,387 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .prayer-page {
+        padding: 30px;
+        max-width: 1400px;
+        margin: auto;
+    }
+
+    .prayer-hero {
+        background: linear-gradient(135deg, #151515, #0b0b0b);
+        border: 1px solid rgba(212, 175, 55, 0.25);
+        border-radius: 18px;
+        padding: 28px;
+        margin-bottom: 25px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+    }
+
+    .prayer-hero h2 {
+        color: #d4af37;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+
+    .prayer-hero p {
+        color: #aaa;
+        margin: 0;
+    }
+
+    .prayer-stats {
+        display: flex;
+        gap: 15px;
+        margin-top: 22px;
+        flex-wrap: wrap;
+    }
+
+    .stat-box {
+        background: #111;
+        border: 1px solid #292929;
+        border-radius: 12px;
+        padding: 14px 20px;
+        min-width: 140px;
+    }
+
+    .stat-box strong {
+        display: block;
+        color: #d4af37;
+        font-size: 24px;
+    }
+
+    .stat-box span {
+        color: #888;
+        font-size: 13px;
+    }
+
+    .requests-card {
+        background: #fff;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid #eee;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    .requests-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .requests-header h5 {
+        margin: 0;
+        font-weight: 700;
+        color: #151515;
+    }
+
+    .requests-header a {
+        text-decoration: none;
+        color: #151515;
+        font-size: 14px;
+    }
+
+    .requests-header a:hover {
+        color: #d4af37;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .prayer-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 800px;
+    }
+
+    .prayer-table th {
+        background: #fafafa;
+        color: #777;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: .6px;
+        padding: 16px 20px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+
+    .prayer-table td {
+        padding: 18px 20px;
+        border-bottom: 1px solid #f0f0f0;
+        vertical-align: middle;
+        color: #333;
+    }
+
+    .prayer-table tr:hover {
+        background: #fffdf5;
+    }
+
+    .person-name {
+        font-weight: 700;
+        color: #151515;
+    }
+
+    .person-email {
+        font-size: 12px;
+        color: #999;
+        margin-top: 3px;
+    }
+
+    .urgency,
+    .status {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 10px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .urgency-low {
+        background: #eef7ee;
+        color: #3b7a3b;
+    }
+
+    .urgency-medium {
+        background: #fff8df;
+        color: #9a7410;
+    }
+
+    .urgency-high {
+        background: #fff0df;
+        color: #b65c00;
+    }
+
+    .urgency-urgent {
+        background: #ffe7e7;
+        color: #b42323;
+    }
+
+    .status-pending {
+        background: #fff5d6;
+        color: #8a6700;
+    }
+
+    .status-prayed {
+        background: #eaf4ff;
+        color: #1769aa;
+    }
+
+    .status-answered {
+        background: #e8f7ed;
+        color: #22733d;
+    }
+
+    .status-archived {
+        background: #eeeeee;
+        color: #666;
+    }
+
+    .request-preview {
+        max-width: 350px;
+        color: #777;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .view-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 9px 15px;
+        border-radius: 9px;
+        background: #151515;
+        color: #d4af37;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: .2s;
+    }
+
+    .view-btn:hover {
+        background: #d4af37;
+        color: #111;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 70px 20px;
+    }
+
+    .empty-state .icon {
+        font-size: 42px;
+        margin-bottom: 15px;
+    }
+
+    .empty-state h5 {
+        color: #222;
+        font-weight: 700;
+    }
+
+    .empty-state p {
+        color: #999;
+    }
+
+    @media (max-width: 768px) {
+        .prayer-page {
+            padding: 18px;
+        }
+
+        .prayer-hero {
+            padding: 22px;
+        }
+    }
+</style>
+
+<div class="prayer-page">
+
+    <div class="prayer-hero">
+        <h2>
+            <i class="bi bi-heart-pulse"></i>
+            Prayer Requests
+        </h2>
+
+        <p>
+            Private prayer requests submitted through the EGWM website.
+        </p>
+
+        <div class="prayer-stats">
+            <div class="stat-box">
+                <strong>{{ prayer_requests|length }}</strong>
+                <span>Total Requests</span>
+            </div>
+
+            <div class="stat-box">
+                <strong>{{ pending_prayers }}</strong>
+                <span>Pending</span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="requests-card">
+
+        <div class="requests-header">
+            <h5>All Prayer Requests</h5>
+
+            <a href="{% url 'core:dashboard' %}">
+                <i class="bi bi-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </div>
+
+
+        {% if prayer_requests %}
+
+        <div class="table-responsive">
+
+            <table class="prayer-table">
+
+                <thead>
+                    <tr>
+                        <th>Person</th>
+                        <th>Urgency</th>
+                        <th>Request</th>
+                        <th>Status</th>
+                        <th>Submitted</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for prayer in prayer_requests %}
+
+                    <tr>
+
+                        <td>
+                            <div class="person-name">
+                                {{ prayer.full_name }}
+                            </div>
+
+                            {% if prayer.email %}
+                                <div class="person-email">
+                                    {{ prayer.email }}
+                                </div>
+                            {% endif %}
+                        </td>
+
+
+                        <td>
+                            <span class="urgency urgency-{{ prayer.urgency }}">
+                                {{ prayer.get_urgency_display }}
+                            </span>
+                        </td>
+
+
+                        <td>
+                            <div class="request-preview">
+                                {{ prayer.request_details|truncatechars:110 }}
+                            </div>
+                        </td>
+
+
+                        <td>
+                            <span class="status status-{{ prayer.status }}">
+                                {{ prayer.get_status_display }}
+                            </span>
+                        </td>
+
+
+                        <td>
+                            <small>
+                                {{ prayer.submitted_date|date:"M d, Y" }}
+                                <br>
+                                {{ prayer.submitted_date|date:"h:i A" }}
+                            </small>
+                        </td>
+
+
+                        <td>
+                            <a
+                                href="{% url 'core:dashboard_prayer_request_detail' prayer.pk %}"
+                                class="view-btn"
+                            >
+                                View
+                                <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-state">
+
+            <div class="icon">
+                🙏
+            </div>
+
+            <h5>No Prayer Requests Yet</h5>
+
+            <p>
+                When someone submits a prayer request, it will appear here.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

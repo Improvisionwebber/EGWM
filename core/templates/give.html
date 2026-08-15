@@ -5,57 +5,138 @@
 
 {% block extra_css %}
 <style>
-    .give-card {
-        background: #fff;
-        border: 1px solid #eee;
-        border-radius: 16px;
-        padding: 1.5rem;
+    .page-hero {
+        background: linear-gradient(160deg, var(--black) 0%, var(--charcoal) 100%);
+        color: #fff;
+        padding: calc(var(--nav-h) + 4rem) 0 4.5rem;
+        margin-top: calc(-1 * var(--nav-h));
         text-align: center;
-        transition: 0.3s;
+        position: relative;
+        overflow: hidden;
+    }
+    .page-hero h1 { color: #fff; font-size: clamp(2.2rem, 4.5vw, 3.2rem); }
+
+    .give-scripture {
+        text-align: center;
+        max-width: 640px;
+        margin: 0 auto 4rem;
+    }
+    .give-scripture blockquote {
+        font-family: var(--font-display);
+        font-style: italic;
+        font-size: 1.3rem;
+        color: var(--black);
+        line-height: 1.6;
+    }
+    .give-scripture cite { color: var(--gold-dark); font-style: normal; font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; }
+
+    .give-card {
+        position: relative;
+        background: linear-gradient(155deg, var(--black) 0%, var(--charcoal) 60%, #1c1c1c 100%);
+        border-radius: var(--radius-lg);
+        padding: 2.5rem;
+        color: #fff;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+        transition: transform .4s var(--ease);
         height: 100%;
     }
-    .give-card:hover {
-        border-color: var(--gold);
-        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    .give-card::before {
+        content: '';
+        position: absolute;
+        top: -40%; right: -20%;
+        width: 60%; height: 160%;
+        background: radial-gradient(circle, rgba(201,162,39,0.16), transparent 70%);
+        pointer-events: none;
     }
-    .give-card .bank-details {
-        font-size: 1.1rem;
-        color: #333;
+    .give-card:hover { transform: translateY(-6px); }
+    .give-card .give-title { font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 1.5rem; }
+    .give-card .field-label { font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: .3rem; }
+    .give-card .field-value { font-size: 1.05rem; color: #fff; margin-bottom: 1.35rem; }
+    .give-card .account-number {
+        font-family: var(--font-display);
+        font-size: 2.1rem;
+        letter-spacing: .04em;
+        color: var(--gold-light);
+        margin-bottom: 1.5rem;
+        word-break: break-all;
     }
-    .give-card .bank-details strong {
-        color: var(--gold);
+    .give-card .copy-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .55rem;
+        background: var(--gold);
+        color: #000;
+        border: none;
+        border-radius: 50px;
+        padding: .75rem 1.5rem;
+        font-weight: 700;
+        font-size: .85rem;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all .3s var(--ease);
     }
-    .give-card img {
-        max-width: 100%;
-        max-height: 200px;
-        border-radius: 12px;
-        margin-top: 1rem;
-    }
+    .give-card .copy-btn:hover { background: var(--gold-light); transform: translateY(-2px); }
+    .give-card .copy-btn.copied { background: #2e7d32; color: #fff; }
+    .give-card .give-description { color: rgba(255,255,255,0.65); font-size: .92rem; margin-top: 1.25rem; }
+    .give-card .qr-wrap { margin-top: 1.5rem; text-align: center; }
+    .give-card .qr-wrap img { max-width: 160px; border-radius: 10px; background: #fff; padding: 10px; }
+
+    .give-thanks { text-align: center; margin-top: 3rem; }
 </style>
 {% endblock %}
 
 {% block content %}
-<section class="section-padding">
-    <div class="container">
-        <h1 class="section-title text-center">Give</h1>
-        <p class="section-subtitle text-center mb-5">Support the work of the ministry through your generous giving.</p>
 
-        <div class="row g-4">
+<section class="page-hero">
+    <div class="container" data-reveal>
+        <p class="eyebrow on-dark center justify-content-center d-flex">Kingdom Support</p>
+        <h1>Give With Purpose</h1>
+        <p class="mb-0" style="color: rgba(255,255,255,0.7); max-width:560px; margin:0.75rem auto 0;">Your generosity supports the work of the ministry — reaching, teaching, and transforming lives.</p>
+    </div>
+</section>
+
+<section class="section-padding" style="padding-top: 3.5rem;">
+    <div class="container">
+
+        <div class="give-scripture" data-reveal>
+            <blockquote>"Every man according as he purposeth in his heart, so let him give; not grudgingly, or of necessity: for God loveth a cheerful giver."</blockquote>
+            <cite>2 Corinthians 9:7 · KJV</cite>
+        </div>
+
+        <div class="row g-4 justify-content-center" data-reveal>
             {% if giving_info %}
                 {% for info in giving_info %}
                     <div class="col-md-6 col-lg-4">
                         <div class="give-card">
-                            <h5>{{ info.title }}</h5>
-                            <div class="bank-details">
-                                <p><strong>Bank:</strong> {{ info.bank_name }}</p>
-                                <p><strong>Account Name:</strong> {{ info.account_name }}</p>
-                                <p><strong>Account Number:</strong> {{ info.account_number }}</p>
-                            </div>
+                            <h5 class="give-title">{{ info.title }}</h5>
+
+                            <div class="field-label">Bank</div>
+                            <div class="field-value">{{ info.bank_name }}</div>
+
+                            <div class="field-label">Account Name</div>
+                            <div class="field-value">{{ info.account_name }}</div>
+
+                            <div class="field-label">Account Number</div>
+                            <div class="account-number">{{ info.account_number }}</div>
+
+                            <button
+                                type="button"
+                                class="copy-btn"
+                                onclick="egwmCopy(this, '{{ info.account_number|escapejs }}')"
+                            >
+                                <i class="fas fa-copy"></i> Copy Account Number
+                            </button>
+
                             {% if info.description %}
-                                <p>{{ info.description }}</p>
+                                <p class="give-description">{{ info.description }}</p>
                             {% endif %}
+
                             {% if info.qr_image %}
-                                <img src="{{ info.qr_image.url }}" alt="QR Code for {{ info.title }}">
+                                <div class="qr-wrap">
+                                    <img src="{{ info.qr_image.url }}" alt="QR Code for {{ info.title }}">
+                                </div>
                             {% endif %}
                         </div>
                     </div>
@@ -67,8 +148,8 @@
             {% endif %}
         </div>
 
-        <div class="text-center mt-5">
-            <p class="text-muted">Thank you for your generosity. God bless you.</p>
+        <div class="give-thanks">
+            <p style="color: var(--muted);">Thank you for your generosity. God bless you.</p>
         </div>
     </div>
 </section>

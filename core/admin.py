@@ -7,6 +7,8 @@ from django.db import models
 from .models import (
     ChurchSettings,
     HomepageSettings,
+    GalleryImage,
+    GalleryAlbum,
     HeroSlide,
     Announcement,
     ServiceSchedule,
@@ -17,8 +19,6 @@ from .models import (
     Sermon,
     Devotional,
     Event,
-    GalleryAlbum,
-    GalleryImage,
     Testimony,
     PrayerRequest,
     ContactMessage,
@@ -503,86 +503,56 @@ class EventAdmin(admin.ModelAdmin, ImagePreviewMixin):
         self.message_user(request, _(f"{updated} events unfeatured."))
     unfeature_selected.short_description = _("Unfeature selected events")
 
-
-# ---------- Gallery Album ----------
-class GalleryImageInline(admin.TabularInline):
-    model = GalleryImage
-    extra = 1
-    fields = ("image", "caption", "display_order")
-    readonly_fields = ("created_at", "updated_at")
-    ordering = ("display_order",)
-
-
 @admin.register(GalleryAlbum)
-class GalleryAlbumAdmin(admin.ModelAdmin, ImagePreviewMixin):
-    inlines = [GalleryImageInline]
-    fieldsets = (
-        (_("General"), {
-            "fields": ("title", "description")
-        }),
-        (_("Media"), {
-            "fields": ("cover_image",)
-        }),
-        (_("Display"), {
-            "fields": ("display_order", "published")
-        }),
-        (_("SEO"), {
-            "fields": ("meta_title", "meta_description", "meta_keywords", "og_image", "canonical_url"),
-            "classes": ("collapse",),
-        }),
-        (_("Slug"), {
-            "fields": ("slug",)
-        }),
-        (_("Timestamps"), {
-            "fields": ("created_at", "updated_at"),
-            "classes": ("collapse",),
-        }),
+class GalleryAlbumAdmin(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "published",
+        "display_order",
+        "created_at",
     )
-    list_display = ("title", "display_order", "published", "image_count", "cover_preview")
-    list_filter = ("published",)
-    search_fields = ("title", "description")
-    ordering = ("display_order", "-created_at")
-    prepopulated_fields = {"slug": ("title",)}
-    readonly_fields = ("created_at", "updated_at")
-    list_per_page = 50
-    save_on_top = True
 
-    def cover_preview(self, obj):
-        return self.preview_image(obj, "cover_image", width=100, height=60)
-    cover_preview.short_description = _("Cover Preview")
+    list_filter = (
+        "published",
+    )
 
-    def image_count(self, obj):
-        return obj.images.count()
-    image_count.short_description = _("Images")
+    search_fields = (
+        "title",
+        "description",
+    )
+
+    ordering = (
+        "display_order",
+        "-created_at",
+    )
 
 
-# ---------- Gallery Image ----------
 @admin.register(GalleryImage)
-class GalleryImageAdmin(admin.ModelAdmin, ImagePreviewMixin):
-    fieldsets = (
-        (_("General"), {
-            "fields": ("album", "image", "caption")
-        }),
-        (_("Display"), {
-            "fields": ("display_order",)
-        }),
-        (_("Timestamps"), {
-            "fields": ("created_at", "updated_at"),
-            "classes": ("collapse",),
-        }),
+class GalleryImageAdmin(admin.ModelAdmin):
+    list_display = (
+        "caption",
+        "album",
+        "display_order",
+        "created_at",
     )
-    list_display = ("album", "caption", "display_order", "image_preview")
-    list_filter = ("album",)
-    search_fields = ("caption",)
-    ordering = ("album", "display_order")
-    readonly_fields = ("created_at", "updated_at")
-    list_per_page = 50
-    autocomplete_fields = ("album",)
 
-    def image_preview(self, obj):
-        return self.preview_image(obj, "image", width=80, height=80)
-    image_preview.short_description = _("Image Preview")
+    list_filter = (
+        "album",
+    )
 
+    search_fields = (
+        "caption",
+        "album__title",
+    )
+
+    autocomplete_fields = (
+        "album",
+    )
+
+    ordering = (
+        "display_order",
+        "-created_at",
+    )
 
 # ---------- Testimony ----------
 @admin.register(Testimony)
@@ -810,3 +780,4 @@ class DevotionalAdmin(admin.ModelAdmin):
         "fields": ("published", "featured")
     }),
 )
+ 

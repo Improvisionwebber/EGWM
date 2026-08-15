@@ -5,115 +5,73 @@
 
 {% block extra_css %}
 <style>
-    /* About page specific styles */
+    /* ============================================================
+       HERO
+       ============================================================ */
     .about-hero {
-        background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 100%),
-                    url('{% if church_settings and church_settings.hero_default_image %}{{ church_settings.hero_default_image.url }}{% else %}https://via.placeholder.com/1920x600/1a1a1a/d4af37?text=About+Us{% endif %}');
+        background:
+            radial-gradient(ellipse at 20% 20%, rgba(201,162,39,0.18), transparent 55%),
+            linear-gradient(180deg, rgba(10,10,10,0.62) 0%, rgba(10,10,10,0.85) 100%){% if church_settings and church_settings.hero_default_image %}, url('{{ church_settings.hero_default_image.url }}'){% endif %};
         background-size: cover;
         background-position: center;
-        padding: 100px 0;
+        padding: calc(var(--nav-h) + 6rem) 0 6rem;
+        margin-top: calc(-1 * var(--nav-h));
         color: #fff;
         text-align: center;
+        position: relative;
     }
-    .about-hero h1 {
-        font-size: 4rem;
-        font-weight: 800;
-    }
-    .about-hero .breadcrumb {
-        background: transparent;
-        justify-content: center;
-        --bs-breadcrumb-divider: '>';
-    }
-    .about-hero .breadcrumb-item a {
-        color: var(--gold);
-        text-decoration: none;
-    }
-    .about-hero .breadcrumb-item.active {
-        color: rgba(255,255,255,0.7);
-    }
+    .about-hero h1 { font-size: clamp(2.6rem, 5.5vw, 4.2rem); margin-bottom: .75rem; }
+    .about-hero .breadcrumb { background: transparent; justify-content: center; --bs-breadcrumb-divider: '/'; margin: 0; }
+    .about-hero .breadcrumb-item a { color: var(--gold-light); }
+    .about-hero .breadcrumb-item.active { color: rgba(255,255,255,0.6); }
 
     .mission-vision-card {
         background: #fff;
-        border: none;
-        border-radius: 16px;
-        padding: 2rem;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 2.1rem;
         height: 100%;
-        transition: transform 0.3s;
+        transition: all .35s var(--ease);
         text-align: center;
     }
-    .mission-vision-card:hover {
-        transform: translateY(-5px);
-    }
-    .mission-vision-card .icon {
-        font-size: 3rem;
-        color: var(--gold);
-        margin-bottom: 1rem;
-    }
+    .mission-vision-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+    .mission-vision-card .icon { font-size: 2.4rem; color: var(--gold); margin-bottom: .9rem; }
 
     .belief-card {
         background: #fff;
-        border-left: 4px solid var(--gold);
-        border-radius: 8px;
-        padding: 1.2rem 1.5rem;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-        margin-bottom: 1rem;
+        border-left: 3px solid var(--gold);
+        border-radius: 10px;
+        padding: 1.4rem 1.75rem;
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 1.1rem;
+        transition: transform .3s var(--ease);
     }
-    .belief-card h6 {
-        font-weight: 700;
-    }
+    .belief-card:hover { transform: translateX(4px); }
+    .belief-card h6 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; margin-bottom: .4rem; }
 
-    .pastor-feature {
-        background: #fff;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-    }
-    .pastor-feature img {
-        width: 100%;
-        height: 400px;
-        object-fit: cover;
-    }
-    .pastor-feature .pastor-content {
-        padding: 2rem;
-    }
-    .pastor-feature .pastor-quote {
-        font-size: 1.2rem;
-        font-style: italic;
-        border-left: 4px solid var(--gold);
-        padding-left: 1.5rem;
-        color: #555;
-    }
+    .pastor-feature { background: #fff; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); }
+    .pastor-feature img { width: 100%; height: 440px; object-fit: cover; }
+    .pastor-feature .no-photo { height: 440px; display: flex; align-items: center; justify-content: center; background: linear-gradient(160deg, var(--charcoal), var(--black)); }
+    .pastor-feature .no-photo .initial-ring { width: 150px; height: 150px; border-radius: 50%; border: 1.5px solid var(--gold); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 2.8rem; color: var(--gold-light); }
+    .pastor-feature .pastor-content { padding: 2.5rem; }
+    .pastor-feature .pastor-quote { font-family: var(--font-display); font-style: italic; font-size: 1.2rem; border-left: 3px solid var(--gold); padding-left: 1.4rem; color: var(--black); margin: 1.1rem 0; }
+    .pastor-feature .social-links a { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); color: var(--black); margin-right: .5rem; }
+    .pastor-feature .social-links a:hover { background: var(--gold); border-color: var(--gold); color: var(--black); }
 
-    .why-card {
-        background: #fff;
-        border-radius: 16px;
-        padding: 1.8rem;
-        text-align: center;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.04);
-        height: 100%;
-        transition: 0.3s;
-    }
-    .why-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    }
-    .why-card .icon {
-        font-size: 2.5rem;
-        color: var(--gold);
-        margin-bottom: 1rem;
-    }
+    .why-card { background: #fff; border-radius: var(--radius); padding: 2rem; text-align: center; box-shadow: var(--shadow-sm); height: 100%; transition: all .3s var(--ease); }
+    .why-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .why-card .icon { font-size: 2.1rem; color: var(--gold); margin-bottom: .9rem; }
 
-    .cta-about {
-        background: linear-gradient(135deg, var(--black) 0%, var(--charcoal) 100%);
-        color: #fff;
-        padding: 60px 0;
-        text-align: center;
-    }
-    .cta-about h2 {
-        font-weight: 800;
-        font-size: 2.8rem;
-    }
+    .map-container { border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); border: 1px solid var(--border); }
+    .map-container iframe { width: 100%; height: 350px; border: 0; display: block; }
+    .map-fallback { height: 350px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--off-white); text-align: center; padding: 1.5rem; }
+
+    .gallery-grid a { display: block; overflow: hidden; border-radius: 10px; }
+    .gallery-grid img { width: 100%; height: 180px; object-fit: cover; transition: transform .5s var(--ease); }
+    .gallery-grid a:hover img { transform: scale(1.08); }
+
+    .cta-about { background: linear-gradient(135deg, var(--black) 0%, var(--charcoal) 100%); color: #fff; padding: 5.5rem 0; text-align: center; }
+    .cta-about h2 { font-size: clamp(1.9rem, 3.6vw, 2.8rem); }
 </style>
 {% endblock %}
 
@@ -122,7 +80,8 @@
 <!-- ========== HERO BANNER ========== -->
 <section class="about-hero">
     <div class="container">
-        <h1>About Us</h1>
+        <p class="eyebrow on-dark center justify-content-center d-flex">Who We Are</p>
+        <h1>About The Ministry</h1>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Home</a></li>
@@ -136,16 +95,17 @@
 <section class="section-padding">
     <div class="container">
         <div class="row align-items-center g-5">
-            <div class="col-lg-6">
-                <h2 class="section-title">Our Story</h2>
-                <p class="lead">
+            <div class="col-lg-6" data-reveal>
+                <p class="eyebrow">Our Story</p>
+                <h2 class="section-title">A Ministry Built On The Word</h2>
+                <p class="lead" style="font-weight:400; color:var(--muted);">
                     {% if church_settings %}
                         {{ church_settings.mission|default:"We are a family of believers dedicated to worshipping God and serving our community." }}
                     {% else %}
                         Embassy of God's Word Ministry is a church founded on the principles of faith, love, and service.
                     {% endif %}
                 </p>
-                <p>
+                <p style="color: var(--muted);">
                     {% if church_settings %}
                         {{ church_settings.vision|default:"Our vision is to see lives transformed by the power of the Gospel." }}
                     {% else %}
@@ -156,20 +116,20 @@
                     <a href="{% url 'core:leadership' %}" class="btn btn-gold">Meet Our Leadership</a>
                 </div>
             </div>
-            <div class="col-lg-6">
+            <div class="col-lg-6" data-reveal>
                 <div class="row g-4">
                     <div class="col-sm-6">
                         <div class="mission-vision-card">
                             <div class="icon"><i class="fas fa-bible"></i></div>
                             <h5>Our Mission</h5>
-                            <p>{% if church_settings %}{{ church_settings.mission|truncatewords:20 }}{% else %}To spread the gospel and make disciples of all nations.{% endif %}</p>
+                            <p class="mb-0 small" style="color: var(--muted);">{% if church_settings %}{{ church_settings.mission|truncatewords:20 }}{% else %}To spread the gospel and make disciples of all nations.{% endif %}</p>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="mission-vision-card">
                             <div class="icon"><i class="fas fa-eye"></i></div>
                             <h5>Our Vision</h5>
-                            <p>{% if church_settings %}{{ church_settings.vision|truncatewords:20 }}{% else %}To see lives transformed by God's power and presence.{% endif %}</p>
+                            <p class="mb-0 small" style="color: var(--muted);">{% if church_settings %}{{ church_settings.vision|truncatewords:20 }}{% else %}To see lives transformed by God's power and presence.{% endif %}</p>
                         </div>
                     </div>
                 </div>
@@ -179,27 +139,28 @@
 </section>
 
 <!-- ========== WHAT WE BELIEVE ========== -->
-<section class="section-padding" style="background: #f8f7f4;">
+<section class="section-padding" style="background: var(--off-white);">
     <div class="container">
+        <p class="eyebrow center justify-content-center d-flex">Our Foundation</p>
         <h2 class="section-title text-center">What We Believe</h2>
         <p class="section-subtitle text-center mb-5">Core biblical truths that shape our faith and practice.</p>
-        <div class="row justify-content-center">
+        <div class="row justify-content-center" data-reveal>
             <div class="col-lg-8">
                 <div class="belief-card">
                     <h6><i class="fas fa-cross gold-text me-2"></i> The Bible</h6>
-                    <p>We believe the Bible is the inspired, infallible Word of God and the final authority for faith and life.</p>
+                    <p class="mb-0" style="color: var(--muted);">We believe the Bible is the inspired, infallible Word of God and the final authority for faith and life.</p>
                 </div>
                 <div class="belief-card">
                     <h6><i class="fas fa-pray gold-text me-2"></i> The Trinity</h6>
-                    <p>We believe in one God, eternally existing in three persons: Father, Son, and Holy Spirit.</p>
+                    <p class="mb-0" style="color: var(--muted);">We believe in one God, eternally existing in three persons: Father, Son, and Holy Spirit.</p>
                 </div>
                 <div class="belief-card">
                     <h6><i class="fas fa-hand-holding-heart gold-text me-2"></i> Salvation</h6>
-                    <p>We believe salvation is by grace through faith in Jesus Christ alone, who died for our sins and rose again.</p>
+                    <p class="mb-0" style="color: var(--muted);">We believe salvation is by grace through faith in Jesus Christ alone, who died for our sins and rose again.</p>
                 </div>
                 <div class="belief-card">
                     <h6><i class="fas fa-church gold-text me-2"></i> The Church</h6>
-                    <p>We believe the Church is the body of Christ, called to worship, fellowship, and share the Gospel.</p>
+                    <p class="mb-0" style="color: var(--muted);">We believe the Church is the body of Christ, called to worship, fellowship, and share the Gospel.</p>
                 </div>
             </div>
         </div>
@@ -209,12 +170,13 @@
 <!-- ========== MEET OUR PASTOR ========== -->
 <section class="section-padding">
     <div class="container">
+        <p class="eyebrow center justify-content-center d-flex">Leadership</p>
         <h2 class="section-title text-center">Meet Our Senior Pastor</h2>
         <p class="section-subtitle text-center mb-5">A man of God with a heart for the nations.</p>
 
         {% if leadership %}
             {% with pastor=leadership|first %}
-                <div class="row justify-content-center">
+                <div class="row justify-content-center" data-reveal>
                     <div class="col-lg-10">
                         <div class="pastor-feature">
                             <div class="row g-0">
@@ -222,24 +184,22 @@
                                     {% if pastor.photo %}
                                         <img src="{{ pastor.photo.url }}" alt="{{ pastor.name }}">
                                     {% else %}
-                                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 400px;">
-                                            <i class="fas fa-user-circle" style="font-size: 6rem; color: #ccc;"></i>
-                                        </div>
+                                        <div class="no-photo"><div class="initial-ring">{{ pastor.name|slice:":1" }}</div></div>
                                     {% endif %}
                                 </div>
                                 <div class="col-md-7">
                                     <div class="pastor-content">
-                                        <h3>{{ pastor.name }}</h3>
-                                        <p class="text-gold">{{ pastor.position }}</p>
-                                        <p>{{ pastor.biography|default:"Senior Pastor of Embassy of God's Word Ministry, dedicated to teaching the Word and leading the church with integrity and passion." }}</p>
+                                        <h3 class="mb-1">{{ pastor.name }}</h3>
+                                        <p class="gold-text fw-semibold">{{ pastor.position }}</p>
+                                        <p style="color: var(--muted);">{{ pastor.biography|default:"Senior Pastor of Embassy of God's Word Ministry, dedicated to teaching the Word and leading the church with integrity and passion." }}</p>
                                         {% if pastor.quote %}
-                                            <div class="pastor-quote">“{{ pastor.quote }}”</div>
+                                            <div class="pastor-quote">"{{ pastor.quote }}"</div>
                                         {% endif %}
                                         <div class="social-links mt-3">
-                                            {% if pastor.facebook %}<a href="{{ pastor.facebook }}" target="_blank" class="me-2"><i class="fab fa-facebook-f"></i></a>{% endif %}
-                                            {% if pastor.instagram %}<a href="{{ pastor.instagram }}" target="_blank" class="me-2"><i class="fab fa-instagram"></i></a>{% endif %}
-                                            {% if pastor.email %}<a href="mailto:{{ pastor.email }}" class="me-2"><i class="fas fa-envelope"></i></a>{% endif %}
-                                            {% if pastor.phone %}<a href="tel:{{ pastor.phone }}"><i class="fas fa-phone"></i></a>{% endif %}
+                                            {% if pastor.facebook %}<a href="{{ pastor.facebook }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>{% endif %}
+                                            {% if pastor.instagram %}<a href="{{ pastor.instagram }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>{% endif %}
+                                            {% if pastor.email %}<a href="mailto:{{ pastor.email }}" aria-label="Email"><i class="fas fa-envelope"></i></a>{% endif %}
+                                            {% if pastor.phone %}<a href="tel:{{ pastor.phone }}" aria-label="Phone"><i class="fas fa-phone"></i></a>{% endif %}
                                         </div>
                                         <a href="{% url 'core:leadership' %}" class="btn btn-gold mt-3">View All Leadership</a>
                                     </div>
@@ -260,25 +220,26 @@
 
 <!-- ========== LEADERSHIP PREVIEW ========== -->
 {% if leadership %}
-    <section class="section-padding" style="background: #f8f7f4;">
+    <section class="section-padding" style="background: var(--off-white);">
         <div class="container">
+            <p class="eyebrow center justify-content-center d-flex">The Team</p>
             <h2 class="section-title text-center">Our Leadership Team</h2>
             <p class="section-subtitle text-center mb-5">Dedicated servants of God leading the church.</p>
-            <div class="row g-4">
+            <div class="row g-4" data-reveal>
                 {% for leader in leadership|slice:":3" %}
                     <div class="col-md-4">
                         <div class="card premium-card h-100">
                             {% if leader.photo %}
-                                <img src="{{ leader.photo.url }}" class="card-img-top" alt="{{ leader.name }}" style="height: 250px; object-fit: cover;">
+                                <img src="{{ leader.photo.url }}" class="card-img-top" alt="{{ leader.name }}" style="height: 240px;">
                             {% else %}
-                                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
-                                    <i class="fas fa-user-circle" style="font-size: 4rem; color: #ccc;"></i>
+                                <div class="card-img-top d-flex align-items-center justify-content-center" style="height:240px; background: linear-gradient(160deg, var(--charcoal), var(--black));">
+                                    <div style="width:76px;height:76px;border-radius:50%;border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.6rem;color:var(--gold-light);">{{ leader.name|slice:":1" }}</div>
                                 </div>
                             {% endif %}
                             <div class="card-body">
                                 <h5>{{ leader.name }}</h5>
-                                <p class="text-gold">{{ leader.position }}</p>
-                                <p class="card-text small">{{ leader.biography|truncatewords:20 }}</p>
+                                <p class="gold-text small fw-semibold mb-2">{{ leader.position }}</p>
+                                <p class="card-text small" style="color: var(--muted);">{{ leader.biography|truncatewords:20 }}</p>
                                 <a href="{% url 'core:leadership' %}" class="btn btn-outline-gold btn-sm">View Profile</a>
                             </div>
                         </div>
@@ -295,18 +256,19 @@
 <!-- ========== SERVICE TIMES ========== -->
 <section class="section-padding">
     <div class="container">
+        <p class="eyebrow center justify-content-center d-flex">Join Us</p>
         <h2 class="section-title text-center">Service Times</h2>
         <p class="section-subtitle text-center mb-5">Join us for worship and fellowship.</p>
-        <div class="row justify-content-center g-4">
+        <div class="row justify-content-center g-4" data-reveal>
             {% if service_schedule %}
                 {% for service in service_schedule %}
                     <div class="col-md-3 col-sm-6">
-                        <div class="service-card">
-                            <div class="service-icon"><i class="fas fa-calendar-alt"></i></div>
+                        <div class="mission-vision-card">
+                            <div class="icon"><i class="fas fa-calendar-alt"></i></div>
                             <h5>{{ service.get_day_display }}</h5>
                             <p class="mb-1"><strong>{{ service.start_time|time:"g:i A" }}</strong> – {{ service.end_time|time:"g:i A" }}</p>
-                            <p class="text-muted small">{{ service.name }}</p>
-                            {% if service.venue %}<p class="text-muted small"><i class="fas fa-map-pin"></i> {{ service.venue }}</p>{% endif %}
+                            <p class="small mb-0" style="color: var(--muted);">{{ service.name }}</p>
+                            {% if service.venue %}<p class="small mb-0" style="color: var(--muted);"><i class="fas fa-map-pin"></i> {{ service.venue }}</p>{% endif %}
                         </div>
                     </div>
                 {% endfor %}
@@ -320,52 +282,29 @@
 </section>
 
 <!-- ========== WHY VISIT US ========== -->
-<section class="section-padding" style="background: #f8f7f4;">
+<section class="section-padding" style="background: var(--off-white);">
     <div class="container">
+        <p class="eyebrow center justify-content-center d-flex">Why Visit</p>
         <h2 class="section-title text-center">Why Visit Us</h2>
         <p class="section-subtitle text-center mb-5">Experience a warm welcome and a life-changing encounter with God.</p>
-        <div class="row g-4">
+        <div class="row g-4" data-reveal>
             <div class="col-md-4">
-                <div class="why-card">
-                    <div class="icon"><i class="fas fa-handshake"></i></div>
-                    <h5>Warm Welcome</h5>
-                    <p>You'll be greeted with genuine love and hospitality from the moment you arrive.</p>
-                </div>
+                <div class="why-card"><div class="icon"><i class="fas fa-handshake"></i></div><h5>Warm Welcome</h5><p class="mb-0 small" style="color:var(--muted);">You'll be greeted with genuine love and hospitality from the moment you arrive.</p></div>
             </div>
             <div class="col-md-4">
-                <div class="why-card">
-                    <div class="icon"><i class="fas fa-users"></i></div>
-                    <h5>Family Atmosphere</h5>
-                    <p>We are a community of believers who care for one another like family.</p>
-                </div>
+                <div class="why-card"><div class="icon"><i class="fas fa-users"></i></div><h5>Family Atmosphere</h5><p class="mb-0 small" style="color:var(--muted);">We are a community of believers who care for one another like family.</p></div>
             </div>
             <div class="col-md-4">
-                <div class="why-card">
-                    <div class="icon"><i class="fas fa-praying-hands"></i></div>
-                    <h5>Powerful Worship</h5>
-                    <p>Our worship is vibrant, Spirit-filled, and centered on the presence of God.</p>
-                </div>
+                <div class="why-card"><div class="icon"><i class="fas fa-praying-hands"></i></div><h5>Powerful Worship</h5><p class="mb-0 small" style="color:var(--muted);">Our worship is vibrant, Spirit-filled, and centered on the presence of God.</p></div>
             </div>
             <div class="col-md-4">
-                <div class="why-card">
-                    <div class="icon"><i class="fas fa-bible"></i></div>
-                    <h5>Biblical Teaching</h5>
-                    <p>Relevant, practical messages rooted in the Word of God.</p>
-                </div>
+                <div class="why-card"><div class="icon"><i class="fas fa-bible"></i></div><h5>Biblical Teaching</h5><p class="mb-0 small" style="color:var(--muted);">Relevant, practical messages rooted in the Word of God.</p></div>
             </div>
             <div class="col-md-4">
-                <div class="why-card">
-                    <div class="icon"><i class="fas fa-heart"></i></div>
-                    <h5>Prayer & Healing</h5>
-                    <p>We believe in the power of prayer and God's healing for every need.</p>
-                </div>
+                <div class="why-card"><div class="icon"><i class="fas fa-heart"></i></div><h5>Prayer &amp; Healing</h5><p class="mb-0 small" style="color:var(--muted);">We believe in the power of prayer and God's healing for every need.</p></div>
             </div>
             <div class="col-md-4">
-                <div class="why-card">
-                    <div class="icon"><i class="fas fa-church"></i></div>
-                    <h5>Community Impact</h5>
-                    <p>We are actively serving and impacting our community with the love of Christ.</p>
-                </div>
+                <div class="why-card"><div class="icon"><i class="fas fa-church"></i></div><h5>Community Impact</h5><p class="mb-0 small" style="color:var(--muted);">We are actively serving and impacting our community with the love of Christ.</p></div>
             </div>
         </div>
     </div>
@@ -375,23 +314,24 @@
 {% if ministries %}
     <section class="section-padding">
         <div class="container">
+            <p class="eyebrow center justify-content-center d-flex">Get Involved</p>
             <h2 class="section-title text-center">Our Ministries</h2>
             <p class="section-subtitle text-center mb-5">Serving God and community through various ministries.</p>
-            <div class="row g-4">
+            <div class="row g-4" data-reveal>
                 {% for ministry in ministries|slice:":3" %}
                     <div class="col-md-4">
                         <div class="card premium-card h-100">
                             {% if ministry.image %}
                                 <img src="{{ ministry.image.url }}" class="card-img-top" alt="{{ ministry.name }}">
                             {% else %}
-                                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                                    <i class="fas fa-church" style="font-size: 3rem; color: #ccc;"></i>
+                                <div class="card-img-top d-flex align-items-center justify-content-center" style="height:220px; background: var(--off-white);">
+                                    <i class="fas fa-church" style="font-size: 2.5rem; color: var(--gold);"></i>
                                 </div>
                             {% endif %}
                             <div class="card-body">
                                 <h5>{{ ministry.name }}</h5>
-                                <p class="card-text small">{{ ministry.description|truncatewords:20 }}</p>
-                                {% if ministry.leader %}<p class="text-muted small"><i class="fas fa-user"></i> {{ ministry.leader }}</p>{% endif %}
+                                <p class="card-text small" style="color: var(--muted);">{{ ministry.description|truncatewords:20 }}</p>
+                                {% if ministry.leader %}<p class="small mb-2" style="color: var(--muted);"><i class="fas fa-user"></i> {{ ministry.leader }}</p>{% endif %}
                                 <a href="{% url 'core:ministries' %}" class="btn btn-outline-gold btn-sm">Learn More</a>
                             </div>
                         </div>
@@ -406,16 +346,17 @@
 {% endif %}
 
 <!-- ========== GALLERY PREVIEW ========== -->
-<section class="section-padding" style="background: #f8f7f4;">
+<section class="section-padding" style="background: var(--off-white);">
     <div class="container">
+        <p class="eyebrow center justify-content-center d-flex">In Pictures</p>
         <h2 class="section-title text-center">Moments Captured</h2>
         <p class="section-subtitle text-center mb-5">A glimpse into our worship and fellowship.</p>
         {% if latest_album and album_images %}
-            <div class="row g-3 gallery-grid">
+            <div class="row g-3 gallery-grid" data-reveal>
                 {% for image in album_images|slice:":6" %}
                     <div class="col-4 col-md-2">
                         <a href="{% url 'core:gallery' %}">
-                            <img src="{{ image.image.url }}" alt="{{ image.caption|default:'Gallery image' }}" class="img-fluid rounded" style="height: 180px; width: 100%; object-fit: cover;">
+                            <img src="{{ image.image.url }}" alt="{{ image.caption|default:'Gallery image' }}">
                         </a>
                     </div>
                 {% endfor %}
@@ -434,16 +375,17 @@
 <!-- ========== CHURCH LOCATION ========== -->
 <section class="section-padding">
     <div class="container">
+        <p class="eyebrow center justify-content-center d-flex">Come Say Hello</p>
         <h2 class="section-title text-center">Find Us</h2>
         <p class="section-subtitle text-center mb-5">We would love to welcome you in person.</p>
-        <div class="row g-5">
+        <div class="row g-5" data-reveal>
             <div class="col-lg-6">
                 <div class="map-container">
                     {% if church_settings and church_settings.google_maps_embed %}
                         {{ church_settings.google_maps_embed|safe }}
                     {% else %}
-                        <div class="bg-light p-5 text-center rounded" style="height: 350px; display: flex; align-items: center; justify-content: center;">
-                            <p><i class="fas fa-map-marked-alt" style="font-size: 3rem; color: var(--gold);"></i></p>
+                        <div class="map-fallback">
+                            <i class="fas fa-map-marked-alt mb-2" style="font-size: 2.5rem; color: var(--gold);"></i>
                             <h5>{% if church_settings %}{{ church_settings.address }}{% else %}Peyi Road, opposite British Oasis International School, Ushafa Old Road, Bwari, Abuja{% endif %}</h5>
                         </div>
                     {% endif %}
@@ -452,21 +394,21 @@
             <div class="col-lg-6">
                 <div class="contact-info-box">
                     <h4><i class="fas fa-map-pin gold-text"></i> Address</h4>
-                    <p>{% if church_settings %}{{ church_settings.address }}{% else %}Peyi Road, opposite British Oasis International School, Ushafa Old Road, Bwari, Abuja{% endif %}</p>
+                    <p class="mb-0">{% if church_settings %}{{ church_settings.address }}{% else %}Peyi Road, opposite British Oasis International School, Ushafa Old Road, Bwari, Abuja{% endif %}</p>
                 </div>
                 <div class="contact-info-box">
                     <h4><i class="fas fa-phone gold-text"></i> Phone</h4>
-                    <p>{% if church_settings %}{{ church_settings.phone }}{% endif %}</p>
-                    {% if church_settings and church_settings.alternate_phone %}<p>{{ church_settings.alternate_phone }}</p>{% endif %}
+                    <p class="mb-0">{% if church_settings %}{{ church_settings.phone }}{% endif %}</p>
+                    {% if church_settings and church_settings.alternate_phone %}<p class="mb-0">{{ church_settings.alternate_phone }}</p>{% endif %}
                 </div>
                 <div class="contact-info-box">
                     <h4><i class="fas fa-envelope gold-text"></i> Email</h4>
-                    <p>{% if church_settings %}{{ church_settings.email }}{% endif %}</p>
+                    <p class="mb-0">{% if church_settings %}{{ church_settings.email }}{% endif %}</p>
                 </div>
                 {% if church_settings and church_settings.office_hours %}
                     <div class="contact-info-box">
                         <h4><i class="fas fa-clock gold-text"></i> Office Hours</h4>
-                        <p>{{ church_settings.office_hours }}</p>
+                        <p class="mb-0">{{ church_settings.office_hours }}</p>
                     </div>
                 {% endif %}
             </div>
@@ -476,11 +418,12 @@
 
 <!-- ========== CALL TO ACTION ========== -->
 <section class="cta-about">
-    <div class="container">
+    <div class="container" data-reveal>
+        <p class="eyebrow on-dark center justify-content-center d-flex">We'd Love To Meet You</p>
         <h2>Join Us This Sunday</h2>
-        <p class="mb-4">We look forward to worshipping with you.</p>
+        <p class="mb-4" style="color: rgba(255,255,255,0.7);">We look forward to worshipping with you.</p>
         <a href="{% url 'core:first_visit' %}" class="btn btn-gold me-2">Plan Your Visit</a>
-        <a href="{% url 'core:contact' %}" class="btn btn-outline-gold">Contact Us</a>
+        <a href="{% url 'core:contact' %}" class="btn btn-ghost-invert">Contact Us</a>
     </div>
 </section>
 

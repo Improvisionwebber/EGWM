@@ -15,12 +15,7 @@ urlpatterns = [
     # Leadership
     path("leadership/", views.leadership_view, name="leadership"),
 
-    # Ministries
-    path("ministries/", views.ministries_view, name="ministries"),
 
-    # Sermons
-    path("sermons/", views.sermons_view, name="sermons"),
-    path("sermons/<slug:slug>/", views.sermon_detail, name="sermon_detail"),
 
     # Devotionals
     path("devotionals/", views.devotionals_view, name="devotionals"),
@@ -45,18 +40,85 @@ urlpatterns = [
 
     # Prayer Request
     path("prayer-request/", views.prayer_request_view, name="prayer_request"),
-
-    # First Visit
+# First Visit
     path("first-visit/", views.first_visit_view, name="first_visit"),
 
     # Search
     path("search/", views.search_results, name="search_results"),
+# Dashboard - Prayer Requests
+path(
+    "dashboard/prayer-requests/",
+    views.dashboard_prayer_requests,
+    name="dashboard_prayer_requests",
+),
 
+path(
+    "dashboard/prayer-requests/<int:pk>/",
+    views.dashboard_prayer_request_detail,
+    name="dashboard_prayer_request_detail",
+),
     # Newsletter Subscription (POST-only, handles redirect)
     path("newsletter/subscribe/", views.newsletter_subscribe, name="newsletter_subscribe"),
     # Dashboard
 path("dashboard/", views.dashboard, name="dashboard"),
+# Dashboard - Gallery
 
+path(
+    "dashboard/gallery/",
+    views.dashboard_gallery,
+    name="dashboard_gallery",
+),
+
+path(
+    "dashboard/gallery/albums/add/",
+    views.dashboard_add_gallery_album,
+    name="dashboard_add_gallery_album",
+),
+
+path(
+    "dashboard/gallery/albums/<int:pk>/edit/",
+    views.dashboard_edit_gallery_album,
+    name="dashboard_edit_gallery_album",
+),
+
+path(
+    "dashboard/gallery/images/add/",
+    views.dashboard_add_gallery_image,
+    name="dashboard_add_gallery_image",
+),
+
+path(
+    "dashboard/gallery/images/<int:pk>/delete/",
+    views.dashboard_delete_gallery_image,
+    name="dashboard_delete_gallery_image",
+),
+
+
+# Dashboard - Testimonies
+
+path(
+    "dashboard/testimonies/",
+    views.dashboard_testimonies,
+    name="dashboard_testimonies",
+),
+
+path(
+    "dashboard/testimonies/add/",
+    views.dashboard_add_testimony,
+    name="dashboard_add_testimony",
+),
+
+path(
+    "dashboard/testimonies/<int:pk>/edit/",
+    views.dashboard_edit_testimony,
+    name="dashboard_edit_testimony",
+),
+
+path(
+    "dashboard/testimonies/<int:pk>/delete/",
+    views.dashboard_delete_testimony,
+    name="dashboard_delete_testimony",
+),
 # Dashboard - Devotionals
 path(
     "dashboard/devotionals/add/",

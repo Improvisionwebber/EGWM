@@ -1,100 +1,499 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Leadership - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
+{% block title %}
+Leadership -
+{% if church_settings %}
+    {{ church_settings.church_name }}
+{% else %}
+    Embassy of God's Word Ministry
+{% endif %}
+{% endblock %}
+
 
 {% block extra_css %}
 <style>
+
+    /* ================================
+       PAGE HERO STRIP
+    ================================= */
+
+    .page-hero {
+        background: linear-gradient(160deg, var(--black) 0%, var(--charcoal) 100%);
+        color: #fff;
+        padding: calc(var(--nav-h) + 4rem) 0 4.5rem;
+        margin-top: calc(-1 * var(--nav-h));
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    .page-hero h1 { color: #fff; font-size: clamp(2.2rem, 4.5vw, 3.2rem); }
+
+    /* ================================
+       LEADERSHIP CARD
+    ================================= */
+
     .leadership-card {
+        position: relative;
         background: #fff;
         border: none;
         border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-        transition: transform 0.3s, box-shadow 0.3s;
+        box-shadow: var(--shadow-sm);
+        transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
         height: 100%;
     }
+
     .leadership-card:hover {
         transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        box-shadow: var(--shadow-lg);
     }
+
+
+    /* ================================
+       LEADER IMAGE
+    ================================= */
+
     .leadership-card img {
         width: 100%;
         height: 350px;
         object-fit: cover;
+        display: block;
     }
+
+    .leadership-card .no-photo {
+        height: 350px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(160deg, var(--charcoal), var(--black));
+    }
+
+    .leadership-card .no-photo .initial-ring {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        border: 1.5px solid var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-display);
+        font-size: 2.2rem;
+        color: var(--gold-light);
+    }
+
+
+    /* ================================
+       CARD BODY
+    ================================= */
+
     .leadership-card .card-body {
-        padding: 1.8rem;
+        padding: 1.9rem;
     }
+
     .leadership-card .position {
-        color: var(--gold);
+        color: var(--gold-dark);
         font-weight: 600;
-        font-size: 1rem;
-        letter-spacing: 0.5px;
+        font-size: .85rem;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
+        margin-bottom: .75rem;
     }
+
     .leadership-card .quote {
+        font-family: var(--font-display);
         font-style: italic;
-        color: #6c757d;
+        color: var(--muted);
         border-left: 3px solid var(--gold);
         padding-left: 1rem;
-        margin-top: 0.8rem;
+        margin-top: 0.9rem;
     }
+
+
+    /* ================================
+       SOCIAL LINKS
+    ================================= */
+
     .leadership-card .social-links a {
-        color: #6c757d;
-        margin-right: 0.8rem;
-        font-size: 1.1rem;
-        transition: color 0.3s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        color: var(--black);
+        margin-right: 0.5rem;
+        font-size: .9rem;
+        transition: all 0.3s ease;
     }
+
     .leadership-card .social-links a:hover {
-        color: var(--gold);
+        background: var(--gold);
+        border-color: var(--gold);
+        color: var(--black);
     }
+
+
+    /* ================================
+       ADMIN CONTROLS
+    ================================= */
+
+    .leadership-admin-controls {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        z-index: 30;
+    }
+
+
+    /* Small circular icon */
+
+    .leadership-admin-controls .admin-icon {
+        width: 36px;
+        height: 36px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        text-decoration: none;
+        border: none;
+
+        background: rgba(255,255,255,0.94);
+        color: #333;
+
+        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+
+        cursor: pointer;
+
+        transition:
+            transform 0.2s ease,
+            background 0.2s ease,
+            color 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+
+    .leadership-admin-controls .admin-icon i {
+        font-size: 14px;
+    }
+
+
+    /* Edit */
+
+    .leadership-admin-controls .edit-icon:hover {
+        background: var(--gold);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 7px 18px rgba(0,0,0,0.2);
+    }
+
+
+    /* Delete */
+
+    .leadership-admin-controls .delete-icon:hover {
+        background: #dc3545;
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 7px 18px rgba(0,0,0,0.2);
+    }
+
+
+    /* Remove form default spacing */
+
+    .leadership-admin-controls form {
+        margin: 0;
+        padding: 0;
+    }
+
+
+    /* Slight image overlay so controls remain visible */
+
+    .leadership-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+
+        height: 80px;
+
+        background: linear-gradient(
+            to bottom,
+            rgba(0,0,0,0.18),
+            transparent
+        );
+
+        pointer-events: none;
+        z-index: 5;
+    }
+
+
+    /* Empty state */
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 1rem;
+        color: var(--muted);
+    }
+    .empty-state i { font-size: 2.4rem; color: var(--gold); margin-bottom: 1rem; display: block; }
+
+
+    /* ================================
+       MOBILE
+    ================================= */
+
+    @media (max-width: 576px) {
+
+        .leadership-card img,
+        .leadership-card .no-photo {
+            height: 300px;
+        }
+
+        .leadership-admin-controls {
+            top: 10px;
+            right: 10px;
+        }
+
+        .leadership-admin-controls .admin-icon {
+            width: 34px;
+            height: 34px;
+        }
+
+    }
+
 </style>
 {% endblock %}
 
-{% block content %}
-<section class="section-padding">
-    <div class="container">
-        <h1 class="section-title text-center">Our Leadership</h1>
-        <p class="section-subtitle text-center mb-5">Spiritual leaders dedicated to serving God and His people.</p>
 
-        {% if leadership %}
-            <div class="row g-4">
-                {% for leader in leadership %}
-                    <div class="col-lg-4 col-md-6">
-                        <div class="leadership-card">
-                            {% if leader.photo %}
-                                <img src="{{ leader.photo.url }}" alt="{{ leader.name }}">
-                            {% else %}
-                                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 350px;">
-                                    <i class="fas fa-user-circle" style="font-size: 5rem; color: #ccc;"></i>
-                                </div>
-                            {% endif %}
-                            <div class="card-body">
-                                <h4>{{ leader.name }}</h4>
-                                <p class="position">{{ leader.position }}</p>
-                                {% if leader.biography %}
-                                    <p>{{ leader.biography|truncatewords:30 }}</p>
-                                {% endif %}
-                                {% if leader.quote %}
-                                    <div class="quote">“{{ leader.quote }}”</div>
-                                {% endif %}
-                                <div class="social-links mt-3">
-                                    {% if leader.facebook %}<a href="{{ leader.facebook }}" target="_blank"><i class="fab fa-facebook-f"></i></a>{% endif %}
-                                    {% if leader.instagram %}<a href="{{ leader.instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>{% endif %}
-                                    {% if leader.email %}<a href="mailto:{{ leader.email }}"><i class="fas fa-envelope"></i></a>{% endif %}
-                                    {% if leader.phone %}<a href="tel:{{ leader.phone }}"><i class="fas fa-phone"></i></a>{% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="text-center">
-                <p>Leadership information coming soon.</p>
-            </div>
-        {% endif %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="page-hero">
+    <div class="container">
+        <p class="eyebrow on-dark center justify-content-center d-flex">The People Who Serve</p>
+        <h1>Our Leadership</h1>
     </div>
 </section>
+
+<section class="section-padding">
+
+    <div class="container">
+
+        <p class="section-subtitle text-center mb-5">
+            Spiritual leaders dedicated to serving God and His people.
+        </p>
+
+
+        {% if leadership %}
+
+            <div class="row g-4" data-reveal>
+
+                {% for leader in leadership %}
+
+                    <div class="col-lg-4 col-md-6">
+
+                        <div class="leadership-card">
+
+
+                            <!-- =================================
+                                 ADMIN CONTROLS
+                                 ONLY STAFF CAN SEE THESE
+                            ================================== -->
+
+                            {% if user.is_authenticated and user.is_staff %}
+
+                                <div class="leadership-admin-controls">
+
+                                    <!-- EDIT -->
+
+                                    <a
+                                        href="{% url 'core:dashboard_edit_leadership' leader.pk %}"
+                                        class="admin-icon edit-icon"
+                                        title="Edit {{ leader.name }}"
+                                        aria-label="Edit {{ leader.name }}"
+                                    >
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+
+
+                                    <!-- DELETE -->
+
+                                    <form
+                                        method="POST"
+                                        action="{% url 'core:dashboard_delete_leadership' leader.pk %}"
+                                        onsubmit="return confirm('Are you sure you want to delete {{ leader.name|escapejs }}?');"
+                                    >
+
+                                        {% csrf_token %}
+
+                                        <button
+                                            type="submit"
+                                            class="admin-icon delete-icon"
+                                            title="Delete {{ leader.name }}"
+                                            aria-label="Delete {{ leader.name }}"
+                                        >
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            {% endif %}
+
+
+
+                            <!-- =================================
+                                 LEADER PHOTO
+                            ================================== -->
+
+                            {% if leader.photo %}
+
+                                <img
+                                    src="{{ leader.photo.url }}"
+                                    alt="{{ leader.name }}"
+                                    loading="lazy"
+                                >
+
+                            {% else %}
+
+                                <div class="no-photo">
+                                    <div class="initial-ring">{{ leader.name|slice:":1" }}</div>
+                                </div>
+
+                            {% endif %}
+
+
+
+                            <!-- =================================
+                                 LEADER INFORMATION
+                            ================================== -->
+
+                            <div class="card-body">
+
+                                <h4>
+                                    {{ leader.name }}
+                                </h4>
+
+
+                                {% if leader.position %}
+
+                                    <p class="position">
+                                        {{ leader.position }}
+                                    </p>
+
+                                {% endif %}
+
+
+
+                                {% if leader.biography %}
+
+                                    <p style="color: var(--muted);">
+                                        {{ leader.biography|striptags|truncatewords:30 }}
+                                    </p>
+
+                                {% endif %}
+
+
+
+                                {% if leader.quote %}
+
+                                    <div class="quote">
+                                        "{{ leader.quote }}"
+                                    </div>
+
+                                {% endif %}
+
+
+
+                                <!-- SOCIAL LINKS -->
+
+                                <div class="social-links mt-3">
+
+                                    {% if leader.facebook %}
+
+                                        <a
+                                            href="{{ leader.facebook }}"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            title="Facebook"
+                                        >
+                                            <i class="fab fa-facebook-f"></i>
+                                        </a>
+
+                                    {% endif %}
+
+
+                                    {% if leader.instagram %}
+
+                                        <a
+                                            href="{{ leader.instagram }}"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            title="Instagram"
+                                        >
+                                            <i class="fab fa-instagram"></i>
+                                        </a>
+
+                                    {% endif %}
+
+
+                                    {% if leader.email %}
+
+                                        <a
+                                            href="mailto:{{ leader.email }}"
+                                            title="Email"
+                                        >
+                                            <i class="fas fa-envelope"></i>
+                                        </a>
+
+                                    {% endif %}
+
+
+                                    {% if leader.phone %}
+
+                                        <a
+                                            href="tel:{{ leader.phone }}"
+                                            title="Phone"
+                                        >
+                                            <i class="fas fa-phone"></i>
+                                        </a>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+                <i class="fas fa-user-circle"></i>
+                <p class="mb-0">Meet the servants entrusted with leading this ministry.</p>
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
 {% endblock %}

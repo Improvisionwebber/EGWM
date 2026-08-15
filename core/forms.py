@@ -20,6 +20,7 @@ from .models import (
     NewsletterSubscriber,
     Devotional,
     Leadership,
+    GalleryAlbum, GalleryImage,
     Event,
 )
 class BootstrapFormMixin:
@@ -275,10 +276,11 @@ class LeadershipForm(BootstrapFormMixin, forms.ModelForm):
     def clean_quote(self):
         return self.cleaned_data["quote"].strip()
 
-
 class EventForm(BootstrapFormMixin, forms.ModelForm):
+
     class Meta:
         model = Event
+
         fields = [
             "title",
             "banner",
@@ -292,6 +294,7 @@ class EventForm(BootstrapFormMixin, forms.ModelForm):
             "featured",
             "published",
         ]
+
         labels = {
             "title": _("Event Title"),
             "banner": _("Event Banner"),
@@ -305,24 +308,36 @@ class EventForm(BootstrapFormMixin, forms.ModelForm):
             "featured": _("Featured Event"),
             "published": _("Published"),
         }
+
         widgets = {
             "start_date": forms.DateTimeInput(
                 attrs={
-                    "type": "datetime-local"
+                    "type": "datetime-local",
                 }
             ),
+
             "end_date": forms.DateTimeInput(
                 attrs={
-                    "type": "datetime-local"
+                    "type": "datetime-local",
                 }
             ),
         }
 
     def clean_title(self):
-        return self.cleaned_data["title"].strip()
+        title = self.cleaned_data.get("title")
+
+        if title:
+            return title.strip()
+
+        return title
 
     def clean_venue(self):
-        return self.cleaned_data["venue"].strip()
+        venue = self.cleaned_data.get("venue")
+
+        if venue:
+            return venue.strip()
+
+        return venue
 
     def clean(self):
         cleaned_data = super().clean()
@@ -336,3 +351,129 @@ class EventForm(BootstrapFormMixin, forms.ModelForm):
             )
 
         return cleaned_data
+
+class GalleryAlbumForm(forms.ModelForm):
+    class Meta:
+        model = GalleryAlbum
+        fields = [
+            "title",
+            "description",
+            "cover_image",
+            "published",
+            "display_order",
+        ]
+
+        widgets = {
+            "title": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Album title",
+            }),
+
+            "description": forms.Textarea(attrs={
+                "class": "form-control",
+                "rows": 4,
+                "placeholder": "Album description",
+            }),
+
+            "cover_image": forms.ClearableFileInput(attrs={
+                "class": "form-control",
+                "accept": "image/*",
+            }),
+
+            "published": forms.CheckboxInput(attrs={
+                "class": "form-check-input",
+            }),
+
+            "display_order": forms.NumberInput(attrs={
+                "class": "form-control",
+                "min": "0",
+            }),
+        }
+
+
+class GalleryImageForm(forms.ModelForm):
+    class Meta:
+        model = GalleryImage
+        fields = [
+            "album",
+            "image",
+            "caption",
+            "display_order",
+        ]
+
+        widgets = {
+            "album": forms.Select(attrs={
+                "class": "form-select",
+            }),
+
+            "image": forms.ClearableFileInput(attrs={
+                "class": "form-control",
+                "accept": "image/*",
+            }),
+
+            "caption": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Optional image caption",
+            }),
+
+            "display_order": forms.NumberInput(attrs={
+                "class": "form-control",
+                "min": "0",
+                "placeholder": "0",
+            }),
+        }
+
+class TestimonyForm(forms.ModelForm):
+    class Meta:
+        model = Testimony
+        fields = [
+            "full_name",
+            "email",
+            "photo",
+            "title",
+            "story",
+            "approved",
+            "featured",
+            "published_date",
+        ]
+
+        widgets = {
+            "full_name": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Full name",
+            }),
+
+            "email": forms.EmailInput(attrs={
+                "class": "form-control",
+                "placeholder": "Email address",
+            }),
+
+            "photo": forms.ClearableFileInput(attrs={
+                "class": "form-control",
+                "accept": "image/*",
+            }),
+
+            "title": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Testimony title",
+            }),
+
+            "story": forms.Textarea(attrs={
+                "class": "form-control",
+                "rows": 8,
+                "placeholder": "Write the testimony...",
+            }),
+
+            "approved": forms.CheckboxInput(attrs={
+                "class": "form-check-input",
+            }),
+
+            "featured": forms.CheckboxInput(attrs={
+                "class": "form-check-input",
+            }),
+
+            "published_date": forms.DateTimeInput(attrs={
+                "class": "form-control",
+                "type": "datetime-local",
+            }),
+        }

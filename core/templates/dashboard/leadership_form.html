@@ -1,0 +1,578 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if leader %}
+        Edit Leader
+    {% else %}
+        Add Leader
+    {% endif %}
+    -
+    {% if church_settings %}
+        {{ church_settings.church_name }}
+    {% else %}
+        Embassy of God's Word Ministry
+    {% endif %}
+{% endblock %}
+
+
+{% block extra_css %}
+<style>
+
+    .leadership-form-section {
+        padding: 80px 0;
+        background: #f8f8f8;
+        min-height: 80vh;
+    }
+
+    .leadership-form-wrapper {
+        max-width: 850px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 22px;
+        padding: 40px;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.07);
+    }
+
+    .form-header {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .form-header-icon {
+        width: 65px;
+        height: 65px;
+        margin: 0 auto 15px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+        background: rgba(197, 157, 61, 0.12);
+        color: var(--gold);
+
+        font-size: 28px;
+    }
+
+    .form-header h1 {
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .form-header p {
+        color: #777;
+        margin-bottom: 0;
+    }
+
+    .form-group {
+        margin-bottom: 22px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+        color: #222;
+    }
+
+    .form-control-premium {
+        width: 100%;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 12px 15px;
+        font-size: 15px;
+        transition: border-color .2s, box-shadow .2s;
+    }
+
+    .form-control-premium:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 3px rgba(197,157,61,.12);
+        outline: none;
+    }
+
+    textarea.form-control-premium {
+        min-height: 140px;
+        resize: vertical;
+    }
+
+    .image-preview {
+        margin-top: 12px;
+    }
+
+    .image-preview img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 14px;
+        border: 1px solid #ddd;
+    }
+
+    .custom-file {
+        border: 2px dashed #ddd;
+        border-radius: 14px;
+        padding: 25px;
+        text-align: center;
+        transition: .2s;
+    }
+
+    .custom-file:hover {
+        border-color: var(--gold);
+        background: rgba(197,157,61,.03);
+    }
+
+    .custom-file i {
+        font-size: 30px;
+        color: var(--gold);
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .custom-file input {
+        width: 100%;
+    }
+
+    .checkbox-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 16px;
+        background: #fafafa;
+        border-radius: 12px;
+        margin-bottom: 12px;
+    }
+
+    .checkbox-row input {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--gold);
+    }
+
+    .checkbox-row label {
+        margin: 0;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-top: 35px;
+    }
+
+    .btn-cancel {
+        padding: 12px 22px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        color: #555;
+        text-decoration: none;
+        background: #fff;
+        transition: .2s;
+    }
+
+    .btn-cancel:hover {
+        background: #f5f5f5;
+        color: #222;
+    }
+
+    .btn-submit {
+        border: none;
+        padding: 12px 25px;
+        border-radius: 10px;
+        background: var(--gold);
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,0,0,.15);
+    }
+
+    .error-message {
+        color: #dc3545;
+        font-size: 13px;
+        margin-top: 6px;
+    }
+
+    @media (max-width: 768px) {
+
+        .leadership-form-section {
+            padding: 45px 15px;
+        }
+
+        .leadership-form-wrapper {
+            padding: 25px 20px;
+            border-radius: 18px;
+        }
+
+        .form-actions {
+            flex-direction: column-reverse;
+            align-items: stretch;
+        }
+
+        .btn-submit,
+        .btn-cancel {
+            width: 100%;
+            text-align: center;
+        }
+
+    }
+
+</style>
+{% endblock %}
+
+
+
+{% block content %}
+
+<section class="leadership-form-section">
+
+    <div class="container">
+
+        <div class="leadership-form-wrapper">
+
+            <!-- HEADER -->
+
+            <div class="form-header">
+
+                <div class="form-header-icon">
+                    <i class="bi bi-person-plus-fill"></i>
+                </div>
+
+                <h1>
+                    {% if leader %}
+                        Edit Leader
+                    {% else %}
+                        Add Leader
+                    {% endif %}
+                </h1>
+
+                <p>
+                    {% if leader %}
+                        Update this leader's information.
+                    {% else %}
+                        Add a pastor, minister, or church leader.
+                    {% endif %}
+                </p>
+
+            </div>
+
+
+            <!-- FORM -->
+
+            <form
+                method="POST"
+                enctype="multipart/form-data"
+            >
+
+                {% csrf_token %}
+
+
+                <!-- NAME -->
+
+                <div class="form-group">
+
+                    <label class="form-label" for="name">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        class="form-control-premium"
+                        placeholder="e.g. Pastor Kingsley Nwekwo"
+                        value="{% if leader %}{{ leader.name }}{% endif %}"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- POSITION -->
+
+                <div class="form-group">
+
+                    <label class="form-label" for="position">
+                        Position
+                    </label>
+
+                    <input
+                        type="text"
+                        id="position"
+                        name="position"
+                        class="form-control-premium"
+                        placeholder="e.g. Senior Pastor"
+                        value="{% if leader %}{{ leader.position }}{% endif %}"
+                    >
+
+                </div>
+
+
+                <!-- PHOTO -->
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Leader Photo
+                    </label>
+
+                    <div class="custom-file">
+
+                        <i class="bi bi-camera-fill"></i>
+
+                        <p class="mb-2">
+                            Upload a professional photo
+                        </p>
+
+                        <input
+                            type="file"
+                            name="photo"
+                            accept="image/*"
+                        >
+
+                    </div>
+
+
+                    {% if leader and leader.photo %}
+
+                        <div class="image-preview">
+
+                            <small class="text-muted d-block mb-2">
+                                Current photo:
+                            </small>
+
+                            <img
+                                src="{{ leader.photo.url }}"
+                                alt="{{ leader.name }}"
+                            >
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- BIOGRAPHY -->
+
+                <div class="form-group">
+
+                    <label class="form-label" for="biography">
+                        Biography
+                    </label>
+
+                    <textarea
+                        id="biography"
+                        name="biography"
+                        class="form-control-premium"
+                        placeholder="Write a short biography about this leader..."
+                    >{% if leader %}{{ leader.biography }}{% endif %}</textarea>
+
+                </div>
+
+
+                <!-- QUOTE -->
+
+                <div class="form-group">
+
+                    <label class="form-label" for="quote">
+                        Quote
+                    </label>
+
+                    <textarea
+                        id="quote"
+                        name="quote"
+                        class="form-control-premium"
+                        placeholder="A memorable quote or message from the leader..."
+                    >{% if leader %}{{ leader.quote }}{% endif %}</textarea>
+
+                </div>
+
+
+                <!-- DISPLAY ORDER -->
+
+                <div class="form-group">
+
+                    <label class="form-label" for="display_order">
+                        Display Order
+                    </label>
+
+                    <input
+                        type="number"
+                        id="display_order"
+                        name="display_order"
+                        class="form-control-premium"
+                        min="0"
+                        value="{% if leader %}{{ leader.display_order }}{% else %}0{% endif %}"
+                    >
+
+                    <small class="text-muted">
+                        Lower numbers appear first.
+                    </small>
+
+                </div>
+
+
+                <!-- HOMEPAGE -->
+
+                <div class="checkbox-row">
+
+                    <input
+                        type="checkbox"
+                        id="show_on_homepage"
+                        name="show_on_homepage"
+                        {% if leader and leader.show_on_homepage %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <label for="show_on_homepage">
+                        Show this leader on the homepage
+                    </label>
+
+                </div>
+
+
+                <!-- SOCIAL / CONTACT -->
+
+                <div class="row">
+
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+
+                            <label class="form-label" for="facebook">
+                                Facebook URL
+                            </label>
+
+                            <input
+                                type="url"
+                                id="facebook"
+                                name="facebook"
+                                class="form-control-premium"
+                                placeholder="https://facebook.com/..."
+                                value="{% if leader %}{{ leader.facebook }}{% endif %}"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+
+                            <label class="form-label" for="instagram">
+                                Instagram URL
+                            </label>
+
+                            <input
+                                type="url"
+                                id="instagram"
+                                name="instagram"
+                                class="form-control-premium"
+                                placeholder="https://instagram.com/..."
+                                value="{% if leader %}{{ leader.instagram }}{% endif %}"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+
+                            <label class="form-label" for="email">
+                                Email
+                            </label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                class="form-control-premium"
+                                placeholder="leader@example.com"
+                                value="{% if leader %}{{ leader.email }}{% endif %}"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <div class="form-group">
+
+                            <label class="form-label" for="phone">
+                                Phone
+                            </label>
+
+                            <input
+                                type="text"
+                                id="phone"
+                                name="phone"
+                                class="form-control-premium"
+                                placeholder="+234..."
+                                value="{% if leader %}{{ leader.phone }}{% endif %}"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="form-actions">
+
+                    <a
+                        href="{% url 'core:dashboard' %}"
+                        class="btn-cancel"
+                    >
+                        <i class="bi bi-arrow-left"></i>
+                        Cancel
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="btn-submit"
+                    >
+
+                        {% if leader %}
+
+                            <i class="bi bi-check-lg"></i>
+                            Save Changes
+
+                        {% else %}
+
+                            <i class="bi bi-person-plus-fill"></i>
+                            Add Leader
+
+                        {% endif %}
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

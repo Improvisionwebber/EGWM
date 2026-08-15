@@ -8,47 +8,57 @@
     .testimony-detail .testimony-header {
         display: flex;
         align-items: center;
-        gap: 1.5rem;
-        margin-bottom: 2rem;
+        gap: 1.75rem;
+        margin-bottom: 2.5rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid var(--border);
     }
     .testimony-detail .testimony-header img {
-        width: 80px;
-        height: 80px;
+        width: 84px;
+        height: 84px;
         object-fit: cover;
         border-radius: 50%;
+        border: 2px solid var(--gold);
     }
+    .testimony-detail .testimony-header h2 { margin-bottom: .1rem; font-size: 1.6rem; }
     .testimony-detail .story {
-        font-size: 1.1rem;
-        line-height: 1.9;
-        color: #333;
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        line-height: 1.85;
+        color: #222;
     }
     .testimony-detail .story::before {
         content: '"';
-        font-size: 3rem;
+        font-size: 3.5rem;
         color: var(--gold);
-        font-family: Georgia, serif;
-        margin-right: 5px;
+        line-height: 0;
+        vertical-align: -20px;
+        margin-right: 6px;
+        display: inline-block;
     }
+    .related-testimony-card { transition: transform .3s var(--ease); }
+    .related-testimony-card:hover { transform: translateY(-4px); }
 </style>
 {% endblock %}
 
 {% block content %}
-<section class="section-padding">
+<section class="section-padding" style="padding-top: 4.5rem;">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 mx-auto testimony-detail">
+            <div class="col-lg-8 mx-auto testimony-detail" data-reveal>
+                <p class="eyebrow"><a href="{% url 'core:testimonies' %}" style="color:inherit;">Testimonies</a></p>
                 <div class="testimony-header">
                     {% if testimony.photo %}
                         <img src="{{ testimony.photo.url }}" alt="{{ testimony.full_name }}">
                     {% else %}
-                        <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width:80px;height:80px;">
+                        <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width:84px;height:84px;">
                             <i class="fas fa-user" style="font-size:2rem;color:#ccc;"></i>
                         </div>
                     {% endif %}
                     <div>
                         <h2>{{ testimony.full_name }}</h2>
-                        {% if testimony.title %}<p class="text-muted">{{ testimony.title }}</p>{% endif %}
-                        <small class="text-muted">{{ testimony.published_date|date:"F d, Y" }}</small>
+                        {% if testimony.title %}<p class="gold-text fw-semibold mb-1">{{ testimony.title }}</p>{% endif %}
+                        <small style="color: var(--muted);">{{ testimony.published_date|date:"F d, Y" }}</small>
                     </div>
                 </div>
 
@@ -58,16 +68,17 @@
 
                 <!-- Related Testimonies -->
                 {% if related_testimonies %}
-                    <hr class="my-5">
+                    <hr class="my-5" style="border-color: var(--border);">
+                    <p class="eyebrow">More Stories</p>
                     <h4 class="mb-3">More Testimonies</h4>
                     <div class="row g-3">
                         {% for rel in related_testimonies %}
                             <div class="col-md-6">
                                 <a href="{% url 'core:testimony_detail' rel.slug %}" class="text-decoration-none text-dark">
-                                    <div class="card premium-card">
+                                    <div class="card premium-card related-testimony-card">
                                         <div class="card-body">
-                                            <h6>{{ rel.full_name }}</h6>
-                                            <small class="text-muted">{{ rel.title|default:"Testimony" }}</small>
+                                            <h6 class="mb-1">{{ rel.full_name }}</h6>
+                                            <small style="color: var(--muted);">{{ rel.title|default:"Testimony" }}</small>
                                         </div>
                                     </div>
                                 </a>

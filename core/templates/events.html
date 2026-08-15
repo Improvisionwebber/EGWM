@@ -1,167 +1,561 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Events - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
+{% block title %}
+Events -
+{% if church_settings %}
+    {{ church_settings.church_name }}
+{% else %}
+    Embassy of God's Word Ministry
+{% endif %}
+{% endblock %}
 
 {% block extra_css %}
 <style>
+
+    .page-hero {
+        background: linear-gradient(160deg, var(--black) 0%, var(--charcoal) 100%);
+        color: #fff;
+        padding: calc(var(--nav-h) + 4rem) 0 4.5rem;
+        margin-top: calc(-1 * var(--nav-h));
+        text-align: center;
+    }
+    .page-hero h1 { color: #fff; font-size: clamp(2.2rem, 4.5vw, 3.2rem); }
+
+    .sub-heading {
+        font-family: var(--font-body);
+        font-weight: 700;
+        font-size: .82rem;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: var(--black);
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        margin-bottom: 1.75rem;
+        padding-bottom: .9rem;
+        border-bottom: 1px solid var(--border);
+    }
+    .sub-heading i { color: var(--gold); }
+
+    /* =========================================================
+       EVENT CARD
+    ========================================================= */
+
     .event-card {
         background: #fff;
         border: none;
-        border-radius: 16px;
+        border-radius: 18px;
         overflow: hidden;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-        transition: transform 0.3s, box-shadow 0.3s;
+        box-shadow: var(--shadow-sm);
+        transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
         height: 100%;
+        position: relative;
     }
+
     .event-card:hover {
         transform: translateY(-6px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+        box-shadow: var(--shadow-md);
     }
+
     .event-card img {
         width: 100%;
-        height: 200px;
+        height: 210px;
         object-fit: cover;
+        display: block;
     }
+    .event-card .no-image {
+        height: 210px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--off-white);
+    }
+
     .event-card .card-body {
         padding: 1.5rem;
     }
-    .event-card .event-meta {
+
+    /* =========================================================
+       ADMIN CONTROLS
+       ========================================================= */
+
+    .event-admin-controls {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        z-index: 20;
+
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        padding: 6px;
+        border-radius: 12px;
+
+        background: rgba(255,255,255,0.92);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+
+        box-shadow: 0 5px 18px rgba(0,0,0,0.15);
+    }
+
+    .event-admin-controls form {
+        margin: 0;
+        padding: 0;
+    }
+
+    .admin-icon {
+        width: 36px;
+        height: 36px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border: none;
+        border-radius: 9px;
+
+        text-decoration: none;
+        cursor: pointer;
+
+        font-size: 15px;
+
+        transition: all 0.2s ease;
+    }
+
+    .edit-icon {
+        background: #f5f5f5;
+        color: #333;
+    }
+
+    .edit-icon:hover {
+        background: var(--gold);
+        color: #000;
+        transform: translateY(-2px);
+    }
+
+    .delete-icon {
+        background: #fff1f1;
+        color: #dc3545;
+    }
+
+    .delete-icon:hover {
+        background: #dc3545;
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    /* =========================================================
+       EVENT META
+       ========================================================= */
+
+    .event-meta {
         font-size: 0.9rem;
-        color: #6c757d;
+        color: var(--muted);
     }
-    .event-card .event-meta i {
+
+    .event-meta p {
+        margin-bottom: 0.6rem;
+    }
+
+    .event-meta i {
         color: var(--gold);
-        margin-right: 5px;
+        margin-right: 6px;
     }
+
+    /* =========================================================
+       EVENT BADGE
+       ========================================================= */
+
     .event-badge {
         background: var(--gold);
         color: #000;
         padding: 0.3rem 1rem;
         border-radius: 50px;
         font-weight: 600;
-        font-size: 0.8rem;
+        font-size: 0.78rem;
         display: inline-block;
     }
-    .countdown-tag {
-        background: #1a1a1a;
-        color: var(--gold);
-        padding: 0.2rem 0.8rem;
+
+    /* =========================================================
+       PAST EVENTS
+       ========================================================= */
+
+    .past-event-card { opacity: 0.8; }
+    .past-event-card:hover { opacity: 1; }
+
+    .past-event-badge {
+        background: #e2e2e2;
+        color: #555;
+        padding: 0.3rem 1rem;
         border-radius: 50px;
-        font-size: 0.8rem;
+        font-weight: 600;
+        font-size: 0.78rem;
+        display: inline-block;
     }
+
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+    .empty-state i { font-size: 2.2rem; color: var(--gold); margin-bottom: 1rem; display: block; }
+
+    /* =========================================================
+       MOBILE
+       ========================================================= */
+
+    @media (max-width: 576px) {
+        .event-admin-controls { top: 10px; right: 10px; }
+        .admin-icon { width: 34px; height: 34px; }
+        .event-card img, .event-card .no-image { height: 190px; }
+    }
+
 </style>
 {% endblock %}
 
-{% block content %}
-<section class="section-padding">
-    <div class="container">
-        <h1 class="section-title text-center">Events</h1>
-        <p class="section-subtitle text-center mb-5">Join us for these upcoming and past events.</p>
 
-        <!-- Upcoming Events -->
-        <h2 class="h4 mb-3"><i class="fas fa-calendar-plus gold-text"></i> Upcoming Events</h2>
+{% block content %}
+
+<!-- HERO -->
+<section class="page-hero">
+    <div class="container">
+        <p class="eyebrow on-dark center justify-content-center d-flex">Gather With Us</p>
+        <h1>Events</h1>
+    </div>
+</section>
+
+<section class="section-padding" style="padding-top:3.5rem;">
+
+    <div class="container">
+
+        <p class="section-subtitle text-center mb-5">
+            Join us for these upcoming and past events.
+        </p>
+
+
+        <!-- =====================================================
+             UPCOMING EVENTS
+             ===================================================== -->
+
+        <h2 class="sub-heading">
+            <i class="fas fa-calendar-plus"></i>
+            Upcoming Events
+        </h2>
+
+
         {% if upcoming_events %}
-            <div class="row g-4 mb-5">
+
+            <div class="row g-4 mb-5" data-reveal>
+
                 {% for event in upcoming_events %}
-                    <div class="col-md-4">
+
+                    <div class="col-lg-4 col-md-6">
+
                         <div class="event-card">
-                            {% if event.banner %}
-                                <img src="{{ event.banner.url }}" alt="{{ event.title }}">
-                            {% else %}
-                                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                                    <i class="fas fa-calendar-alt" style="font-size: 3rem; color: var(--gold);"></i>
+
+                            {% if user.is_staff %}
+
+                                <div class="event-admin-controls">
+
+                                    <a
+                                        href="{% url 'core:dashboard_edit_event' event.pk %}"
+                                        class="admin-icon edit-icon"
+                                        title="Edit event"
+                                        aria-label="Edit {{ event.title }}"
+                                    >
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+
+                                    <form
+                                        method="post"
+                                        action="{% url 'core:dashboard_delete_event' event.pk %}"
+                                        onsubmit="return confirm('Are you sure you want to delete this event?');"
+                                    >
+
+                                        {% csrf_token %}
+
+                                        <button
+                                            type="submit"
+                                            class="admin-icon delete-icon"
+                                            title="Delete event"
+                                            aria-label="Delete {{ event.title }}"
+                                        >
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+
+                                    </form>
+
                                 </div>
+
                             {% endif %}
-                            <div class="card-body">
-                                <span class="event-badge">{{ event.get_event_type_display }}</span>
-                                <h5 class="card-title mt-2">{{ event.title }}</h5>
-                                <div class="event-meta">
-                                    <p><i class="fas fa-calendar-alt"></i> {{ event.start_date|date:"M d, Y" }}{% if event.end_date %} – {{ event.end_date|date:"M d, Y" }}{% endif %}</p>
-                                    <p><i class="fas fa-map-pin"></i> {{ event.venue }}</p>
-                                    <p>{{ event.description|truncatewords:15 }}</p>
-                                    {% if event.countdown %}
-                                        <p><span class="countdown-tag"><i class="fas fa-clock"></i> {{ event.start_date|timeuntil }} remaining</span></p>
-                                    {% endif %}
+
+
+                            {% if event.banner %}
+
+                                <img src="{{ event.banner.url }}" alt="{{ event.title }}" loading="lazy">
+
+                            {% else %}
+
+                                <div class="no-image">
+                                    <i class="fas fa-calendar-alt" style="font-size:3rem; color:var(--gold);"></i>
                                 </div>
-                                <a href="{% url 'core:event_detail' event.slug %}" class="btn btn-gold btn-sm">View Details</a>
+
+                            {% endif %}
+
+
+                            <div class="card-body">
+
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <span class="event-badge">
+                                        {{ event.get_event_type_display }}
+                                    </span>
+                                    {% if event.featured %}<span class="badge-featured">Featured</span>{% endif %}
+                                </div>
+
+                                <h5 class="card-title mt-3">
+                                    {{ event.title }}
+                                </h5>
+
+                                <div class="event-meta">
+
+                                    <p>
+                                        <i class="fas fa-calendar-alt"></i>
+                                        {{ event.start_date|date:"M d, Y" }}
+                                        {% if event.end_date %}
+                                            – {{ event.end_date|date:"M d, Y" }}
+                                        {% endif %}
+                                    </p>
+
+                                    <p>
+                                        <i class="fas fa-clock"></i>
+                                        {{ event.start_date|date:"g:i A" }}
+                                    </p>
+
+                                    <p>
+                                        <i class="fas fa-map-pin"></i>
+                                        {{ event.venue }}
+                                    </p>
+
+                                    {% if event.description %}
+                                        <p>{{ event.description|truncatewords:15 }}</p>
+                                    {% endif %}
+
+                                    {% if event.countdown %}
+                                        <p>
+                                            <span class="countdown-tag">
+                                                <i class="fas fa-clock"></i>
+                                                {{ event.start_date|timeuntil }} remaining
+                                            </span>
+                                        </p>
+                                    {% endif %}
+
+                                </div>
+
+                                <a href="{% url 'core:event_detail' event.slug %}" class="btn btn-gold btn-sm">
+                                    View Details
+                                </a>
+
                             </div>
+
                         </div>
+
                     </div>
+
                 {% endfor %}
+
             </div>
 
-            <!-- Pagination for upcoming -->
+
             {% if upcoming_events.paginator.num_pages > 1 %}
+
                 <nav class="mb-5">
                     <ul class="pagination justify-content-center">
+
                         {% if upcoming_events.has_previous %}
-                            <li class="page-item"><a class="page-link" href="?upcoming_page={{ upcoming_events.previous_page_number }}">Previous</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="?upcoming_page={{ upcoming_events.previous_page_number }}">Previous</a>
+                            </li>
                         {% endif %}
+
                         {% for num in upcoming_events.paginator.page_range %}
                             <li class="page-item {% if upcoming_events.number == num %}active{% endif %}">
                                 <a class="page-link" href="?upcoming_page={{ num }}">{{ num }}</a>
                             </li>
                         {% endfor %}
+
                         {% if upcoming_events.has_next %}
-                            <li class="page-item"><a class="page-link" href="?upcoming_page={{ upcoming_events.next_page_number }}">Next</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="?upcoming_page={{ upcoming_events.next_page_number }}">Next</a>
+                            </li>
                         {% endif %}
+
                     </ul>
                 </nav>
-            {% endif %}
-        {% else %}
-            <p class="mb-5">No upcoming events at this time. Check back later.</p>
-        {% endif %}
 
-        <!-- Past Events -->
-        <h2 class="h4 mb-3"><i class="fas fa-calendar-check gold-text"></i> Past Events</h2>
-        {% if past_events %}
-            <div class="row g-4">
-                {% for event in past_events %}
-                    <div class="col-md-4">
-                        <div class="event-card opacity-75">
-                            {% if event.banner %}
-                                <img src="{{ event.banner.url }}" alt="{{ event.title }}">
-                            {% else %}
-                                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                                    <i class="fas fa-calendar-alt" style="font-size: 3rem; color: #ccc;"></i>
-                                </div>
-                            {% endif %}
-                            <div class="card-body">
-                                <span class="event-badge" style="background:#ccc;">{{ event.get_event_type_display }}</span>
-                                <h5 class="card-title mt-2">{{ event.title }}</h5>
-                                <div class="event-meta">
-                                    <p><i class="fas fa-calendar-alt"></i> {{ event.start_date|date:"M d, Y" }}</p>
-                                    <p><i class="fas fa-map-pin"></i> {{ event.venue }}</p>
-                                </div>
-                                <a href="{% url 'core:event_detail' event.slug %}" class="btn btn-outline-gold btn-sm">View Details</a>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
+            {% endif %}
+
+
+        {% else %}
+
+            <div class="empty-state mb-5">
+                <i class="fas fa-calendar-alt"></i>
+                <p class="mb-0">More gatherings are coming soon.</p>
             </div>
 
-            <!-- Pagination for past -->
+        {% endif %}
+
+
+        <!-- =====================================================
+             PAST EVENTS
+             ===================================================== -->
+
+        <h2 class="sub-heading">
+            <i class="fas fa-calendar-check"></i>
+            Past Events
+        </h2>
+
+        {% if past_events %}
+
+            <div class="row g-4" data-reveal>
+
+                {% for event in past_events %}
+
+                    <div class="col-lg-4 col-md-6">
+
+                        <div class="event-card past-event-card">
+
+                            {% if user.is_staff %}
+
+                                <div class="event-admin-controls">
+
+                                    <a
+                                        href="{% url 'core:dashboard_edit_event' event.pk %}"
+                                        class="admin-icon edit-icon"
+                                        title="Edit event"
+                                        aria-label="Edit {{ event.title }}"
+                                    >
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+
+                                    <form
+                                        method="post"
+                                        action="{% url 'core:dashboard_delete_event' event.pk %}"
+                                        onsubmit="return confirm('Are you sure you want to delete this event?');"
+                                    >
+
+                                        {% csrf_token %}
+
+                                        <button
+                                            type="submit"
+                                            class="admin-icon delete-icon"
+                                            title="Delete event"
+                                            aria-label="Delete {{ event.title }}"
+                                        >
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            {% endif %}
+
+
+                            {% if event.banner %}
+
+                                <img src="{{ event.banner.url }}" alt="{{ event.title }}" loading="lazy">
+
+                            {% else %}
+
+                                <div class="no-image">
+                                    <i class="fas fa-calendar-alt" style="font-size:3rem; color:#aaa;"></i>
+                                </div>
+
+                            {% endif %}
+
+
+                            <div class="card-body">
+
+                                <span class="past-event-badge">
+                                    {{ event.get_event_type_display }}
+                                </span>
+
+                                <h5 class="card-title mt-3">
+                                    {{ event.title }}
+                                </h5>
+
+                                <div class="event-meta">
+
+                                    <p>
+                                        <i class="fas fa-calendar-alt"></i>
+                                        {{ event.start_date|date:"M d, Y" }}
+                                    </p>
+
+                                    <p>
+                                        <i class="fas fa-clock"></i>
+                                        {{ event.start_date|date:"g:i A" }}
+                                    </p>
+
+                                    <p>
+                                        <i class="fas fa-map-pin"></i>
+                                        {{ event.venue }}
+                                    </p>
+
+                                </div>
+
+                                <a href="{% url 'core:event_detail' event.slug %}" class="btn btn-outline-gold btn-sm">
+                                    View Details
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
             {% if past_events.paginator.num_pages > 1 %}
+
                 <nav class="mt-4">
                     <ul class="pagination justify-content-center">
+
                         {% if past_events.has_previous %}
-                            <li class="page-item"><a class="page-link" href="?past_page={{ past_events.previous_page_number }}">Previous</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="?past_page={{ past_events.previous_page_number }}">Previous</a>
+                            </li>
                         {% endif %}
+
                         {% for num in past_events.paginator.page_range %}
                             <li class="page-item {% if past_events.number == num %}active{% endif %}">
                                 <a class="page-link" href="?past_page={{ num }}">{{ num }}</a>
                             </li>
                         {% endfor %}
+
                         {% if past_events.has_next %}
-                            <li class="page-item"><a class="page-link" href="?past_page={{ past_events.next_page_number }}">Next</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="?past_page={{ past_events.next_page_number }}">Next</a>
+                            </li>
                         {% endif %}
+
                     </ul>
                 </nav>
+
             {% endif %}
+
+
         {% else %}
-            <p>No past events recorded.</p>
+
+            <div class="empty-state">
+                <i class="fas fa-calendar-check"></i>
+                <p class="mb-0">Past gatherings will be archived here once recorded.</p>
+            </div>
+
         {% endif %}
+
     </div>
+
 </section>
+
 {% endblock %}
