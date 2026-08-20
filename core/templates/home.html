@@ -4,676 +4,1168 @@
 {% block title %}Home - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
 
 {% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-    /* ============================================================
-       HERO
-       ============================================================ */
-    .hero-carousel { position: relative; margin-top: calc(-1 * var(--nav-h)); }
-    .hero-carousel .carousel-item {
-        min-height: 100vh;
-        background-size: cover;
-        background-position: center;
-        background-color: var(--charcoal);
-    }
-    .hero-carousel .carousel-item::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background:
-            radial-gradient(ellipse at 20% 30%, rgba(201,162,39,0.16), transparent 55%),
-            linear-gradient(180deg, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.72) 55%, rgba(10,10,10,0.92) 100%);
-        z-index: 1;
-    }
-    .hero-carousel .carousel-item.no-image {
-        background:
-            radial-gradient(ellipse at 15% 20%, rgba(201,162,39,0.22), transparent 50%),
-            radial-gradient(ellipse at 85% 80%, rgba(201,162,39,0.12), transparent 55%),
-            linear-gradient(160deg, #0A0A0A 0%, #171717 55%, #0A0A0A 100%);
-    }
-    .hero-carousel .carousel-caption {
-        z-index: 3;
-        bottom: auto; top: 50%; transform: translateY(-50%);
-        text-align: left;
-        max-width: 720px;
-        left: 8%;
-        right: auto;
-    }
-    .hero-carousel .carousel-caption h1 {
-        font-size: clamp(2.5rem, 6vw, 5rem);
-        font-weight: 700;
-        line-height: 1.06;
-        color: #fff;
-        margin-bottom: 1.25rem;
-    }
-    .hero-carousel .carousel-caption p {
-        font-family: var(--font-body);
-        font-size: 1.2rem;
-        font-weight: 300;
-        color: rgba(255,255,255,0.85);
-        max-width: 540px;
-        margin-bottom: 2.25rem;
-    }
-    .hero-carousel .carousel-indicators { z-index: 4; bottom: 2.5rem; }
-    .hero-carousel .carousel-indicators button {
-        width: 8px; height: 8px;
-        border-radius: 50%;
-        border: none;
-        background: rgba(255,255,255,0.35);
-        opacity: 1;
-        margin: 0 5px;
-        transition: all .3s var(--ease);
-    }
-    .hero-carousel .carousel-indicators .active { background: var(--gold); width: 22px; border-radius: 5px; }
-    .hero-carousel .carousel-control-prev,
-    .hero-carousel .carousel-control-next { width: 6%; z-index: 4; opacity: .6; }
-    .hero-carousel .carousel-control-prev:hover,
-    .hero-carousel .carousel-control-next:hover { opacity: 1; }
+/* ==========================================================================
+   EGWM PREMIUM HOME — scoped under .egwm so base.html styles stay intact
+   ========================================================================== */
+.egwm{
+  --e-gold:#B8912B;
+  --e-gold-light:#DFC77E;
+  --e-champagne:#EFE3BE;
+  --e-gold-deep:#7A5E14;
+  --e-white:#FFFFFF;
+  --e-ivory:#F7F5F0;
+  --e-ink:#0E0E0D;
+  --e-ink-soft:#33332F;
+  --e-muted:#6B6960;
+  --e-line:rgba(14,14,13,.10);
+  --e-gold-grad:linear-gradient(135deg,#7A5E14 0%,#B8912B 42%,#E4CF8C 66%,#A9832A 100%);
+  --e-ease:cubic-bezier(.22,.61,.36,1);
+  --e-shadow-sm:0 2px 10px rgba(14,14,13,.05);
+  --e-shadow:0 18px 48px rgba(14,14,13,.08);
+  --e-shadow-lg:0 40px 110px rgba(14,14,13,.13);
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;
+  color:var(--e-ink);
+  background:var(--e-white);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+.egwm *,.egwm *::before,.egwm *::after{box-sizing:border-box;}
+.egwm h1,.egwm h2,.egwm h3,.egwm .e-display{
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-weight:300;
+  letter-spacing:-.015em;
+  color:var(--e-ink);
+}
+.egwm p{color:var(--e-ink-soft);}
+.egwm em{font-style:italic;}
+.egwm a{text-decoration:none;}
+.egwm img{max-width:100%;}
 
-    /* Floating glass panel + seal watermark, sit above every slide */
-    .hero-overlay-layer { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
-    .hero-seal-watermark {
-        position: absolute;
-        right: 4%; top: 12%;
-        width: clamp(220px, 24vw, 420px); height: auto;
-        color: var(--gold);
-        opacity: .10;
-    }
-    .hero-glass-card {
-        position: absolute;
-        right: 7%; bottom: 14%;
-        width: 260px;
-        padding: 1.5rem 1.6rem;
-        background: rgba(255,255,255,0.08);
-        border: 1px solid rgba(255,255,255,0.18);
-        border-radius: 18px;
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
-        color: #fff;
-        pointer-events: auto;
-    }
-    .hero-glass-card .verse {
-        font-family: var(--font-display);
-        font-style: italic;
-        font-size: 1.02rem;
-        line-height: 1.5;
-    }
-    .hero-glass-card .ref { color: var(--gold-light); font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; margin-top: .7rem; display: block; }
-    @media (max-width: 991px) { .hero-glass-card, .hero-seal-watermark { display: none; } }
+.e-wrap{width:min(1280px,90vw);margin-inline:auto;}
+.e-section{position:relative;padding:clamp(5.5rem,11vw,11rem) 0;}
+.e-section--ivory{background:var(--e-ivory);}
+.e-section--white{background:var(--e-white);}
+.e-section--white + .e-section--white{border-top:1px solid var(--e-line);}
+.e-section--dark{background:var(--e-ink);color:#fff;}
+.e-section--dark h2,.e-section--dark h3{color:#fff;}
+.e-section--dark p{color:rgba(255,255,255,.72);}
 
-    .hero-scroll-cue {
-        position: absolute; left: 8%; bottom: 2.75rem; z-index: 4;
-        color: rgba(255,255,255,0.6);
-        font-size: .72rem; letter-spacing: .2em; text-transform: uppercase;
-        display: flex; align-items: center; gap: .6rem;
-    }
-    .hero-scroll-cue::after {
-        content: ''; width: 1px; height: 34px;
-        background: linear-gradient(180deg, var(--gold), transparent);
-        animation: scrollCue 2.2s ease-in-out infinite;
-    }
-    @keyframes scrollCue { 0%,100% { opacity: .3; } 50% { opacity: 1; } }
+.e-eyebrow{
+  display:inline-flex;align-items:center;gap:.7rem;
+  font-size:.66rem;font-weight:500;letter-spacing:.42em;text-transform:uppercase;
+  color:var(--e-gold-deep);margin-bottom:1.5rem;
+}
+.e-eyebrow::before{content:'';width:46px;height:1px;background:var(--e-gold);display:block;opacity:.75;}
+.e-section--dark .e-eyebrow{color:var(--e-gold-light);}
+.e-title{font-size:clamp(2.3rem,5vw,4.4rem);line-height:1.04;margin:0 0 1.35rem;}
+.e-lede{font-size:1.02rem;line-height:1.85;color:var(--e-muted);max-width:58ch;font-weight:300;}
+.e-section--dark .e-lede{color:rgba(255,255,255,.66);}
+.e-head-center{text-align:center;max-width:780px;margin:0 auto clamp(3.25rem,6.5vw,5.75rem);}
+.e-head-center .e-lede{margin-inline:auto;}
+.e-head-center .e-eyebrow::before{display:none;}
+.e-gold-text{
+  background:var(--e-gold-grad);-webkit-background-clip:text;background-clip:text;
+  color:transparent;-webkit-text-fill-color:transparent;
+}
 
-    /* ============================================================
-       WELCOME
-       ============================================================ */
-    .welcome-section { background: #fff; }
-    .service-card {
-        background: #fff;
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 1.75rem;
-        transition: all .35s var(--ease);
-        height: 100%;
-    }
-    .service-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); border-color: var(--gold); }
-    .service-card .service-icon { font-size: 1.9rem; color: var(--gold); margin-bottom: .6rem; }
+/* Buttons ---------------------------------------------------------------- */
+.e-btn{
+  position:relative;display:inline-flex;align-items:center;gap:.65rem;
+  padding:1.05rem 2.4rem;border-radius:2px;border:1px solid transparent;
+  font-size:.72rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;
+  transition:transform .45s var(--e-ease),box-shadow .45s var(--e-ease),background .45s var(--e-ease),color .35s var(--e-ease),border-color .35s var(--e-ease);
+  will-change:transform;cursor:pointer;
+}
+.e-btn--gold{background:var(--e-gold-grad);color:#14100A;box-shadow:0 10px 30px rgba(184,145,43,.24);}
+.e-btn--gold:hover{color:#14100A;transform:translateY(-2px);box-shadow:0 18px 44px rgba(184,145,43,.34);}
+.e-btn--ghost{border-color:rgba(255,255,255,.32);color:#fff;background:rgba(255,255,255,.04);backdrop-filter:blur(8px);}
+.e-btn--ghost:hover{border-color:var(--e-gold-light);color:var(--e-gold-light);transform:translateY(-2px);}
+.e-btn--outline{border-color:var(--e-gold);color:var(--e-gold-deep);background:transparent;}
+.e-btn--outline:hover{background:var(--e-gold);color:#14100A;transform:translateY(-2px);}
+.e-btn--dark{background:var(--e-ink);color:#fff;}
+.e-btn--dark:hover{color:var(--e-champagne);transform:translateY(-2px);}
+.egwm a.e-link{
+  display:inline-flex;align-items:center;gap:.55rem;font-size:.72rem;font-weight:500;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--e-gold-deep);
+  border-bottom:1px solid rgba(201,162,39,.4);padding-bottom:.35rem;transition:gap .35s var(--e-ease),color .35s var(--e-ease);
+}
+.egwm a.e-link:hover{gap:1rem;color:var(--e-gold);}
+.e-section--dark a.e-link{color:var(--e-gold-light);}
 
-    /* ============================================================
-       PASTOR / EDITORIAL FEATURE
-       ============================================================ */
-    .pastor-card {
-        background: #fff;
-        border-radius: var(--radius-lg);
-        overflow: hidden;
-        box-shadow: var(--shadow-md);
-    }
-    .pastor-card img { width: 100%; height: 420px; object-fit: cover; display: block; }
-    .pastor-card .no-photo {
-        height: 420px;
-        display: flex; align-items: center; justify-content: center;
-        background: linear-gradient(160deg, var(--charcoal), var(--black));
-    }
-    .pastor-card .no-photo .initial-ring {
-        width: 140px; height: 140px; border-radius: 50%;
-        border: 1.5px solid var(--gold);
-        display: flex; align-items: center; justify-content: center;
-        font-family: var(--font-display); font-size: 2.6rem; color: var(--gold-light);
-    }
-    .pastor-card .pastor-content { padding: 2.5rem; }
-    .pastor-card .pastor-quote {
-        font-family: var(--font-display);
-        font-style: italic;
-        font-size: 1.25rem;
-        color: var(--black);
-        border-left: 3px solid var(--gold);
-        padding-left: 1.25rem;
-        margin: 1.25rem 0;
-    }
+/* Reveal — only hidden when JS is active, so content never disappears ----- */
+.egwm.e-js .e-reveal{opacity:0;transform:translate3d(0,28px,0);transition:opacity 1.05s var(--e-ease),transform 1.15s var(--e-ease);}
+.egwm.e-js .e-reveal.is-in{opacity:1;transform:none;}
+.egwm.e-js .e-reveal[data-delay="1"]{transition-delay:.09s;}
+.egwm.e-js .e-reveal[data-delay="2"]{transition-delay:.18s;}
+.egwm.e-js .e-reveal[data-delay="3"]{transition-delay:.27s;}
+.egwm.e-js .e-reveal[data-delay="4"]{transition-delay:.36s;}
 
-    /* ============================================================
-       SCRIPTURE STRIP
-       ============================================================ */
-    .scripture-strip {
-        background: linear-gradient(160deg, var(--black) 0%, var(--charcoal) 100%);
-        color: #fff;
-        padding: 6rem 0;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-    }
-    .scripture-strip blockquote {
-        font-family: var(--font-display);
-        font-style: italic;
-        font-size: clamp(1.6rem, 3.4vw, 2.6rem);
-        line-height: 1.4;
-        max-width: 820px;
-        margin: 0 auto 1.25rem;
-    }
-    .scripture-strip cite { color: var(--gold-light); font-style: normal; letter-spacing: .1em; text-transform: uppercase; font-size: .85rem; }
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+.e-hero{
+  position:relative;min-height:100svh;display:flex;align-items:center;
+  background:#08080A;color:#fff;overflow:hidden;
+  margin-top:calc(-1 * var(--nav-h,0px));
+  padding:calc(var(--nav-h,0px) + 4rem) 0 5rem;
+  perspective:1400px;
+}
+.e-hero__media{position:absolute;inset:0;z-index:0;}
+.e-hero__video,.e-hero__slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.e-hero__slide{background-size:cover;background-position:center;opacity:0;transform:scale(1.09);filter:blur(8px);transition:opacity 1.6s var(--e-ease),transform 7s linear,filter 1.6s var(--e-ease);}
+.e-hero__slide.is-active{opacity:1;transform:scale(1);filter:blur(0);}
+.e-hero__scrim{
+  position:absolute;inset:0;z-index:1;
+  background:
+    radial-gradient(60% 55% at 78% 42%,rgba(201,162,39,.28),transparent 62%),
+    radial-gradient(50% 50% at 12% 18%,rgba(244,231,181,.10),transparent 60%),
+    linear-gradient(100deg,rgba(6,6,8,.94) 0%,rgba(6,6,8,.80) 42%,rgba(6,6,8,.52) 78%,rgba(6,6,8,.72) 100%);
+}
+.e-hero__grid{
+  position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.28;
+  background-image:linear-gradient(rgba(201,162,39,.14) 1px,transparent 1px),linear-gradient(90deg,rgba(201,162,39,.14) 1px,transparent 1px);
+  background-size:120px 120px;
+  mask-image:radial-gradient(65% 60% at 70% 50%,#000 0%,transparent 78%);
+  -webkit-mask-image:radial-gradient(65% 60% at 70% 50%,#000 0%,transparent 78%);
+}
+#eHeroParticles{position:absolute;inset:0;z-index:2;pointer-events:none;}
+.e-hero__inner{position:relative;z-index:4;width:min(1240px,92vw);margin-inline:auto;display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2rem,5vw,4.5rem);align-items:center;}
+.e-hero__copy{max-width:640px;transform-style:preserve-3d;}
+.e-hero__eyebrow{
+  display:inline-flex;align-items:center;gap:.75rem;font-size:.68rem;font-weight:600;
+  letter-spacing:.36em;text-transform:uppercase;color:var(--e-gold-light);margin-bottom:1.5rem;
+}
+.e-hero__eyebrow::before{content:'';width:44px;height:1px;background:linear-gradient(90deg,transparent,var(--e-gold));}
+.e-hero h1{font-size:clamp(2.7rem,6.2vw,5.4rem);line-height:1.02;color:#fff;margin:0 0 1.5rem;font-weight:300;}
+.e-hero h1 em{font-style:italic;background:var(--e-gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;}
+.e-hero__sub{font-size:1.08rem;line-height:1.85;color:rgba(255,255,255,.76);max-width:46ch;margin-bottom:2.5rem;font-weight:300;}
+.e-hero__actions{display:flex;flex-wrap:wrap;gap:1rem;}
+.e-hero__slidecopy{display:none;}
+.e-hero__slidecopy.is-active{display:block;animation:eHeroCopy 1.1s var(--e-ease) both;}
+@keyframes eHeroCopy{from{opacity:0;transform:translate3d(0,26px,-40px);filter:blur(6px);}to{opacity:1;transform:none;filter:blur(0);}}
 
-    /* ============================================================
-       TESTIMONIES (dark)
-       ============================================================ */
-    .testimonial-card {
-        background: rgba(255,255,255,0.04);
-        border: 1px solid var(--border-invert);
-        border-radius: var(--radius);
-        padding: 2rem;
-        height: 100%;
-        transition: all .3s var(--ease);
-    }
-    .testimonial-card:hover { border-color: var(--gold); transform: translateY(-4px); }
-    .testimonial-card .testimonial-text { font-size: 1.02rem; line-height: 1.75; color: rgba(255,255,255,0.88); }
-    .testimonial-card .testimonial-author { font-weight: 700; color: #fff; }
+/* 3D stage */
+.e-hero__stage{position:relative;height:min(64vh,620px);display:flex;align-items:center;justify-content:center;transform-style:preserve-3d;}
+#eCrossCanvas{position:absolute;inset:0;width:100%;height:100%;}
+.e-halo{position:absolute;width:78%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(201,162,39,.38) 0%,rgba(201,162,39,.10) 42%,transparent 70%);filter:blur(22px);animation:eBreath 9s ease-in-out infinite;}
+@keyframes eBreath{0%,100%{transform:scale(1);opacity:.85;}50%{transform:scale(1.09);opacity:1;}}
+.e-ring{position:absolute;border-radius:50%;border:1px solid rgba(232,213,138,.30);}
+.e-ring--a{width:62%;aspect-ratio:1;animation:eSpin 34s linear infinite;}
+.e-ring--b{width:82%;aspect-ratio:1;border-style:dashed;border-color:rgba(201,162,39,.22);animation:eSpin 58s linear reverse infinite;}
+@keyframes eSpin{to{transform:rotate(360deg);}}
 
-    /* ============================================================
-       GALLERY PREVIEW
-       ============================================================ */
-    .gallery-grid a { display: block; overflow: hidden; border-radius: 10px; position: relative; }
-    .gallery-grid img { width: 100%; height: 200px; object-fit: cover; transition: transform .5s var(--ease); }
-    .gallery-grid a:hover img { transform: scale(1.08); }
-    .gallery-grid a::after {
-        content: '';
-        position: absolute; inset: 0;
-        background: linear-gradient(0deg, rgba(0,0,0,.35), transparent 55%);
-        opacity: 0; transition: opacity .3s;
-    }
-    .gallery-grid a:hover::after { opacity: 1; }
+/* CSS 3D cross fallback (also base layer) */
+.e-cross3d{position:relative;width:clamp(150px,17vw,220px);height:clamp(240px,28vw,360px);transform-style:preserve-3d;animation:eFloat 7s ease-in-out infinite;}
+.e-cross3d__bar{position:absolute;border-radius:8px;background:linear-gradient(135deg,#6E520C 0%,#C9A227 26%,#F7EEC8 48%,#C9A227 70%,#7A5A0E 100%);box-shadow:0 26px 70px rgba(201,162,39,.42),inset 0 0 22px rgba(255,255,255,.28);}
+.e-cross3d__bar--v{left:50%;top:0;width:22%;height:100%;transform:translateX(-50%) translateZ(24px);}
+.e-cross3d__bar--h{top:30%;left:0;width:100%;height:15%;transform:translateZ(40px);}
+.e-cross3d__bar--vb{left:50%;top:0;width:22%;height:100%;transform:translateX(-50%) translateZ(-26px);filter:brightness(.45) blur(1px);}
+.e-cross3d__bar--hb{top:30%;left:0;width:100%;height:15%;transform:translateZ(-26px);filter:brightness(.45) blur(1px);}
+.e-cross3d__glow{position:absolute;inset:-16%;background:radial-gradient(circle,rgba(244,231,181,.34),transparent 62%);filter:blur(26px);transform:translateZ(-60px);}
+@keyframes eFloat{0%,100%{transform:translateY(-10px) rotateY(-12deg);}50%{transform:translateY(12px) rotateY(12deg);}}
+.e-webgl-on .e-cross3d{display:none;}
 
-    /* ============================================================
-       CTA BANDS
-       ============================================================ */
-    .cta-band {
-        background: linear-gradient(135deg, var(--black) 0%, var(--charcoal) 100%);
-        color: #fff;
-        padding: 5.5rem 0;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-    }
-    .cta-band h2 { font-size: clamp(1.9rem, 3.6vw, 2.8rem); margin-bottom: .75rem; }
-    .cta-band p { color: rgba(255,255,255,0.72); max-width: 560px; margin: 0 auto 2rem; }
+.e-hero__card{
+  position:absolute;right:-2%;bottom:4%;width:255px;padding:1.5rem 1.6rem;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);border-radius:3px;
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);transform:translateZ(70px);
+}
+.e-hero__card .e-verse{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.06rem;line-height:1.55;color:#fff;}
+.e-hero__card .e-ref{display:block;margin-top:.75rem;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;color:var(--e-gold-light);}
 
-    .map-container { border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); border: 1px solid var(--border); }
-    .map-container iframe { width: 100%; height: 380px; border: 0; display: block; }
-    .map-fallback { height: 380px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--off-white); text-align: center; padding: 2rem; }
+.e-hero__dots{position:absolute;left:0;bottom:2.4rem;z-index:5;display:flex;gap:.55rem;}
+.e-hero__dots button{width:9px;height:9px;padding:0;border:none;border-radius:999px;background:rgba(255,255,255,.34);transition:all .4s var(--e-ease);cursor:pointer;}
+.e-hero__dots button[aria-selected="true"]{width:30px;background:var(--e-gold);}
+.e-hero__cue{position:absolute;right:0;bottom:2.6rem;z-index:5;display:flex;align-items:center;gap:.7rem;font-size:.64rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.55);}
+.e-hero__cue::after{content:'';width:1px;height:38px;background:linear-gradient(180deg,var(--e-gold),transparent);animation:eCue 2.4s ease-in-out infinite;}
+@keyframes eCue{0%,100%{opacity:.25;}50%{opacity:1;}}
+.e-hero__foot{position:absolute;z-index:5;left:0;right:0;bottom:0;width:min(1240px,92vw);margin-inline:auto;height:0;}
+
+/* ==========================================================================
+   CARDS / DEPTH SYSTEM
+   ========================================================================== */
+.e-tilt{transform-style:preserve-3d;transition:transform .6s var(--e-ease),box-shadow .6s var(--e-ease),border-color .5s var(--e-ease);will-change:transform;}
+.e-card{
+  position:relative;background:#fff;border:1px solid var(--e-line);border-radius:3px;
+  padding:2.15rem;height:100%;box-shadow:var(--e-shadow-sm);overflow:hidden;
+}
+.e-card::after{content:'';position:absolute;inset:0;border-radius:3px;border:1px solid transparent;transition:border-color .5s var(--e-ease);pointer-events:none;}
+.e-card:hover{box-shadow:var(--e-shadow);}
+.e-card:hover::after{border-color:rgba(201,162,39,.55);}
+.e-card__num{font-family:'Cormorant Garamond',serif;font-size:.9rem;letter-spacing:.3em;color:var(--e-gold);}
+.e-grid{display:grid;gap:clamp(1.2rem,2.4vw,2rem);}
+.e-grid--2{grid-template-columns:repeat(2,1fr);}
+.e-grid--3{grid-template-columns:repeat(3,1fr);}
+.e-shine{position:relative;overflow:hidden;}
+.e-shine::before{
+  content:'';position:absolute;top:0;left:-70%;width:45%;height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);
+  transform:skewX(-18deg);transition:left .9s var(--e-ease);pointer-events:none;z-index:3;
+}
+.e-shine:hover::before{left:130%;}
+
+/* Welcome ---------------------------------------------------------------- */
+.e-welcome{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,5rem);align-items:center;}
+.e-welcome__art{position:relative;aspect-ratio:4/4.4;display:flex;align-items:center;justify-content:center;perspective:1200px;}
+.e-welcome__img{position:absolute;inset:8% 6%;border-radius:3px;object-fit:cover;width:88%;height:84%;box-shadow:var(--e-shadow-lg);}
+.e-welcome__ring{position:absolute;border-radius:50%;border:1px solid rgba(201,162,39,.35);}
+.e-welcome__ring--1{width:96%;aspect-ratio:1;animation:eSpin 46s linear infinite;}
+.e-welcome__ring--2{width:74%;aspect-ratio:1;border-style:dashed;animation:eSpin 30s linear reverse infinite;}
+.e-mv{display:grid;gap:1rem;margin-top:2.5rem;}
+.e-mv .e-card{padding:1.6rem 1.7rem;}
+.e-mv h3{font-size:1.35rem;margin:.35rem 0 .5rem;}
+.e-mv p{font-size:.95rem;line-height:1.75;color:var(--e-muted);margin:0;}
+
+/* Service cards ---------------------------------------------------------- */
+.e-service{
+  background:linear-gradient(165deg,rgba(255,255,255,.96),rgba(250,249,246,.92));
+  border:1px solid var(--e-line);border-radius:3px;padding:2.3rem 2rem;height:100%;
+  box-shadow:0 34px 70px -40px rgba(17,17,17,.4);backdrop-filter:blur(6px);
+}
+.e-service__day{font-size:.68rem;letter-spacing:.28em;text-transform:uppercase;color:var(--e-gold-deep);font-weight:600;}
+.e-service__time{font-family:'Cormorant Garamond',serif;font-size:clamp(1.7rem,2.5vw,2.3rem);line-height:1.2;margin:.6rem 0 .35rem;}
+.e-service__name{font-size:1rem;font-weight:500;color:var(--e-ink);}
+.e-service__venue{font-size:.86rem;color:var(--e-muted);margin-top:.6rem;}
+.e-service__rule{width:44px;height:2px;background:var(--e-gold-grad);margin-top:1.4rem;border-radius:2px;}
+
+/* Leadership ------------------------------------------------------------- */
+.e-leader{display:grid;grid-template-columns:.95fr 1.05fr;gap:clamp(2rem,5vw,4.5rem);align-items:center;}
+.e-leader__frame{position:relative;perspective:1100px;}
+.e-leader__ring{position:absolute;inset:-9%;border-radius:50%;border:1px solid rgba(201,162,39,.32);animation:eSpin 42s linear infinite;}
+.e-leader__photo{position:relative;border-radius:3px;overflow:hidden;box-shadow:var(--e-shadow-lg);background:var(--e-ink);}
+.e-leader__photo img{width:100%;height:clamp(380px,52vw,560px);object-fit:cover;display:block;}
+.e-leader__photo::after{content:'';position:absolute;inset:12px;border:1px solid rgba(232,213,138,.55);border-radius:3px;pointer-events:none;}
+.e-leader__initial{height:clamp(380px,52vw,560px);display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#1A1A1A,#050505);}
+.e-leader__initial span{width:150px;height:150px;border-radius:50%;border:1px solid var(--e-gold);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:3rem;color:var(--e-gold-light);}
+.e-leader__quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.4rem,2.3vw,2rem);line-height:1.5;border-left:2px solid var(--e-gold);padding-left:1.5rem;margin:1.6rem 0 2rem;color:var(--e-ink);}
+.e-leader__role{font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--e-gold-deep);font-weight:600;}
+
+/* Scripture -------------------------------------------------------------- */
+.e-scripture{background:var(--e-ivory);text-align:center;overflow:hidden;}
+.e-scripture__inner{position:relative;perspective:1000px;}
+.e-scripture blockquote{
+  position:relative;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
+  font-size:clamp(1.7rem,4.2vw,3.4rem);line-height:1.34;max-width:20ch;margin:0 auto 1.6rem;
+  color:var(--e-ink);text-shadow:0 30px 60px rgba(17,17,17,.10);
+}
+.e-scripture cite{font-style:normal;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--e-gold-deep);}
+.e-goldline{height:1px;width:min(520px,70vw);margin:0 auto 2rem;background:linear-gradient(90deg,transparent,var(--e-gold),transparent);position:relative;overflow:hidden;}
+.e-goldline::after{content:'';position:absolute;top:0;left:-40%;width:40%;height:100%;background:linear-gradient(90deg,transparent,#fff8dd,transparent);animation:eSweep 3.6s var(--e-ease) infinite;}
+@keyframes eSweep{to{left:110%;}}
+.e-scripture__orb{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(201,162,39,.16),transparent 68%);filter:blur(28px);}
+
+/* Devotional ------------------------------------------------------------- */
+.e-dev{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(2rem,4.5vw,4rem);align-items:center;}
+.e-dev__frame{position:relative;border-radius:3px;overflow:hidden;box-shadow:var(--e-shadow-lg);}
+.e-dev__frame img{width:100%;height:clamp(320px,44vw,500px);object-fit:cover;display:block;transition:transform 1.2s var(--e-ease);}
+.e-dev__frame:hover img{transform:scale(1.06);}
+.e-dev__frame::after{content:'';position:absolute;inset:14px;border:1px solid rgba(255,255,255,.4);border-radius:1px;pointer-events:none;}
+.e-dev__placeholder{height:clamp(320px,44vw,500px);display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#151515,#000);color:var(--e-gold-light);font-family:'Cormorant Garamond',serif;font-size:2rem;}
+.e-dev__scripture{display:inline-block;font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--e-gold-deep);border:1px solid rgba(201,162,39,.4);border-radius:999px;padding:.5rem 1.1rem;margin-bottom:1.2rem;}
+.e-dev__meta{font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:var(--e-muted);margin:1.4rem 0 2rem;}
+
+/* Events ----------------------------------------------------------------- */
+.e-event{background:#fff;border:1px solid var(--e-line);border-radius:3px;overflow:hidden;height:100%;display:flex;flex-direction:column;box-shadow:var(--e-shadow-sm);}
+.e-event__media{position:relative;height:230px;overflow:hidden;background:linear-gradient(160deg,#161616,#040404);}
+.e-event__media img{width:100%;height:100%;object-fit:cover;transition:transform 1.1s var(--e-ease);}
+.e-event:hover .e-event__media img{transform:scale(1.07);}
+.e-event__type{position:absolute;left:1rem;top:1rem;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;background:var(--e-gold-grad);color:#1B1405;padding:.4rem .9rem;border-radius:999px;font-weight:600;}
+.e-event__flag{position:absolute;right:1rem;top:1rem;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;background:rgba(17,17,17,.78);color:var(--e-gold-light);padding:.4rem .9rem;border-radius:999px;}
+.e-event__body{padding:1.8rem;display:flex;flex-direction:column;gap:.6rem;flex:1;}
+.e-event__body h3{font-size:1.5rem;margin:0;}
+.e-event__row{font-size:.85rem;color:var(--e-muted);}
+.e-event__count{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--e-gold-deep);}
+.e-event__body .e-link{margin-top:auto;align-self:flex-start;}
+.e-event__noimg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--e-gold);font-family:'Cormorant Garamond',serif;font-size:2.4rem;}
+
+/* Testimonies ------------------------------------------------------------ */
+.e-section--dark{position:relative;overflow:hidden;}
+.e-dark-glow{position:absolute;width:60vw;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(201,162,39,.16),transparent 66%);filter:blur(40px);pointer-events:none;}
+.e-testi{
+  position:relative;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.12);
+  border-radius:3px;padding:2.2rem;height:100%;backdrop-filter:blur(10px);
+  display:flex;flex-direction:column;gap:1rem;transition:transform .6s var(--e-ease),border-color .5s var(--e-ease),background .5s var(--e-ease);
+}
+.e-testi:hover{border-color:rgba(201,162,39,.6);background:rgba(255,255,255,.07);}
+.e-testi__mark{font-family:'Cormorant Garamond',serif;font-size:3.4rem;line-height:.6;color:var(--e-gold);}
+.e-testi__story{color:rgba(255,255,255,.84);line-height:1.8;font-size:1rem;font-weight:300;}
+.e-testi__who{display:flex;align-items:center;gap:.9rem;margin-top:auto;}
+.e-testi__who img,.e-testi__avatar{width:48px;height:48px;border-radius:50%;object-fit:cover;border:1px solid rgba(201,162,39,.6);}
+.e-testi__avatar{display:flex;align-items:center;justify-content:center;color:var(--e-gold-light);font-family:'Cormorant Garamond',serif;font-size:1.3rem;background:rgba(201,162,39,.14);}
+.e-testi__name{color:#fff;font-weight:600;font-size:.95rem;}
+.e-testi__title{color:rgba(255,255,255,.55);font-size:.78rem;}
+
+/* Gallery ---------------------------------------------------------------- */
+.e-gallery{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:170px;gap:14px;}
+.e-gallery a{position:relative;display:block;overflow:hidden;border-radius:3px;border:1px solid rgba(201,162,39,.22);box-shadow:var(--e-shadow-sm);transition:transform .6s var(--e-ease),box-shadow .6s var(--e-ease);}
+.e-gallery a img{width:100%;height:100%;object-fit:cover;transition:transform 1.1s var(--e-ease);}
+.e-gallery a:hover{box-shadow:var(--e-shadow);}
+.e-gallery a:hover img{transform:scale(1.09);}
+.e-gallery a::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.22),transparent 42%,rgba(0,0,0,.32));opacity:0;transition:opacity .5s var(--e-ease);}
+.e-gallery a:hover::after{opacity:1;}
+.e-gallery a:nth-child(1){grid-column:span 2;grid-row:span 2;}
+.e-gallery a:nth-child(4){grid-row:span 2;}
+.e-gallery a:nth-child(5){grid-column:span 2;}
+
+/* Prayer / first visit --------------------------------------------------- */
+.e-prayer{position:relative;text-align:center;background:var(--e-white);overflow:hidden;}
+.e-prayer__orb{
+  position:absolute;left:50%;top:50%;translate:-50% -50%;width:min(680px,80vw);aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,rgba(244,231,181,.55) 0%,rgba(201,162,39,.14) 46%,transparent 70%);
+  filter:blur(6px);box-shadow:inset 0 0 120px rgba(201,162,39,.22);animation:eBreath 11s ease-in-out infinite;
+}
+.e-prayer__inner{position:relative;z-index:2;}
+.e-prayer h2{font-size:clamp(2.6rem,7vw,5.4rem);font-weight:300;margin-bottom:1rem;}
+.e-visit{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,4rem);align-items:center;}
+.e-visit__img{border-radius:3px;overflow:hidden;box-shadow:var(--e-shadow-lg);}
+.e-visit__img img{width:100%;height:clamp(300px,40vw,460px);object-fit:cover;display:block;}
+.e-linegrow{height:1px;background:var(--e-gold);width:0;transition:width 1.4s var(--e-ease);margin:1.5rem 0;}
+.is-in .e-linegrow,.e-reveal.is-in .e-linegrow{width:100%;}
+
+/* Newsletter ------------------------------------------------------------- */
+.e-news{background:var(--e-ink);color:#fff;position:relative;overflow:hidden;}
+.e-news__grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,4rem);align-items:center;}
+.e-news h2{color:#fff;}
+.e-news form{display:grid;gap:1rem;}
+.egwm .e-news input{
+  width:100%;padding:1.05rem 1.3rem;border-radius:3px;background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.18);color:#fff;font-size:.95rem;transition:border-color .35s var(--e-ease),background .35s var(--e-ease);
+}
+.egwm .e-news input::placeholder{color:rgba(255,255,255,.42);}
+.egwm .e-news input:focus{outline:none;border-color:var(--e-gold);background:rgba(255,255,255,.09);}
+.e-news .e-btn{justify-content:center;}
+
+/* Map -------------------------------------------------------------------- */
+.e-map{border-radius:3px;overflow:hidden;border:1px solid rgba(201,162,39,.4);box-shadow:var(--e-shadow);background:#fff;}
+.e-map iframe{width:100%;height:420px;border:0;display:block;filter:grayscale(.25) contrast(1.03);}
+.e-map__fallback{min-height:340px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem 2rem;background:var(--e-ivory);gap:.6rem;}
+
+.e-empty{text-align:center;padding:3.5rem 2rem;border:1px dashed rgba(201,162,39,.45);border-radius:3px;color:var(--e-muted);background:rgba(250,249,246,.6);}
+.e-section--dark .e-empty{background:rgba(255,255,255,.03);color:rgba(255,255,255,.6);}
+.e-center{text-align:center;}
+.e-mt{margin-top:clamp(2.5rem,5vw,4rem);}
+
+/* Responsive ------------------------------------------------------------- */
+@media (max-width:1100px){
+  .e-gallery{grid-template-columns:repeat(3,1fr);}
+}
+@media (max-width:991px){
+  .e-hero{min-height:auto;padding:calc(var(--nav-h,0px) + 6rem) 0 6rem;}
+  .e-hero__inner{grid-template-columns:1fr;}
+  .e-hero__stage{height:340px;order:-1;}
+  .e-hero__card,.e-hero__cue{display:none;}
+  .e-welcome,.e-leader,.e-dev,.e-visit,.e-news__grid{grid-template-columns:1fr;}
+  .e-grid--3,.e-grid--2{grid-template-columns:1fr;}
+  .e-dev__frame,.e-leader__frame{order:-1;}
+  .e-gallery{grid-template-columns:repeat(2,1fr);grid-auto-rows:150px;}
+  .e-gallery a:nth-child(4){grid-row:span 1;}
+  .e-gallery a:nth-child(5){grid-column:span 2;}
+}
+@media (max-width:600px){
+  .e-hero h1{font-size:clamp(2.2rem,10vw,3rem);}
+  .e-hero__actions .e-btn{width:100%;justify-content:center;}
+  .e-card,.e-service,.e-testi{padding:1.6rem;}
+  .e-gallery{grid-template-columns:1fr;grid-auto-rows:200px;}
+  .e-gallery a:nth-child(1),.e-gallery a:nth-child(5){grid-column:span 1;grid-row:span 1;}
+}
+@media (prefers-reduced-motion:reduce){
+  .egwm *,.egwm *::before,.egwm *::after{animation:none!important;transition-duration:.01ms!important;}
+  .e-reveal{opacity:1;transform:none;filter:none;}
+  .e-hero__video{display:none;}
+}
 </style>
 {% endblock %}
 
 {% block content %}
+<div class="egwm">
 
-<!-- ========== HERO CAROUSEL ========== -->
-<section class="hero-carousel" data-parallax-scope>
-    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6500">
+  <!-- =====================================================================
+       HERO
+       ===================================================================== -->
+  <section class="e-hero" id="eHero" aria-label="Welcome">
+    <div class="e-hero__media">
+      <video class="e-hero__video" id="eHeroVideo" autoplay muted loop playsinline preload="none"
+             poster="{% if hero_slides %}{% for slide in hero_slides %}{% if forloop.first and slide.image %}{{ slide.image.url }}{% endif %}{% endfor %}{% endif %}"
+             aria-hidden="true" tabindex="-1">
+        <source src="https://cdn.coverr.co/videos/coverr-light-rays-through-a-window-2606/1080p.mp4" type="video/mp4">
+      </video>
+
+      {% if hero_slides %}
+        {% for slide in hero_slides %}
+          <div class="e-hero__slide{% if forloop.first %} is-active{% endif %}" data-hero-slide="{{ forloop.counter0 }}"
+               {% if slide.image %}style="background-image:url('{{ slide.image.url }}')"{% endif %} role="img"
+               aria-label="{{ slide.title|default:'Hero image' }}"></div>
+        {% endfor %}
+      {% else %}
+        <div class="e-hero__slide is-active" style="background-image:url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&w=2000&q=80')" role="img" aria-label="Cathedral light"></div>
+      {% endif %}
+    </div>
+
+    <div class="e-hero__scrim" aria-hidden="true"></div>
+    <div class="e-hero__grid" aria-hidden="true"></div>
+    <canvas id="eHeroParticles" aria-hidden="true"></canvas>
+
+    <div class="e-hero__inner">
+      <div class="e-hero__copy" data-parallax="0.4">
+        <span class="e-hero__eyebrow">{% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}</span>
+
         {% if hero_slides %}
-            <div class="carousel-indicators">
-                {% for slide in hero_slides %}
-                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %} aria-label="Slide {{ forloop.counter }}"></button>
-                {% endfor %}
-            </div>
-            <div class="carousel-inner">
-                {% for slide in hero_slides %}
-                    <div class="carousel-item {% if forloop.first %}active{% endif %}" style="background-image: url('{{ slide.image.url }}');">
-                        <div class="carousel-caption">
-                            <p class="eyebrow on-dark">{% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}</p>
-                            {% if slide.title %}<h1>{{ slide.title }}</h1>{% endif %}
-                            {% if slide.subtitle %}<p>{{ slide.subtitle }}</p>{% endif %}
-                            <div class="d-flex flex-wrap gap-3">
-                                {% if slide.button_text and slide.button_link %}
-                                    <a href="{{ slide.button_link }}" class="btn btn-gold">{{ slide.button_text }}</a>
-                                {% endif %}
-                                <a href="{% url 'core:about' %}" class="btn btn-ghost-invert">Explore The Ministry</a>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        {% else %}
-            <!-- Fallback hero with default image from settings -->
-            <div class="carousel-item active {% if not church_settings or not church_settings.hero_default_image %}no-image{% endif %}" {% if church_settings and church_settings.hero_default_image %}style="background-image: url('{{ church_settings.hero_default_image.url }}');"{% endif %}>
-                <div class="carousel-caption">
-                    <p class="eyebrow on-dark">{% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}</p>
-                    {% if homepage_settings %}
-                        <h1>{{ homepage_settings.hero_title|default:"The Word Of God Is Alive." }}</h1>
-                        <p>{{ homepage_settings.hero_subtitle|default:"A place where God's Word is taught, faith is strengthened, and lives are transformed." }}</p>
-                        <div class="d-flex flex-wrap gap-3">
-                            {% if homepage_settings.hero_button_text and homepage_settings.hero_button_link %}
-                                <a href="{{ homepage_settings.hero_button_link }}" class="btn btn-gold">{{ homepage_settings.hero_button_text }}</a>
-                            {% else %}
-                                <a href="{% url 'core:events' %}" class="btn btn-gold">Join Us</a>
-                            {% endif %}
-                            <a href="{% url 'core:about' %}" class="btn btn-ghost-invert">Explore The Ministry</a>
-                        </div>
-                    {% else %}
-                        <h1>The Word Of God<br>Is Alive.</h1>
-                        <p>A place where God's Word is taught, faith is strengthened, and lives are transformed.</p>
-                        <div class="d-flex flex-wrap gap-3">
-                            <a href="{% url 'core:events' %}" class="btn btn-gold">Join Us</a>
-                            <a href="{% url 'core:about' %}" class="btn btn-ghost-invert">Explore The Ministry</a>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        {% endif %}
-
-        <div class="hero-overlay-layer">
-            <svg class="hero-seal-watermark" data-parallax="10" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="100" cy="100" r="92" stroke="currentColor" stroke-width="1"/>
-                <circle cx="100" cy="100" r="80" stroke="currentColor" stroke-width="1"/>
-                <path d="M55 78C70 71 85 74 100 83C115 74 130 71 145 78" stroke="currentColor" stroke-width="1"/>
-                <path d="M100 83V138" stroke="currentColor" stroke-width="1"/>
-            </svg>
-            <div class="particle-field">
-                <span class="float-particle" style="width:5px;height:5px;left:12%;top:70%;animation-delay:0s;"></span>
-                <span class="float-particle" style="width:3px;height:3px;left:24%;top:30%;animation-delay:2s;"></span>
-                <span class="float-particle" style="width:6px;height:6px;left:40%;top:60%;animation-delay:4s;"></span>
-                <span class="float-particle" style="width:4px;height:4px;left:63%;top:24%;animation-delay:1s;"></span>
-                <span class="float-particle" style="width:3px;height:3px;left:78%;top:55%;animation-delay:3s;"></span>
-                <span class="float-particle" style="width:5px;height:5px;left:88%;top:35%;animation-delay:5s;"></span>
-            </div>
-            <div class="hero-glass-card" data-parallax="18">
-                <span class="verse">"Thy word is a lamp unto my feet, and a light unto my path."</span>
-                <span class="ref">Psalm 119:105 · KJV</span>
-            </div>
-        </div>
-        <div class="hero-scroll-cue">Scroll</div>
-    </div>
-</section>
-
-<!-- ========== WELCOME SECTION ========== -->
-<section class="welcome-section section-padding">
-    <div class="container">
-        <div class="row align-items-center g-5">
-            <div class="col-lg-6" data-reveal>
-                <p class="eyebrow">Welcome Home</p>
-                {% if homepage_settings %}
-                    <h2 class="section-title">{{ homepage_settings.welcome_title|default:"Welcome to Our Church" }}</h2>
-                    <p class="lead" style="color: var(--muted); font-weight: 400;">{{ homepage_settings.welcome_message|default:"We are a family of believers dedicated to worshipping God and serving our community." }}</p>
-                    <a href="{% url 'core:about' %}" class="btn btn-gold mt-2">Learn More About Us</a>
-                {% else %}
-                    <h2 class="section-title">Welcome to Embassy of God's Word</h2>
-                    <p class="lead" style="color: var(--muted); font-weight: 400;">We are a family of believers dedicated to worshipping God and serving our community.</p>
-                    <a href="{% url 'core:about' %}" class="btn btn-gold mt-2">Learn More</a>
+          {% for slide in hero_slides %}
+            <div class="e-hero__slidecopy{% if forloop.first %} is-active{% endif %}" data-hero-copy="{{ forloop.counter0 }}">
+              {% if slide.title %}<h1>{{ slide.title }}</h1>{% endif %}
+              {% if slide.subtitle %}<p class="e-hero__sub">{{ slide.subtitle }}</p>{% endif %}
+              <div class="e-hero__actions">
+                {% if slide.button_text and slide.button_link %}
+                  <a href="{{ slide.button_link }}" class="e-btn e-btn--gold">{{ slide.button_text }}</a>
                 {% endif %}
+                <a href="{% url 'core:about' %}" class="e-btn e-btn--ghost">Explore The Ministry</a>
+              </div>
             </div>
-            <div class="col-lg-6" data-reveal>
-                <div class="row g-4">
-                    <div class="col-sm-6">
-                        <div class="service-card">
-                            <div class="service-icon"><i class="fas fa-bible"></i></div>
-                            <h5>Mission</h5>
-                            <p class="mb-0" style="color: var(--muted);">{% if church_settings %}{{ church_settings.mission|truncatewords:20 }}{% else %}To spread the gospel and make disciples.{% endif %}</p>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="service-card">
-                            <div class="service-icon"><i class="fas fa-eye"></i></div>
-                            <h5>Vision</h5>
-                            <p class="mb-0" style="color: var(--muted);">{% if church_settings %}{{ church_settings.vision|truncatewords:20 }}{% else %}To see lives transformed by God's power.{% endif %}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ========== SERVICE TIMES ========== -->
-<section class="section-padding" style="background: var(--off-white);">
-    <div class="container">
-        <p class="eyebrow center justify-content-center d-flex">Join Us</p>
-        <h2 class="section-title text-center">Service Times</h2>
-        <p class="section-subtitle text-center mb-5">Join us for worship and fellowship.</p>
-        <div class="row justify-content-center g-4" data-reveal>
-            {% if service_schedule %}
-                {% for service in service_schedule %}
-                    <div class="col-md-3 col-sm-6">
-                        <div class="service-card text-center">
-                            <div class="service-icon"><i class="fas fa-calendar-alt"></i></div>
-                            <h5>{{ service.get_day_display }}</h5>
-                            <p class="mb-1"><strong>{{ service.start_time|time:"g:i A" }}</strong> – {{ service.end_time|time:"g:i A" }}</p>
-                            <p class="small mb-0" style="color: var(--muted);">{{ service.name }}</p>
-                            {% if service.venue %}<p class="small mb-0" style="color: var(--muted);"><i class="fas fa-map-pin"></i> {{ service.venue }}</p>{% endif %}
-                        </div>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <div class="col-12 text-center">
-                    <p>Service times are not yet set. Please check back soon.</p>
-                </div>
-            {% endif %}
-        </div>
-        {% if church_settings and church_settings.service_times_text %}
-            <div class="text-center mt-4">
-                <p style="color: var(--muted);">{{ church_settings.service_times_text|safe }}</p>
-            </div>
-        {% endif %}
-    </div>
-</section>
-
-<!-- ========== MEET OUR PASTOR ========== -->
-<section class="section-padding">
-    <div class="container">
-        <p class="eyebrow center justify-content-center d-flex">Meet Our Pastor</p>
-        <h2 class="section-title text-center">A Shepherd For This House</h2>
-        <p class="section-subtitle text-center mb-5">Spiritual leader and servant of God.</p>
-        <div class="row justify-content-center" data-reveal>
-            {% if leadership_home %}
-                {% for leader in leadership_home|slice:":1" %}
-                    <div class="col-lg-10">
-                        <div class="pastor-card">
-                            <div class="row g-0">
-                                <div class="col-md-5">
-                                    {% if leader.photo %}
-                                        <img src="{{ leader.photo.url }}" alt="{{ leader.name }}">
-                                    {% else %}
-                                        <div class="no-photo"><div class="initial-ring">{{ leader.name|slice:":1" }}</div></div>
-                                    {% endif %}
-                                </div>
-                                <div class="col-md-7">
-                                    <div class="pastor-content">
-                                        <h3 class="mb-1">{{ leader.name }}</h3>
-                                        <p class="gold-text fw-semibold">{{ leader.position }}</p>
-                                        <div class="pastor-quote">"{{ leader.quote|default:"A man of God with a heart for the nations." }}"</div>
-                                        <a href="{% url 'core:leadership' %}" class="btn btn-outline-gold mt-2">Read More</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <div class="col-lg-10">
-                    <div class="pastor-card">
-                        <div class="row g-0">
-                            <div class="col-md-5">
-                                <div class="no-photo"><div class="initial-ring">K</div></div>
-                            </div>
-                            <div class="col-md-7">
-                                <div class="pastor-content">
-                                    <h3 class="mb-1">Pastor Kingsley Nwekwo</h3>
-                                    <p class="gold-text fw-semibold">Senior Pastor</p>
-                                    <div class="pastor-quote">"We are called to be the light of the world."</div>
-                                    <a href="{% url 'core:leadership' %}" class="btn btn-outline-gold mt-2">Learn More</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-</section>
-
-<!-- ========== SCRIPTURE STRIP ========== -->
-<section class="scripture-strip">
-    <div class="container" data-reveal="scale">
-        <blockquote>"For the word of God is quick, and powerful, and sharper than any twoedged sword."</blockquote>
-        <cite>Hebrews 4:12 · KJV</cite>
-    </div>
-</section>
-
-<!-- ========== FEATURED DEVOTIONAL ========== -->
-<section class="section-padding">
-    <div class="container">
-        <p class="eyebrow center justify-content-center d-flex">Daily Bread</p>
-        <h2 class="section-title text-center">Today's Devotional</h2>
-        <p class="section-subtitle text-center mb-5">Nourish your spirit with God's word.</p>
-        <div class="row justify-content-center" data-reveal>
-            {% if featured_devotional or latest_devotionals %}
-                {% with devotional=featured_devotional|default:latest_devotionals|first %}
-                    <div class="col-lg-8">
-                        <div class="card premium-card">
-                            <div class="row g-0">
-                                <div class="col-md-4">
-                                    {% if devotional.featured_image %}
-                                        <img src="{{ devotional.featured_image.url }}" class="img-fluid" alt="{{ devotional.title }}" style="height: 100%; width: 100%; object-fit: cover;">
-                                    {% else %}
-                                        <div style="height:100%; min-height:220px; display:flex; align-items:center; justify-content:center; background: var(--off-white);">
-                                            <i class="fas fa-pray" style="font-size: 3rem; color: var(--gold);"></i>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="card-body p-4">
-                                        <h3 class="card-title h4">{{ devotional.title }}</h3>
-                                        {% if devotional.scripture %}<p class="mb-2 gold-text small fw-semibold"><i class="fas fa-book-open"></i> {{ devotional.scripture }}</p>{% endif %}
-                                        <p style="color: var(--muted);">{{ devotional.excerpt|truncatewords:30|default:devotional.content|truncatewords:30 }}</p>
-                                        <p class="small mb-3" style="color: var(--muted);">By {{ devotional.author|default:"Pastor Kingsley Nwekwo" }}</p>
-                                        <a href="{% url 'core:devotional_detail' devotional.slug %}" class="btn btn-gold">Read More</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endwith %}
-            {% else %}
-                <div class="col-12 text-center">
-                    <p>Fresh encouragement from God's Word is coming soon.</p>
-                </div>
-            {% endif %}
-        </div>
-        <div class="text-center mt-4">
-            <a href="{% url 'core:devotionals' %}" class="btn btn-outline-gold">All Devotionals <i class="fas fa-arrow-right ms-2"></i></a>
-        </div>
-    </div>
-</section>
-
-<!-- ========== UPCOMING EVENTS ========== -->
-<section class="section-padding" style="background: var(--off-white);">
-    <div class="container">
-        <p class="eyebrow center justify-content-center d-flex">What's Next</p>
-        <h2 class="section-title text-center">Upcoming Events</h2>
-        <p class="section-subtitle text-center mb-5">Join us for these special gatherings.</p>
-        {% if upcoming_events %}
-            <div class="row g-4" data-reveal>
-                {% for event in upcoming_events|slice:":3" %}
-                    <div class="col-md-4">
-                        <div class="card premium-card h-100">
-                            {% if event.banner %}<img src="{{ event.banner.url }}" class="card-img-top" alt="{{ event.title }}">
-                            {% else %}<div class="card-img-top d-flex align-items-center justify-content-center" style="background: var(--off-white);"><i class="fas fa-calendar-alt" style="font-size:2.5rem;color:var(--gold);"></i></div>{% endif %}
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <h5 class="card-title mb-0">{{ event.title }}</h5>
-                                    {% if event.featured %}<span class="badge-featured">Featured</span>{% endif %}
-                                </div>
-                                <p class="gold-text small fw-semibold mb-2">{{ event.get_event_type_display }}</p>
-                                <p class="small mb-1" style="color: var(--muted);"><i class="fas fa-calendar-alt"></i> {{ event.start_date|date:"M d, Y" }}{% if event.end_date %} – {{ event.end_date|date:"M d, Y" }}{% endif %}</p>
-                                <p class="small mb-2" style="color: var(--muted);"><i class="fas fa-map-pin"></i> {{ event.venue }}</p>
-                                <p class="small" style="color: var(--muted);">{{ event.description|truncatewords:20 }}</p>
-                                {% if event.countdown %}
-                                    <div class="mb-3"><span class="countdown-tag"><i class="fas fa-clock"></i> {{ event.start_date|timeuntil }} remaining</span></div>
-                                {% endif %}
-                                <a href="{% url 'core:event_detail' event.slug %}" class="btn btn-gold btn-sm">View Details</a>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="text-center mt-4">
-                <a href="{% url 'core:events' %}" class="btn btn-outline-gold">View All Events <i class="fas fa-arrow-right ms-2"></i></a>
-            </div>
+          {% endfor %}
         {% else %}
-            <div class="text-center">
-                <p>More gatherings are coming soon.</p>
-            </div>
-        {% endif %}
-    </div>
-</section>
-
-<!-- ========== LATEST TESTIMONIES ========== -->
-<section class="section-padding" style="background: var(--black); color: #fff;">
-    <div class="container">
-        <p class="eyebrow center on-dark justify-content-center d-flex">Testimonies</p>
-        <h2 class="section-title text-center gold-text">What God Is Doing</h2>
-        <p class="section-subtitle text-center mb-5" style="color: rgba(255,255,255,0.65);">Hear testimonies of God's goodness.</p>
-        <div class="row g-4" data-reveal>
-            {% if latest_testimonies %}
-                {% for testimony in latest_testimonies|slice:":3" %}
-                    <div class="col-md-4">
-                        <div class="testimonial-card">
-                            <i class="fas fa-quote-left gold-text mb-3 d-block" style="opacity:.5;"></i>
-                            <p class="testimonial-text">{{ testimony.story|truncatewords:30 }}</p>
-                            <div class="d-flex align-items-center mt-4">
-                                {% if testimony.photo %}<img src="{{ testimony.photo.url }}" alt="{{ testimony.full_name }}" class="rounded-circle me-3" style="width: 48px; height: 48px; object-fit: cover;">
-                                {% else %}<div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width:48px;height:48px;background:rgba(255,255,255,.08);"><i class="fas fa-user" style="color:var(--gold-light);"></i></div>{% endif %}
-                                <div>
-                                    <div class="testimonial-author">{{ testimony.full_name }}</div>
-                                    <small style="color: rgba(255,255,255,0.5);">{% if testimony.title %}{{ testimony.title }}{% endif %}</small>
-                                </div>
-                            </div>
-                            <a href="{% url 'core:testimony_detail' testimony.slug %}" class="btn btn-outline-gold btn-sm mt-3" style="color: var(--gold-light); border-color: var(--gold-light);">Read Full Testimony</a>
-                        </div>
-                    </div>
-                {% endfor %}
+          <div class="e-hero__slidecopy is-active">
+            {% if homepage_settings %}
+              <h1>{{ homepage_settings.hero_title|default:"The Word Of God Is Alive." }}</h1>
+              <p class="e-hero__sub">{{ homepage_settings.hero_subtitle|default:"A place where God's Word is taught, faith is strengthened, and lives are transformed." }}</p>
+              <div class="e-hero__actions">
+                {% if homepage_settings.hero_button_text and homepage_settings.hero_button_link %}
+                  <a href="{{ homepage_settings.hero_button_link }}" class="e-btn e-btn--gold">{{ homepage_settings.hero_button_text }}</a>
+                {% else %}
+                  <a href="{% url 'core:first_visit' %}" class="e-btn e-btn--gold">Join Us</a>
+                {% endif %}
+                <a href="{% url 'core:about' %}" class="e-btn e-btn--ghost">Explore The Ministry</a>
+              </div>
             {% else %}
-                <div class="col-12 text-center">
-                    <p style="color: rgba(255,255,255,0.55);">Every testimony is a reminder of God's faithfulness — be the first to share yours.</p>
-                </div>
+              <h1>The Word Of God<br><em>Is Alive.</em></h1>
+              <p class="e-hero__sub">A place where God's Word is taught, faith is strengthened, and lives are transformed.</p>
+              <div class="e-hero__actions">
+                <a href="{% url 'core:first_visit' %}" class="e-btn e-btn--gold">Join Us</a>
+                <a href="{% url 'core:about' %}" class="e-btn e-btn--ghost">Explore The Ministry</a>
+              </div>
             {% endif %}
-        </div>
-        <div class="text-center mt-4">
-            <a href="{% url 'core:testimonies' %}" class="btn btn-ghost-invert">View All Testimonies <i class="fas fa-arrow-right ms-2"></i></a>
-        </div>
-    </div>
-</section>
+          </div>
+        {% endif %}
+      </div>
 
-<!-- ========== GALLERY PREVIEW ========== -->
-<section class="section-padding">
-    <div class="container">
-        <p class="eyebrow center justify-content-center d-flex">Moments</p>
-        <h2 class="section-title text-center">Photo Gallery</h2>
-        <p class="section-subtitle text-center mb-5">Moments captured in worship and fellowship.</p>
-        {% if latest_album and album_images %}
-            <div class="row g-3 gallery-grid" data-reveal>
-                {% for image in album_images|slice:":6" %}
-                    <div class="col-4 col-md-2">
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#galleryModal{{ image.id }}">
-                            <img src="{{ image.image.url }}" alt="{{ image.caption|default:"Gallery image" }}">
-                        </a>
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="text-center mt-4">
-                <a href="{% url 'core:gallery' %}" class="btn btn-gold">View Full Gallery</a>
-            </div>
+      <div class="e-hero__stage" id="eStage" aria-hidden="true">
+        <div class="e-halo"></div>
+        <div class="e-ring e-ring--a"></div>
+        <div class="e-ring e-ring--b"></div>
+        <canvas id="eCrossCanvas"></canvas>
+        <div class="e-cross3d" id="eCrossCss">
+          <span class="e-cross3d__glow"></span>
+          <span class="e-cross3d__bar e-cross3d__bar--vb"></span>
+          <span class="e-cross3d__bar e-cross3d__bar--hb"></span>
+          <span class="e-cross3d__bar e-cross3d__bar--v"></span>
+          <span class="e-cross3d__bar e-cross3d__bar--h"></span>
+        </div>
+        <div class="e-hero__card" data-parallax="0.9">
+          <p class="e-verse">&ldquo;Thy word is a lamp unto my feet, and a light unto my path.&rdquo;</p>
+          <span class="e-ref">Psalm 119:105 &middot; KJV</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="e-hero__inner e-hero__foot" aria-hidden="false">
+      {% if hero_slides %}
+        <div class="e-hero__dots" id="eHeroDots" role="tablist" aria-label="Hero slides">
+          {% for slide in hero_slides %}
+            <button type="button" role="tab" data-hero-dot="{{ forloop.counter0 }}"
+                    aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                    aria-label="Show slide {{ forloop.counter }}"></button>
+          {% endfor %}
+        </div>
+      {% endif %}
+      <span class="e-hero__cue">Scroll</span>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       WELCOME
+       ===================================================================== -->
+  <section class="e-section e-section--white">
+    <div class="e-wrap e-welcome">
+      <div class="e-reveal">
+        <span class="e-eyebrow">Welcome Home</span>
+        {% if homepage_settings %}
+          <h2 class="e-title">{{ homepage_settings.welcome_title|default:"Welcome to Our Church" }}</h2>
+          <p class="e-lede">{{ homepage_settings.welcome_message|default:"We are a family of believers dedicated to worshipping God and serving our community." }}</p>
         {% else %}
-            <div class="text-center">
-                <p>Moments from our ministry journey will appear here.</p>
-            </div>
+          <h2 class="e-title">Welcome to Embassy of God's Word</h2>
+          <p class="e-lede">We are a family of believers dedicated to worshipping God and serving our community.</p>
         {% endif %}
-    </div>
-</section>
-
-<!-- ========== PRAYER CTA ========== -->
-<section class="cta-band" data-reveal>
-    <div class="container">
-        <p class="eyebrow center on-dark justify-content-center d-flex">We're Here For You</p>
-        <h2>Need Prayer?</h2>
-        <p>We would love to pray with you. Submit your prayer request today.</p>
-        <a href="{% url 'core:prayer_request' %}" class="btn btn-gold">Submit a Prayer Request <i class="fas fa-praying-hands ms-2"></i></a>
-    </div>
-</section>
-
-<!-- ========== FIRST VISIT CTA ========== -->
-<section class="section-padding" style="background: var(--off-white);">
-    <div class="container text-center" data-reveal>
-        <p class="eyebrow center justify-content-center d-flex">New Here?</p>
-        <h2 class="section-title">Plan Your First Visit</h2>
-        <p class="section-subtitle">New to our church? We'd love to welcome you!</p>
-        <a href="{% url 'core:first_visit' %}" class="btn btn-gold mt-3">Let Us Know You're Coming <i class="fas fa-chevron-right ms-2"></i></a>
-    </div>
-</section>
-
-<!-- ========== NEWSLETTER ========== -->
-<section class="section-padding" style="background: var(--black); color: #fff;">
-    <div class="container">
-        <div class="row align-items-center" data-reveal>
-            <div class="col-lg-6">
-                <p class="eyebrow on-dark">Stay Connected</p>
-                <h2 class="section-title gold-text" style="text-align:left;">Never Miss A Word</h2>
-                <p style="color: rgba(255,255,255,0.65);">Subscribe to our newsletter to receive devotionals, updates, and announcements.</p>
-            </div>
-            <div class="col-lg-6">
-                <form action="{% url 'core:newsletter_subscribe' %}" method="post">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <input type="text" name="name" class="form-control form-control-premium" style="background: rgba(255,255,255,0.06); border-color: var(--border-invert); color:#fff;" placeholder="Your Name (optional)">
-                    </div>
-                    <div class="mb-3">
-                        <input type="email" name="email" class="form-control form-control-premium" style="background: rgba(255,255,255,0.06); border-color: var(--border-invert); color:#fff;" placeholder="Your Email *" required>
-                    </div>
-                    <button type="submit" class="btn btn-gold w-100">Subscribe Now</button>
-                </form>
-            </div>
+        <div class="e-mv">
+          <article class="e-card e-tilt" data-tilt>
+            <span class="e-card__num">01</span>
+            <h3>Mission</h3>
+            <p>{% if church_settings %}{{ church_settings.mission|truncatewords:20 }}{% else %}To spread the gospel and make disciples.{% endif %}</p>
+          </article>
+          <article class="e-card e-tilt" data-tilt>
+            <span class="e-card__num">02</span>
+            <h3>Vision</h3>
+            <p>{% if church_settings %}{{ church_settings.vision|truncatewords:20 }}{% else %}To see lives transformed by God's power.{% endif %}</p>
+          </article>
         </div>
-    </div>
-</section>
-
-<!-- ========== GOOGLE MAP ========== -->
-<section class="section-padding">
-    <div class="container">
-        <p class="eyebrow center justify-content-center d-flex">Visit Us</p>
-        <h2 class="section-title text-center">Find Us</h2>
-        <p class="section-subtitle text-center mb-5">We are located at:</p>
-        <div class="map-container" data-reveal>
-            {% if church_settings and church_settings.google_maps_embed %}
-                {{ church_settings.google_maps_embed|safe }}
-            {% else %}
-                <div class="map-fallback">
-                    <i class="fas fa-map-marked-alt mb-3" style="font-size: 2.5rem; color: var(--gold);"></i>
-                    <h5>{% if church_settings %}{{ church_settings.address }}{% else %}Peyi Road, opposite British Oasis International School, Ushafa Old Road, Bwari, Abuja{% endif %}</h5>
-                    <p class="mb-0" style="color: var(--muted);">Map location coming soon.</p>
-                </div>
-            {% endif %}
+        <div style="margin-top:2.2rem;">
+          <a href="{% url 'core:about' %}" class="e-link">Learn More About Us <span aria-hidden="true">&rarr;</span></a>
         </div>
-    </div>
-</section>
+      </div>
 
+      <div class="e-welcome__art e-reveal" data-delay="2">
+        <span class="e-welcome__ring e-welcome__ring--1" aria-hidden="true"></span>
+        <span class="e-welcome__ring e-welcome__ring--2" aria-hidden="true"></span>
+        <img class="e-welcome__img" loading="lazy"
+             src="https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=1400&q=80"
+             alt="Worshippers gathered in prayer">
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SERVICE TIMES
+       ===================================================================== -->
+  <section class="e-section e-section--ivory">
+    <div class="e-wrap">
+      <div class="e-head-center e-reveal">
+        <span class="e-eyebrow">Join Us</span>
+        <h2 class="e-title">Service Times</h2>
+        <p class="e-lede">Join us for worship and fellowship.</p>
+      </div>
+
+      {% if service_schedule %}
+        <div class="e-grid e-grid--3">
+          {% for service in service_schedule %}
+            <article class="e-service e-tilt e-reveal" data-tilt data-delay="{{ forloop.counter0 }}">
+              <span class="e-service__day">{{ service.get_day_display }}</span>
+              <p class="e-service__time">{{ service.start_time|time:"g:i A" }} &ndash; {{ service.end_time|time:"g:i A" }}</p>
+              <p class="e-service__name">{{ service.name }}</p>
+              {% if service.venue %}<p class="e-service__venue">{{ service.venue }}</p>{% endif %}
+              <div class="e-service__rule" aria-hidden="true"></div>
+            </article>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="e-grid e-grid--3">
+          <article class="e-service e-tilt e-reveal" data-tilt data-delay="0">
+            <span class="e-service__day">Sunday</span>
+            <p class="e-service__time">9:00 AM</p>
+            <p class="e-service__name">Glory Service</p>
+            <p class="e-service__venue">Main Auditorium</p>
+            <div class="e-service__rule" aria-hidden="true"></div>
+          </article>
+          <article class="e-service e-tilt e-reveal" data-tilt data-delay="1">
+            <span class="e-service__day">Tuesday</span>
+            <p class="e-service__time">Prayer Band</p>
+            <p class="e-service__name">Prayer Band Meeting</p>
+            <p class="e-service__venue">Main Auditorium</p>
+            <div class="e-service__rule" aria-hidden="true"></div>
+          </article>
+          <article class="e-service e-tilt e-reveal" data-tilt data-delay="2">
+            <span class="e-service__day">Thursday</span>
+            <p class="e-service__time">Communion</p>
+            <p class="e-service__name">Communion Service</p>
+            <p class="e-service__venue">Main Auditorium</p>
+            <div class="e-service__rule" aria-hidden="true"></div>
+          </article>
+          <article class="e-service e-tilt e-reveal" data-tilt data-delay="3">
+            <span class="e-service__day">Friday</span>
+            <p class="e-service__time">All Night</p>
+            <p class="e-service__name">All Night Service</p>
+            <p class="e-service__venue">Main Auditorium</p>
+            <div class="e-service__rule" aria-hidden="true"></div>
+          </article>
+          <article class="e-service e-tilt e-reveal" data-tilt data-delay="4">
+            <span class="e-service__day">Saturday</span>
+            <p class="e-service__time">Morning</p>
+            <p class="e-service__name">Evangelism &amp; Outreach</p>
+            <p class="e-service__venue">Community Outreach</p>
+            <div class="e-service__rule" aria-hidden="true"></div>
+          </article>
+        </div>
+      {% endif %}
+
+      {% if church_settings and church_settings.service_times_text %}
+        <div class="e-center e-mt e-lede" style="margin-inline:auto;">{{ church_settings.service_times_text|safe }}</div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       LEADERSHIP
+       ===================================================================== -->
+  <section class="e-section e-section--white">
+    <div class="e-wrap">
+      {% if leadership_home %}
+        {% for leader in leadership_home|slice:":1" %}
+          <div class="e-leader">
+            <div class="e-leader__frame e-reveal">
+              <span class="e-leader__ring" aria-hidden="true"></span>
+              <div class="e-leader__photo e-tilt e-shine" data-tilt>
+                {% if leader.photo %}
+                  <img src="{{ leader.photo.url }}" alt="{{ leader.name }}, {{ leader.position }}" loading="lazy">
+                {% else %}
+                  <div class="e-leader__initial"><span>{{ leader.name|slice:":1" }}</span></div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="e-reveal" data-delay="2">
+              <span class="e-eyebrow">Meet Our Pastor</span>
+              <h2 class="e-title">{{ leader.name }}</h2>
+              <span class="e-leader__role">{{ leader.position }}</span>
+              <blockquote class="e-leader__quote">&ldquo;{{ leader.quote|default:"A man of God with a heart for the nations." }}&rdquo;</blockquote>
+              <a href="{% url 'core:leadership' %}" class="e-link">Meet The Leadership <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="e-leader">
+          <div class="e-leader__frame e-reveal">
+            <span class="e-leader__ring" aria-hidden="true"></span>
+            <div class="e-leader__photo e-tilt" data-tilt>
+              <div class="e-leader__initial"><span>K</span></div>
+            </div>
+          </div>
+          <div class="e-reveal" data-delay="2">
+            <span class="e-eyebrow">Meet Our Pastor</span>
+            <h2 class="e-title">Pastor Kingsley Nwekwo</h2>
+            <span class="e-leader__role">Senior Pastor</span>
+            <blockquote class="e-leader__quote">&ldquo;We are called to be the light of the world.&rdquo;</blockquote>
+            <a href="{% url 'core:leadership' %}" class="e-link">Meet The Leadership <span aria-hidden="true">&rarr;</span></a>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       SCRIPTURE
+       ===================================================================== -->
+  <section class="e-section e-scripture">
+    <div class="e-wrap e-scripture__inner">
+      <span class="e-scripture__orb" style="left:8%;top:0;width:280px;height:280px;" aria-hidden="true"></span>
+      <span class="e-scripture__orb" style="right:6%;bottom:-10%;width:340px;height:340px;" aria-hidden="true"></span>
+      <div class="e-reveal" data-parallax="0.18">
+        <div class="e-goldline" aria-hidden="true"></div>
+        <blockquote>&ldquo;For the word of God is quick, and powerful, and sharper than any twoedged sword.&rdquo;</blockquote>
+        <cite>Hebrews 4:12 &middot; KJV</cite>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       DEVOTIONAL
+       ===================================================================== -->
+  <section class="e-section e-section--white">
+    <div class="e-wrap">
+      <div class="e-head-center e-reveal">
+        <span class="e-eyebrow">Daily Bread</span>
+        <h2 class="e-title">Today's Devotional</h2>
+        <p class="e-lede">Nourish your spirit with God's word.</p>
+      </div>
+
+      {% if featured_devotional or latest_devotionals %}
+        {% with devotional=featured_devotional|default:latest_devotionals|first %}
+          <div class="e-dev">
+            <div class="e-dev__frame e-tilt e-shine e-reveal" data-tilt>
+              {% if devotional.featured_image %}
+                <img src="{{ devotional.featured_image.url }}" alt="{{ devotional.title }}" loading="lazy">
+              {% else %}
+                <div class="e-dev__placeholder">Daily Bread</div>
+              {% endif %}
+            </div>
+            <div class="e-reveal" data-delay="2">
+              {% if devotional.scripture %}<span class="e-dev__scripture">{{ devotional.scripture }}</span>{% endif %}
+              <h3 class="e-title" style="font-size:clamp(1.8rem,3.4vw,2.9rem);">{{ devotional.title }}</h3>
+              <p class="e-lede">{{ devotional.excerpt|truncatewords:34|default:devotional.content|truncatewords:34 }}</p>
+              <p class="e-dev__meta">By {{ devotional.author|default:"Pastor Kingsley Nwekwo" }}</p>
+              <a href="{% url 'core:devotional_detail' devotional.slug %}" class="e-btn e-btn--outline">Read Devotional</a>
+            </div>
+          </div>
+        {% endwith %}
+      {% else %}
+        <div class="e-empty">Fresh encouragement from God's Word is coming soon.</div>
+      {% endif %}
+
+      <div class="e-center e-mt">
+        <a href="{% url 'core:devotionals' %}" class="e-link">All Devotionals <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       EVENTS
+       ===================================================================== -->
+  <section class="e-section e-section--ivory">
+    <div class="e-wrap">
+      <div class="e-head-center e-reveal">
+        <span class="e-eyebrow">What's Next</span>
+        <h2 class="e-title">Upcoming Events</h2>
+        <p class="e-lede">Join us for these special gatherings.</p>
+      </div>
+
+      {% if upcoming_events %}
+        <div class="e-grid e-grid--3">
+          {% for event in upcoming_events|slice:":3" %}
+            <article class="e-event e-tilt e-reveal" data-tilt data-delay="{{ forloop.counter0 }}">
+              <div class="e-event__media">
+                {% if event.banner %}
+                  <img src="{{ event.banner.url|default:event.banner }}" alt="{{ event.title }}" loading="lazy">
+                {% else %}
+                  <div class="e-event__noimg" aria-hidden="true">&#10013;</div>
+                {% endif %}
+                <span class="e-event__type">{{ event.get_event_type_display }}</span>
+                {% if event.featured %}<span class="e-event__flag">Featured</span>{% endif %}
+              </div>
+              <div class="e-event__body">
+                <h3>{{ event.title }}</h3>
+                <p class="e-event__row">{{ event.start_date|date:"M d, Y" }}{% if event.end_date %} &ndash; {{ event.end_date|date:"M d, Y" }}{% endif %}</p>
+                <p class="e-event__row">{{ event.venue }}</p>
+                <p class="e-event__row">{{ event.description|truncatewords:20 }}</p>
+                {% if event.countdown %}<p class="e-event__count">{{ event.start_date|timeuntil }} remaining</p>{% endif %}
+                <a href="{% url 'core:event_detail' event.slug %}" class="e-link">View Details <span aria-hidden="true">&rarr;</span></a>
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+        <div class="e-center e-mt">
+          <a href="{% url 'core:events' %}" class="e-link">View All Events <span aria-hidden="true">&rarr;</span></a>
+        </div>
+      {% else %}
+        <div class="e-empty">More gatherings are coming soon.</div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       TESTIMONIES
+       ===================================================================== -->
+  <section class="e-section e-section--dark">
+    <span class="e-dark-glow" style="left:-15%;top:10%;" aria-hidden="true"></span>
+    <span class="e-dark-glow" style="right:-20%;bottom:-10%;" aria-hidden="true"></span>
+    <div class="e-wrap" style="position:relative;z-index:2;">
+      <div class="e-head-center e-reveal">
+        <span class="e-eyebrow">Testimonies</span>
+        <h2 class="e-title">What God Is Doing</h2>
+        <p class="e-lede">Hear testimonies of God's goodness.</p>
+      </div>
+
+      {% if latest_testimonies %}
+        <div class="e-grid e-grid--3">
+          {% for testimony in latest_testimonies|slice:":3" %}
+            <article class="e-testi e-tilt e-reveal" data-tilt data-delay="{{ forloop.counter0 }}">
+              <span class="e-testi__mark" aria-hidden="true">&ldquo;</span>
+              <p class="e-testi__story">{{ testimony.story|truncatewords:30 }}</p>
+              <div class="e-testi__who">
+                {% if testimony.photo %}
+                  <img src="{{ testimony.photo.url|default:testimony.photo }}" alt="{{ testimony.full_name }}" loading="lazy">
+                {% else %}
+                  <span class="e-testi__avatar" aria-hidden="true">{{ testimony.full_name|slice:":1" }}</span>
+                {% endif %}
+                <span>
+                  <span class="e-testi__name">{{ testimony.full_name }}</span>
+                  {% if testimony.title %}<br><span class="e-testi__title">{{ testimony.title }}</span>{% endif %}
+                </span>
+              </div>
+              <a href="{% url 'core:testimony_detail' testimony.slug %}" class="e-link">Read Full Testimony <span aria-hidden="true">&rarr;</span></a>
+            </article>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="e-empty">Every testimony is a reminder of God's faithfulness &mdash; be the first to share yours.</div>
+      {% endif %}
+
+      <div class="e-center e-mt">
+        <a href="{% url 'core:testimonies' %}" class="e-link">View All Testimonies <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       GALLERY
+       ===================================================================== -->
+  <section class="e-section e-section--white">
+    <div class="e-wrap">
+      <div class="e-head-center e-reveal">
+        <span class="e-eyebrow">Moments</span>
+        <h2 class="e-title">Photo Gallery</h2>
+        <p class="e-lede">Moments captured in worship and fellowship.</p>
+      </div>
+
+      {% if latest_album and album_images %}
+        <div class="e-gallery e-reveal">
+          {% for image in album_images|slice:":6" %}
+            <a href="{% url 'core:gallery' %}" class="e-tilt" data-tilt>
+              <img src="{{ image.image.url }}" alt="{{ image.caption|default:latest_album.title }}" loading="lazy">
+            </a>
+          {% endfor %}
+        </div>
+        <div class="e-center e-mt">
+          <a href="{% url 'core:gallery' %}" class="e-btn e-btn--outline">View Full Gallery</a>
+        </div>
+      {% else %}
+        <div class="e-empty">Moments from our ministry journey will appear here.</div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       PRAYER CTA
+       ===================================================================== -->
+  <section class="e-section e-prayer">
+    <span class="e-prayer__orb" aria-hidden="true"></span>
+    <div class="e-wrap e-prayer__inner e-reveal">
+      <span class="e-eyebrow" style="justify-content:center;">We're Here For You</span>
+      <h2>Need <span class="e-gold-text">Prayer?</span></h2>
+      <p class="e-lede" style="margin-inline:auto;">We would love to pray with you. Submit your prayer request today.</p>
+      <div class="e-mt">
+        <a href="{% url 'core:prayer_request' %}" class="e-btn e-btn--gold">Submit a Prayer Request</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       FIRST VISIT
+       ===================================================================== -->
+  <section class="e-section e-section--ivory">
+    <div class="e-wrap e-visit">
+      <div class="e-visit__img e-tilt e-shine e-reveal" data-tilt>
+        <img src="https://images.unsplash.com/photo-1544427920-c49ccfb85579?auto=format&fit=crop&w=1400&q=80"
+             alt="Warm welcome at church entrance" loading="lazy">
+      </div>
+      <div class="e-reveal" data-delay="2">
+        <span class="e-eyebrow">New Here?</span>
+        <h2 class="e-title">Plan Your First Visit</h2>
+        <div class="e-linegrow" aria-hidden="true"></div>
+        <p class="e-lede">New to our church? We'd love to welcome you &mdash; tell us you're coming and we'll be looking out for you.</p>
+        <div class="e-mt">
+          <a href="{% url 'core:first_visit' %}" class="e-btn e-btn--dark">Let Us Know You're Coming</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       NEWSLETTER
+       ===================================================================== -->
+  <section class="e-section e-news">
+    <span class="e-dark-glow" style="right:-18%;top:-20%;" aria-hidden="true"></span>
+    <div class="e-wrap e-news__grid" style="position:relative;z-index:2;">
+      <div class="e-reveal">
+        <span class="e-eyebrow">Stay Connected</span>
+        <h2 class="e-title">Never Miss <span class="e-gold-text">A Word</span></h2>
+        <p class="e-lede">Subscribe to our newsletter to receive devotionals, updates, and announcements.</p>
+      </div>
+      <div class="e-reveal" data-delay="2">
+        <form method="post" action="{% url 'core:newsletter_subscribe' %}">
+          {% csrf_token %}
+          <div>
+            <label class="visually-hidden" for="eNewsName">Your name</label>
+            <input type="text" id="eNewsName" name="name" placeholder="Your name" required>
+          </div>
+          <div>
+            <label class="visually-hidden" for="eNewsEmail">Your email</label>
+            <input type="email" id="eNewsEmail" name="email" placeholder="Your email address" required>
+          </div>
+          <button type="submit" class="e-btn e-btn--gold">Subscribe Now</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================================
+       MAP
+       ===================================================================== -->
+  <section class="e-section e-section--white">
+    <div class="e-wrap">
+      <div class="e-head-center e-reveal">
+        <span class="e-eyebrow">Visit Us</span>
+        <h2 class="e-title">Find Us</h2>
+        <p class="e-lede">We are located at:</p>
+      </div>
+      <div class="e-map e-reveal">
+        {% if church_settings and church_settings.google_maps_embed %}
+          {{ church_settings.google_maps_embed|safe }}
+        {% else %}
+          <div class="e-map__fallback">
+            <p class="e-lede" style="color:var(--e-ink);">{% if church_settings %}{{ church_settings.address }}{% else %}Peyi Road, opposite British Oasis International School, Ushafa Old Road, Bwari, Abuja{% endif %}</p>
+            <p class="e-lede">Map location coming soon.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+</div>
 {% endblock %}
 
 {% block extra_js %}
-// Auto-play hero carousel
-var heroCarousel = document.getElementById('heroCarousel');
-if (heroCarousel) {
-    new bootstrap.Carousel(heroCarousel, { interval: 6500, pause: 'hover' });
-}
+/* EGWM home page interactions — base.html already supplies the surrounding JS tag */
+(function () {
+  'use strict';
+
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var isDesktop = window.matchMedia('(min-width: 992px)').matches;
+  var root = document.querySelector('.egwm');
+  if (!root) { return; }
+  /* Animations are opt-in: without JS every section stays fully visible. */
+  root.classList.add('e-js');
+
+  /* ---------------------------------------------------------------
+     Section reveals
+     --------------------------------------------------------------- */
+  var revealEls = root.querySelectorAll('.e-reveal');
+  if (reduced || !('IntersectionObserver' in window)) {
+    revealEls.forEach(function (el) { el.classList.add('is-in'); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.14, rootMargin: '0px 0px -8% 0px' });
+    revealEls.forEach(function (el) { io.observe(el); });
+  }
+
+  /* ---------------------------------------------------------------
+     Hero slides (cinematic crossfade, keeps hero_slides data)
+     --------------------------------------------------------------- */
+  var slides = root.querySelectorAll('[data-hero-slide]');
+  var copies = root.querySelectorAll('[data-hero-copy]');
+  var dots = root.querySelectorAll('[data-hero-dot]');
+  var current = 0;
+  var timer = null;
+
+  function goTo(i) {
+    if (!slides.length) { return; }
+    current = (i + slides.length) % slides.length;
+    slides.forEach(function (s, idx) { s.classList.toggle('is-active', idx === current); });
+    copies.forEach(function (c, idx) { c.classList.toggle('is-active', idx === current); });
+    dots.forEach(function (d, idx) { d.setAttribute('aria-selected', idx === current ? 'true' : 'false'); });
+  }
+  function play() {
+    if (reduced || slides.length < 2) { return; }
+    stop();
+    timer = window.setInterval(function () { goTo(current + 1); }, 7000);
+  }
+  function stop() { if (timer) { window.clearInterval(timer); timer = null; } }
+
+  dots.forEach(function (dot) {
+    dot.addEventListener('click', function () {
+      goTo(parseInt(dot.getAttribute('data-hero-dot'), 10));
+      play();
+    });
+  });
+  var hero = document.getElementById('eHero');
+  if (hero) {
+    hero.addEventListener('mouseenter', stop);
+    hero.addEventListener('mouseleave', play);
+  }
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) { stop(); } else { play(); }
+  });
+  play();
+
+  /* ---------------------------------------------------------------
+     Background video — desktop only, never breaks the page
+     --------------------------------------------------------------- */
+  var video = document.getElementById('eHeroVideo');
+  if (video) {
+    if (reduced || !isDesktop) {
+      video.removeAttribute('autoplay');
+      video.style.display = 'none';
+    } else {
+      video.style.opacity = '0';
+      video.style.transition = 'opacity 1.4s ease';
+      video.addEventListener('canplay', function () { video.style.opacity = '0.55'; }, { once: true });
+      video.addEventListener('error', function () { video.style.display = 'none'; });
+      try {
+        video.load();
+        var p = video.play();
+        if (p && typeof p.catch === 'function') { p.catch(function () { video.style.display = 'none'; }); }
+      } catch (err) { video.style.display = 'none'; }
+    }
+  }
+
+  /* ---------------------------------------------------------------
+     Gold particles (capped, desktop only)
+     --------------------------------------------------------------- */
+  var canvas = document.getElementById('eHeroParticles');
+  if (canvas && isDesktop && !reduced) {
+    var ctx = canvas.getContext('2d');
+    var particles = [];
+    var COUNT = 54;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var pw = 0, ph = 0, running = true;
+
+    function sizeCanvas() {
+      pw = canvas.offsetWidth; ph = canvas.offsetHeight;
+      canvas.width = pw * dpr; canvas.height = ph * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function seed() {
+      particles = [];
+      for (var i = 0; i < COUNT; i++) {
+        particles.push({
+          x: Math.random() * pw, y: Math.random() * ph,
+          r: Math.random() * 1.7 + 0.5,
+          vx: (Math.random() - 0.5) * 0.16,
+          vy: -(Math.random() * 0.28 + 0.06),
+          a: Math.random() * 0.5 + 0.16
+        });
+      }
+    }
+    sizeCanvas(); seed();
+    window.addEventListener('resize', function () { sizeCanvas(); seed(); });
+
+    (function draw() {
+      if (!running) { return; }
+      ctx.clearRect(0, 0, pw, ph);
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+        p.x += p.vx + pointer.x * 0.35;
+        p.y += p.vy;
+        if (p.y < -8) { p.y = ph + 8; p.x = Math.random() * pw; }
+        if (p.x < -8) { p.x = pw + 8; } else if (p.x > pw + 8) { p.x = -8; }
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(232,213,138,' + p.a + ')';
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      window.requestAnimationFrame(draw);
+    })();
+
+    if ('IntersectionObserver' in window && hero) {
+      new IntersectionObserver(function (e) {
+        running = e[0].isIntersecting;
+        if (running) { window.requestAnimationFrame(draw); }
+      }, { threshold: 0.02 }).observe(hero);
+    }
+  }
+
+  /* ---------------------------------------------------------------
+     Pointer state + parallax (single rAF loop)
+     --------------------------------------------------------------- */
+  var pointer = { x: 0, y: 0, tx: 0, ty: 0 };
+  var parallaxEls = root.querySelectorAll('[data-parallax]');
+  var stage = document.getElementById('eStage');
+
+  if (isDesktop && !reduced) {
+    window.addEventListener('pointermove', function (e) {
+      pointer.tx = (e.clientX / window.innerWidth) * 2 - 1;
+      pointer.ty = (e.clientY / window.innerHeight) * 2 - 1;
+    }, { passive: true });
+
+    (function loop() {
+      pointer.x += (pointer.tx - pointer.x) * 0.06;
+      pointer.y += (pointer.ty - pointer.y) * 0.06;
+      parallaxEls.forEach(function (el) {
+        var d = parseFloat(el.getAttribute('data-parallax')) || 0.3;
+        el.style.transform = 'translate3d(' + (-pointer.x * 16 * d) + 'px,' + (-pointer.y * 12 * d) + 'px,0)';
+      });
+      if (stage) {
+        stage.style.transform = 'rotateY(' + (pointer.x * 9) + 'deg) rotateX(' + (-pointer.y * 7) + 'deg)';
+      }
+      window.requestAnimationFrame(loop);
+    })();
+  }
+
+  /* ---------------------------------------------------------------
+     3D card tilt
+     --------------------------------------------------------------- */
+  if (isDesktop && !reduced) {
+    root.querySelectorAll('[data-tilt]').forEach(function (card) {
+      card.addEventListener('pointermove', function (e) {
+        var r = card.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width - 0.5;
+        var py = (e.clientY - r.top) / r.height - 0.5;
+        card.style.transform = 'perspective(900px) rotateY(' + (px * 8) + 'deg) rotateX(' + (-py * 8) + 'deg) translate3d(0,-8px,26px)';
+      });
+      card.addEventListener('pointerleave', function () { card.style.transform = ''; });
+    });
+  }
+
+  /* ---------------------------------------------------------------
+     Three.js gold cross — progressive enhancement with CSS fallback
+     --------------------------------------------------------------- */
+  function supportsWebGL() {
+    try {
+      var c = document.createElement('canvas');
+      return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl')));
+    } catch (e) { return false; }
+  }
+
+  if (isDesktop && !reduced && supportsWebGL()) {
+    var script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    script.async = true;
+    script.onerror = function () { /* CSS cross stays visible */ };
+    script.onload = function () {
+      try { initCross(); } catch (err) { /* silent fallback */ }
+    };
+    document.body.appendChild(script);
+  }
+
+  function initCross() {
+    var el = document.getElementById('eCrossCanvas');
+    if (!el || typeof THREE === 'undefined') { return; }
+
+    var renderer = new THREE.WebGLRenderer({ canvas: el, alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(el.offsetWidth, el.offsetHeight, false);
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(38, el.offsetWidth / el.offsetHeight, 0.1, 100);
+    camera.position.set(0, 0, 9);
+
+    var gold = new THREE.MeshStandardMaterial({
+      color: 0xC9A227, metalness: 1, roughness: 0.22, emissive: 0x2A1E04, emissiveIntensity: 0.6
+    });
+
+    var group = new THREE.Group();
+    var vertical = new THREE.Mesh(new THREE.BoxGeometry(0.85, 5.4, 0.85), gold);
+    var horizontal = new THREE.Mesh(new THREE.BoxGeometry(3.4, 0.85, 0.85), gold);
+    horizontal.position.y = 1.1;
+    group.add(vertical); group.add(horizontal);
+
+    var halo = new THREE.Mesh(
+      new THREE.TorusGeometry(2.9, 0.035, 12, 96),
+      new THREE.MeshBasicMaterial({ color: 0xE8D58A, transparent: true, opacity: 0.55 })
+    );
+    halo.rotation.x = Math.PI / 2.6;
+    group.add(halo);
+    scene.add(group);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.42));
+    var key = new THREE.DirectionalLight(0xFFF3CE, 2.1); key.position.set(4, 6, 6); scene.add(key);
+    var rim = new THREE.DirectionalLight(0xC9A227, 1.5); rim.position.set(-6, -2, -4); scene.add(rim);
+    var fill = new THREE.PointLight(0xF4E7B5, 1.2, 30); fill.position.set(-3, 3, 5); scene.add(fill);
+
+    root.classList.add('e-webgl-on');
+
+    var scrollY = 0;
+    window.addEventListener('scroll', function () { scrollY = window.scrollY || 0; }, { passive: true });
+    window.addEventListener('resize', function () {
+      renderer.setSize(el.offsetWidth, el.offsetHeight, false);
+      camera.aspect = el.offsetWidth / el.offsetHeight;
+      camera.updateProjectionMatrix();
+    });
+
+    var t = 0;
+    (function render() {
+      t += 0.01;
+      group.rotation.y += (pointer.x * 0.6 - group.rotation.y) * 0.05 + 0.0022;
+      group.rotation.x += (-pointer.y * 0.32 - group.rotation.x) * 0.05;
+      group.position.y = Math.sin(t) * 0.22 - Math.min(scrollY, 900) * 0.0012;
+      halo.rotation.z += 0.004;
+      renderer.render(scene, camera);
+      window.requestAnimationFrame(render);
+    })();
+  }
+})();
 {% endblock %}
