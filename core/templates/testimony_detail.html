@@ -1,93 +1,735 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}{{ testimony.title|default:"Testimony" }} - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
+{% block title %}
+    {{ testimony.title|default:"Testimony" }} -
+    {% if church_settings %}
+        {{ church_settings.church_name }}
+    {% else %}
+        Embassy of God's Word Ministry
+    {% endif %}
+{% endblock %}
+
 
 {% block extra_css %}
 <style>
-    .testimony-detail .testimony-header {
-        display: flex;
-        align-items: center;
-        gap: 1.75rem;
+
+/* =========================================================
+   EGWM TESTIMONY DETAIL
+   Fully scoped to prevent conflicts with base.html
+========================================================= */
+
+.egwm-testimony-detail-page {
+    position: relative;
+    min-height: 100vh;
+    background: var(--off-white);
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   STORY HERO
+========================================================= */
+
+.egwm-testimony-detail-page .story-hero {
+    position: relative;
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(201, 162, 39, .10),
+            transparent 42%
+        ),
+        linear-gradient(
+            160deg,
+            var(--black) 0%,
+            var(--charcoal) 100%
+        );
+
+    color: #fff;
+
+    /* Do NOT pull this underneath the base navbar */
+    margin-top: 0;
+
+    padding:
+        clamp(3rem, 6vw, 4.5rem)
+        0
+        clamp(3rem, 6vw, 4.5rem);
+
+    overflow: hidden;
+}
+
+
+.egwm-testimony-detail-page .story-hero::before {
+    content: "";
+
+    position: absolute;
+
+    width: 360px;
+    height: 360px;
+
+    top: -230px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    border-radius: 50%;
+
+    background: rgba(201, 162, 39, .08);
+
+    filter: blur(70px);
+
+    pointer-events: none;
+}
+
+
+.egwm-testimony-detail-page .story-hero::after {
+    content: "";
+
+    position: absolute;
+
+    bottom: 0;
+    left: 50%;
+
+    width: 90px;
+    height: 2px;
+
+    transform: translateX(-50%);
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--gold),
+        transparent
+    );
+}
+
+
+.egwm-testimony-detail-page .story-hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+
+.egwm-testimony-detail-page .story-hero .eyebrow {
+    margin-bottom: 1rem;
+}
+
+
+.egwm-testimony-detail-page .story-hero .eyebrow a {
+    color: rgba(255,255,255,.65);
+    text-decoration: none;
+
+    transition: color .25s ease;
+}
+
+
+.egwm-testimony-detail-page .story-hero .eyebrow a:hover {
+    color: var(--gold-light);
+}
+
+
+.egwm-testimony-detail-page .story-hero h1 {
+    color: #fff;
+
+    font-size: clamp(
+        2rem,
+        5vw,
+        3.4rem
+    );
+
+    line-height: 1.15;
+
+    max-width: 900px;
+
+    margin: 0 auto;
+
+    letter-spacing: -.02em;
+}
+
+
+/* =========================================================
+   MAIN ARTICLE
+========================================================= */
+
+.egwm-testimony-detail-page .story-section {
+    padding-top: clamp(3.5rem, 7vw, 5.5rem);
+    padding-bottom: clamp(4rem, 7vw, 6rem);
+}
+
+
+.egwm-testimony-detail-page .story-column {
+    max-width: 820px;
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   PERSON HEADER
+========================================================= */
+
+.egwm-testimony-detail-page .testimony-header {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    gap: 1.25rem;
+
+    margin-bottom: 3rem;
+
+    padding: 1.5rem 1.75rem;
+
+    background: #fff;
+
+    border: 1px solid rgba(0,0,0,.05);
+
+    border-radius: 16px;
+
+    box-shadow: var(--shadow-sm);
+}
+
+
+.egwm-testimony-detail-page .testimony-header::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 18px;
+    bottom: 18px;
+
+    width: 3px;
+
+    background: var(--gold);
+
+    border-radius: 0 4px 4px 0;
+}
+
+
+.egwm-testimony-detail-page .testimony-header img,
+.egwm-testimony-detail-page .testimony-photo-placeholder {
+    width: 82px;
+    height: 82px;
+
+    flex-shrink: 0;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    border: 2px solid var(--gold);
+
+    background: var(--off-white);
+}
+
+
+.egwm-testimony-detail-page .testimony-photo-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-color: rgba(201,162,39,.45);
+}
+
+
+.egwm-testimony-detail-page .testimony-photo-placeholder i {
+    color: #aaa;
+    font-size: 1.8rem;
+}
+
+
+.egwm-testimony-detail-page .testimony-header h2 {
+    margin-bottom: .25rem;
+
+    font-size: clamp(
+        1.3rem,
+        3vw,
+        1.7rem
+    );
+
+    line-height: 1.25;
+}
+
+
+.egwm-testimony-detail-page .testimony-header .person-title {
+    color: var(--gold-dark);
+
+    font-weight: 600;
+
+    font-size: .78rem;
+
+    letter-spacing: .09em;
+
+    text-transform: uppercase;
+
+    margin-bottom: .25rem;
+}
+
+
+.egwm-testimony-detail-page .testimony-header .date {
+    color: var(--muted);
+
+    font-size: .82rem;
+}
+
+
+/* =========================================================
+   STORY CONTENT
+========================================================= */
+
+.egwm-testimony-detail-page .story {
+    position: relative;
+
+    color: #292929;
+
+    font-family: var(--font-display);
+
+    font-size: clamp(
+        1.08rem,
+        2vw,
+        1.25rem
+    );
+
+    line-height: 1.95;
+}
+
+
+.egwm-testimony-detail-page .story p {
+    margin-bottom: 1.5rem;
+}
+
+
+.egwm-testimony-detail-page .story p:first-child::first-letter {
+    color: var(--gold-dark);
+
+    font-size: 3.8rem;
+
+    font-weight: 600;
+
+    float: left;
+
+    line-height: .85;
+
+    padding-right: .35rem;
+
+    padding-top: .15rem;
+}
+
+
+/* =========================================================
+   QUOTE INTRO
+========================================================= */
+
+.egwm-testimony-detail-page .story-intro-mark {
+    display: block;
+
+    color: var(--gold);
+
+    font-size: 2.5rem;
+
+    opacity: .55;
+
+    margin-bottom: .75rem;
+}
+
+
+/* =========================================================
+   SHARE / CLOSING DIVIDER
+========================================================= */
+
+.egwm-testimony-detail-page .story-divider {
+    display: flex;
+    align-items: center;
+
+    gap: 1rem;
+
+    margin: 3.5rem 0;
+}
+
+
+.egwm-testimony-detail-page .story-divider::before,
+.egwm-testimony-detail-page .story-divider::after {
+    content: "";
+
+    height: 1px;
+
+    flex: 1;
+
+    background: var(--border);
+}
+
+
+.egwm-testimony-detail-page .story-divider span {
+    color: var(--gold);
+
+    font-size: .8rem;
+
+    letter-spacing: .18em;
+
+    text-transform: uppercase;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   RELATED STORIES
+========================================================= */
+
+.egwm-testimony-detail-page .related-section {
+    margin-top: 4rem;
+}
+
+
+.egwm-testimony-detail-page .related-card {
+    position: relative;
+
+    height: 100%;
+
+    background: #fff;
+
+    border: 1px solid rgba(0,0,0,.05);
+
+    border-radius: 15px;
+
+    padding: 1.35rem 1.4rem;
+
+    box-shadow: var(--shadow-sm);
+
+    transition:
+        transform .3s var(--ease),
+        box-shadow .3s var(--ease),
+        border-color .3s ease;
+}
+
+
+.egwm-testimony-detail-page .related-card::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 15px;
+    bottom: 15px;
+
+    width: 2px;
+
+    background: var(--gold);
+
+    opacity: .55;
+}
+
+
+.egwm-testimony-detail-page .related-card:hover {
+    transform: translateY(-5px);
+
+    border-color: rgba(201,162,39,.2);
+
+    box-shadow: var(--shadow-md);
+}
+
+
+.egwm-testimony-detail-page .related-card h6 {
+    color: var(--black);
+
+    font-size: .98rem;
+
+    line-height: 1.45;
+
+    margin-bottom: .35rem;
+}
+
+
+.egwm-testimony-detail-page .related-card .related-title {
+    color: var(--muted);
+
+    font-size: .78rem;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
+.egwm-testimony-detail-page .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+
+    color: var(--gold-dark);
+
+    font-weight: 600;
+
+    font-size: .88rem;
+
+    text-decoration: none;
+
+    transition:
+        color .25s ease,
+        transform .25s ease;
+}
+
+
+.egwm-testimony-detail-page .back-link:hover {
+    color: var(--gold);
+
+    transform: translateX(-3px);
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .egwm-testimony-detail-page .story-hero {
+        padding:
+            3rem
+            1rem
+            3.5rem;
+    }
+
+
+    .egwm-testimony-detail-page .testimony-header {
+        padding: 1.25rem;
+
+        gap: 1rem;
+
         margin-bottom: 2.5rem;
-        padding-bottom: 2rem;
-        border-bottom: 1px solid var(--border);
     }
-    .testimony-detail .testimony-header img {
-        width: 84px;
-        height: 84px;
-        object-fit: cover;
-        border-radius: 50%;
-        border: 2px solid var(--gold);
+
+
+    .egwm-testimony-detail-page .testimony-header img,
+    .egwm-testimony-detail-page .testimony-photo-placeholder {
+        width: 68px;
+        height: 68px;
     }
-    .testimony-detail .testimony-header h2 { margin-bottom: .1rem; font-size: 1.6rem; }
-    .testimony-detail .story {
-        font-family: var(--font-display);
-        font-size: 1.25rem;
+
+
+    .egwm-testimony-detail-page .story {
+        font-size: 1.08rem;
         line-height: 1.85;
-        color: #222;
     }
-    .testimony-detail .story::before {
-        content: '"';
-        font-size: 3.5rem;
-        color: var(--gold);
-        line-height: 0;
-        vertical-align: -20px;
-        margin-right: 6px;
-        display: inline-block;
+
+
+    .egwm-testimony-detail-page .story p:first-child::first-letter {
+        font-size: 3.2rem;
     }
-    .related-testimony-card { transition: transform .3s var(--ease); }
-    .related-testimony-card:hover { transform: translateY(-4px); }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .egwm-testimony-detail-page .testimony-header {
+        align-items: flex-start;
+    }
+
+
+    .egwm-testimony-detail-page .testimony-header img,
+    .egwm-testimony-detail-page .testimony-photo-placeholder {
+        width: 60px;
+        height: 60px;
+    }
+
+
+    .egwm-testimony-detail-page .testimony-header h2 {
+        font-size: 1.25rem;
+    }
+
+}
+
 </style>
 {% endblock %}
 
+
 {% block content %}
-<section class="section-padding" style="padding-top: 4.5rem;">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 mx-auto testimony-detail" data-reveal>
-                <p class="eyebrow"><a href="{% url 'core:testimonies' %}" style="color:inherit;">Testimonies</a></p>
+
+<div class="egwm-testimony-detail-page">
+
+    <!-- =====================================================
+         STORY HERO
+    ====================================================== -->
+
+    <section class="story-hero">
+
+        <div class="container text-center">
+
+            <p class="eyebrow on-dark">
+                <a href="{% url 'core:testimonies' %}">
+                    Testimonies
+                </a>
+            </p>
+
+            <h1>
+                {{ testimony.title|default:"A Testimony of God's Faithfulness" }}
+            </h1>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         STORY
+    ====================================================== -->
+
+    <section class="story-section">
+
+        <div class="container">
+
+            <article
+                class="story-column"
+                data-reveal
+            >
+
+                <!-- PERSON -->
+
                 <div class="testimony-header">
+
                     {% if testimony.photo %}
-                        <img src="{{ testimony.photo.url }}" alt="{{ testimony.full_name }}">
+
+                        <img
+                            src="{{ testimony.photo.url }}"
+                            alt="{{ testimony.full_name }}"
+                            loading="lazy"
+                        >
+
                     {% else %}
-                        <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" style="width:84px;height:84px;">
-                            <i class="fas fa-user" style="font-size:2rem;color:#ccc;"></i>
+
+                        <div class="testimony-photo-placeholder">
+
+                            <i class="fas fa-user"></i>
+
                         </div>
+
                     {% endif %}
+
+
                     <div>
-                        <h2>{{ testimony.full_name }}</h2>
-                        {% if testimony.title %}<p class="gold-text fw-semibold mb-1">{{ testimony.title }}</p>{% endif %}
-                        <small style="color: var(--muted);">{{ testimony.published_date|date:"F d, Y" }}</small>
+
+                        <h2>
+                            {{ testimony.full_name }}
+                        </h2>
+
+
+                        {% if testimony.title %}
+
+                            <div class="person-title">
+                                {{ testimony.title }}
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if testimony.published_date %}
+
+                            <div class="date">
+                                {{ testimony.published_date|date:"F d, Y" }}
+                            </div>
+
+                        {% endif %}
+
                     </div>
+
                 </div>
+
+
+                <!-- STORY -->
 
                 <div class="story">
+
+                    <span class="story-intro-mark">
+                        <i class="fas fa-quote-left"></i>
+                    </span>
+
                     {{ testimony.story|linebreaks }}
+
                 </div>
 
-                <!-- Related Testimonies -->
+
+                <!-- DIVIDER -->
+
+                <div class="story-divider">
+
+                    <span>
+                        God's Faithfulness
+                    </span>
+
+                </div>
+
+
+                <!-- BACK -->
+
+                <a
+                    href="{% url 'core:testimonies' %}"
+                    class="back-link"
+                >
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Testimonies
+                </a>
+
+
+                <!-- =================================================
+                     RELATED TESTIMONIES
+                ================================================== -->
+
                 {% if related_testimonies %}
-                    <hr class="my-5" style="border-color: var(--border);">
-                    <p class="eyebrow">More Stories</p>
-                    <h4 class="mb-3">More Testimonies</h4>
-                    <div class="row g-3">
-                        {% for rel in related_testimonies %}
-                            <div class="col-md-6">
-                                <a href="{% url 'core:testimony_detail' rel.slug %}" class="text-decoration-none text-dark">
-                                    <div class="card premium-card related-testimony-card">
-                                        <div class="card-body">
-                                            <h6 class="mb-1">{{ rel.full_name }}</h6>
-                                            <small style="color: var(--muted);">{{ rel.title|default:"Testimony" }}</small>
+
+                    <div class="related-section">
+
+                        <p class="eyebrow">
+                            More Stories
+                        </p>
+
+                        <h3 class="mb-4">
+                            More Testimonies
+                        </h3>
+
+
+                        <div class="row g-3">
+
+                            {% for rel in related_testimonies %}
+
+                                <div class="col-md-6">
+
+                                    <a
+                                        href="{% url 'core:testimony_detail' rel.slug %}"
+                                        class="text-decoration-none"
+                                    >
+
+                                        <div class="related-card">
+
+                                            <h6>
+                                                {{ rel.full_name }}
+                                            </h6>
+
+                                            <div class="related-title">
+                                                {{ rel.title|default:"Testimony" }}
+                                            </div>
+
                                         </div>
-                                    </div>
-                                </a>
-                            </div>
-                        {% endfor %}
+
+                                    </a>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
                     </div>
+
                 {% endif %}
-            </div>
+
+            </article>
+
         </div>
-    </div>
-</section>
+
+    </section>
+
+</div>
+
 {% endblock %}

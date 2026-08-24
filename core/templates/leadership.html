@@ -10,134 +10,241 @@ Leadership -
 {% endif %}
 {% endblock %}
 
-
 {% block extra_css %}
 <style>
+    /* =========================================================
+       EGWM LEADERSHIP PAGE
+       Premium • White • Black • Gold • Mobile First
+    ========================================================= */
 
-    /* ================================
-       PAGE HERO STRIP
-    ================================= */
+    .leadership-page {
+        background: #ffffff;
+        color: #111111;
+    }
 
-    .page-hero {
-        background: linear-gradient(160deg, var(--black) 0%, var(--charcoal) 100%);
-        color: #fff;
-        padding: calc(var(--nav-h) + 4rem) 0 4.5rem;
-        margin-top: calc(-1 * var(--nav-h));
-        text-align: center;
+    /* =========================================================
+       HERO
+    ========================================================= */
+
+    .leadership-hero {
         position: relative;
         overflow: hidden;
-    }
-    .page-hero h1 { color: #fff; font-size: clamp(2.2rem, 4.5vw, 3.2rem); }
+        background:
+            radial-gradient(
+                circle at 80% 20%,
+                rgba(201, 162, 39, 0.16),
+                transparent 30%
+            ),
+            linear-gradient(145deg, #080808 0%, #151515 100%);
+        color: #fff;
 
-    /* ================================
+        /*
+            Keeps the hero safely below the fixed navbar.
+            Do NOT use negative nav margins here.
+        */
+        padding: 7.5rem 1rem 5rem;
+        text-align: center;
+    }
+
+    .leadership-hero::before {
+        content: "";
+        position: absolute;
+        width: 260px;
+        height: 260px;
+        border: 1px solid rgba(201, 162, 39, 0.15);
+        border-radius: 50%;
+        top: -120px;
+        right: -80px;
+        pointer-events: none;
+    }
+
+    .leadership-hero::after {
+        content: "";
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        border: 1px solid rgba(201, 162, 39, 0.10);
+        border-radius: 50%;
+        bottom: -100px;
+        left: -70px;
+        pointer-events: none;
+    }
+
+    .leadership-hero .container {
+        position: relative;
+        z-index: 2;
+    }
+
+    .leadership-eyebrow {
+        color: #d8bd61;
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: .24em;
+        text-transform: uppercase;
+        margin-bottom: .9rem;
+    }
+
+    .leadership-hero h1 {
+        margin: 0;
+        color: #ffffff;
+        font-family: var(--font-display, "Playfair Display", serif);
+        font-size: clamp(2.3rem, 6vw, 4rem);
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -.02em;
+    }
+
+    .leadership-hero-line {
+        width: 55px;
+        height: 2px;
+        background: var(--gold, #c9a227);
+        margin: 1.4rem auto 0;
+    }
+
+    /* =========================================================
+       INTRO
+    ========================================================= */
+
+    .leadership-section {
+        padding: 4.5rem 0 6rem;
+    }
+
+    .leadership-intro {
+        max-width: 680px;
+        margin: 0 auto 3rem;
+        text-align: center;
+    }
+
+    .leadership-intro-label {
+        color: var(--gold-dark, #a88418);
+        font-size: .72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .2em;
+        margin-bottom: .7rem;
+    }
+
+    .leadership-intro h2 {
+        color: #111;
+        font-family: var(--font-display, "Playfair Display", serif);
+        font-size: clamp(1.8rem, 4vw, 2.5rem);
+        margin-bottom: .8rem;
+    }
+
+    .leadership-intro p {
+        color: #707070;
+        font-size: .98rem;
+        line-height: 1.8;
+        margin: 0;
+    }
+
+    /* =========================================================
        LEADERSHIP CARD
-    ================================= */
+    ========================================================= */
 
     .leadership-card {
         position: relative;
-        background: #fff;
-        border: none;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: var(--shadow-sm);
-        transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
         height: 100%;
+        overflow: hidden;
+
+        background: #fff;
+        border: 1px solid rgba(0, 0, 0, .07);
+        border-radius: 18px;
+
+        box-shadow:
+            0 8px 30px rgba(0, 0, 0, .055);
+
+        transition:
+            transform .3s ease,
+            box-shadow .3s ease,
+            border-color .3s ease;
     }
 
     .leadership-card:hover {
-        transform: translateY(-8px);
-        box-shadow: var(--shadow-lg);
+        transform: translateY(-6px);
+        border-color: rgba(201, 162, 39, .35);
+
+        box-shadow:
+            0 18px 45px rgba(0, 0, 0, .10);
     }
 
+    /* =========================================================
+       PHOTO
+    ========================================================= */
 
-    /* ================================
-       LEADER IMAGE
-    ================================= */
+    .leader-photo-wrap {
+        position: relative;
+        background: #111;
+        overflow: hidden;
+    }
 
     .leadership-card img {
-        width: 100%;
-        height: 350px;
-        object-fit: cover;
         display: block;
+        width: 100%;
+        height: 360px;
+        object-fit: cover;
+
+        transition: transform .5s ease;
     }
+
+    .leadership-card:hover img {
+        transform: scale(1.025);
+    }
+
+    .leader-photo-wrap::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+
+        background:
+            linear-gradient(
+                to bottom,
+                rgba(0,0,0,.16),
+                transparent 35%,
+                rgba(0,0,0,.08)
+            );
+
+        pointer-events: none;
+    }
+
+    /* No photo */
 
     .leadership-card .no-photo {
-        height: 350px;
+        height: 360px;
+
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(160deg, var(--charcoal), var(--black));
+
+        background:
+            radial-gradient(
+                circle at center,
+                #292929 0%,
+                #111111 65%,
+                #080808 100%
+            );
     }
 
-    .leadership-card .no-photo .initial-ring {
-        width: 110px;
-        height: 110px;
-        border-radius: 50%;
-        border: 1.5px solid var(--gold);
+    .initial-ring {
+        width: 105px;
+        height: 105px;
+
         display: flex;
         align-items: center;
         justify-content: center;
-        font-family: var(--font-display);
-        font-size: 2.2rem;
-        color: var(--gold-light);
-    }
 
-
-    /* ================================
-       CARD BODY
-    ================================= */
-
-    .leadership-card .card-body {
-        padding: 1.9rem;
-    }
-
-    .leadership-card .position {
-        color: var(--gold-dark);
-        font-weight: 600;
-        font-size: .85rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        margin-bottom: .75rem;
-    }
-
-    .leadership-card .quote {
-        font-family: var(--font-display);
-        font-style: italic;
-        color: var(--muted);
-        border-left: 3px solid var(--gold);
-        padding-left: 1rem;
-        margin-top: 0.9rem;
-    }
-
-
-    /* ================================
-       SOCIAL LINKS
-    ================================= */
-
-    .leadership-card .social-links a {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 34px;
-        height: 34px;
+        border: 1px solid rgba(201, 162, 39, .7);
         border-radius: 50%;
-        border: 1px solid var(--border);
-        color: var(--black);
-        margin-right: 0.5rem;
-        font-size: .9rem;
-        transition: all 0.3s ease;
+
+        color: #e2c766;
+
+        font-family: var(--font-display, "Playfair Display", serif);
+        font-size: 2.3rem;
     }
 
-    .leadership-card .social-links a:hover {
-        background: var(--gold);
-        border-color: var(--gold);
-        color: var(--black);
-    }
-
-
-    /* ================================
+    /* =========================================================
        ADMIN CONTROLS
-    ================================= */
+    ========================================================= */
 
     .leadership-admin-controls {
         position: absolute;
@@ -146,116 +253,218 @@ Leadership -
 
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 7px;
 
-        z-index: 30;
+        z-index: 50;
     }
-
-
-    /* Small circular icon */
-
-    .leadership-admin-controls .admin-icon {
-        width: 36px;
-        height: 36px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        border-radius: 50%;
-
-        text-decoration: none;
-        border: none;
-
-        background: rgba(255,255,255,0.94);
-        color: #333;
-
-        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-
-        cursor: pointer;
-
-        transition:
-            transform 0.2s ease,
-            background 0.2s ease,
-            color 0.2s ease,
-            box-shadow 0.2s ease;
-    }
-
-
-    .leadership-admin-controls .admin-icon i {
-        font-size: 14px;
-    }
-
-
-    /* Edit */
-
-    .leadership-admin-controls .edit-icon:hover {
-        background: var(--gold);
-        color: #fff;
-        transform: translateY(-2px);
-        box-shadow: 0 7px 18px rgba(0,0,0,0.2);
-    }
-
-
-    /* Delete */
-
-    .leadership-admin-controls .delete-icon:hover {
-        background: #dc3545;
-        color: #fff;
-        transform: translateY(-2px);
-        box-shadow: 0 7px 18px rgba(0,0,0,0.2);
-    }
-
-
-    /* Remove form default spacing */
 
     .leadership-admin-controls form {
         margin: 0;
         padding: 0;
     }
 
+    .leadership-admin-controls .admin-icon {
+        width: 38px;
+        height: 38px;
 
-    /* Slight image overlay so controls remain visible */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
 
-    .leadership-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
+        border: 1px solid rgba(255,255,255,.65);
+        border-radius: 50%;
 
-        height: 80px;
+        background: rgba(255,255,255,.94);
+        backdrop-filter: blur(8px);
 
-        background: linear-gradient(
-            to bottom,
-            rgba(0,0,0,0.18),
-            transparent
-        );
+        color: #151515;
 
-        pointer-events: none;
-        z-index: 5;
+        box-shadow: 0 5px 18px rgba(0,0,0,.18);
+
+        cursor: pointer;
+
+        transition:
+            transform .2s ease,
+            background .2s ease,
+            color .2s ease;
     }
 
+    .leadership-admin-controls .admin-icon:hover {
+        transform: translateY(-2px);
+    }
 
-    /* Empty state */
+    .leadership-admin-controls .edit-icon:hover {
+        background: var(--gold, #c9a227);
+        border-color: var(--gold, #c9a227);
+        color: #fff;
+    }
+
+    .leadership-admin-controls .delete-icon {
+        color: #b42318;
+    }
+
+    .leadership-admin-controls .delete-icon:hover {
+        background: #b42318;
+        border-color: #b42318;
+        color: #fff;
+    }
+
+    /* =========================================================
+       CARD CONTENT
+    ========================================================= */
+
+    .leadership-card .card-body {
+        padding: 1.7rem 1.7rem 1.8rem;
+    }
+
+    .leadership-card h3,
+    .leadership-card h4 {
+        color: #111;
+        font-family: var(--font-display, "Playfair Display", serif);
+        font-size: 1.45rem;
+        line-height: 1.25;
+        margin-bottom: .55rem;
+    }
+
+    .leadership-card .position {
+        color: var(--gold-dark, #a88418);
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: .15em;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+    }
+
+    .leader-biography {
+        color: #6d6d6d;
+        font-size: .9rem;
+        line-height: 1.75;
+        margin-bottom: 1rem;
+    }
+
+    .leader-quote {
+        position: relative;
+
+        margin-top: 1.1rem;
+        padding: .85rem 0 .85rem 1rem;
+
+        border-left: 2px solid var(--gold, #c9a227);
+
+        color: #555;
+        font-family: var(--font-display, "Playfair Display", serif);
+        font-size: .95rem;
+        line-height: 1.65;
+        font-style: italic;
+    }
+
+    /* =========================================================
+       SOCIAL LINKS
+    ========================================================= */
+
+    .leadership-card .social-links {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+
+        margin-top: 1.25rem;
+        padding-top: 1rem;
+
+        border-top: 1px solid rgba(0,0,0,.07);
+    }
+
+    .leadership-card .social-links a {
+        width: 34px;
+        height: 34px;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        border: 1px solid rgba(0,0,0,.09);
+        border-radius: 50%;
+
+        color: #333;
+        background: #fff;
+
+        font-size: .82rem;
+
+        transition:
+            background .2s ease,
+            border-color .2s ease,
+            color .2s ease,
+            transform .2s ease;
+    }
+
+    .leadership-card .social-links a:hover {
+        background: var(--gold, #c9a227);
+        border-color: var(--gold, #c9a227);
+        color: #fff;
+        transform: translateY(-2px);
+    }
+
+    /* =========================================================
+       EMPTY STATE
+    ========================================================= */
 
     .empty-state {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 4rem 1.5rem;
+
         text-align: center;
-        padding: 4rem 1rem;
-        color: var(--muted);
+
+        background: #fafafa;
+        border: 1px solid rgba(0,0,0,.06);
+        border-radius: 18px;
     }
-    .empty-state i { font-size: 2.4rem; color: var(--gold); margin-bottom: 1rem; display: block; }
 
+    .empty-state i {
+        display: block;
+        color: var(--gold, #c9a227);
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
 
-    /* ================================
+    .empty-state p {
+        color: #777;
+        margin: 0;
+    }
+
+    /* =========================================================
        MOBILE
-    ================================= */
+    ========================================================= */
 
-    @media (max-width: 576px) {
+    @media (max-width: 767px) {
+
+        .leadership-hero {
+            padding: 6.5rem 1rem 4rem;
+        }
+
+        .leadership-section {
+            padding: 3.2rem 0 4.5rem;
+        }
+
+        .leadership-intro {
+            margin-bottom: 2.2rem;
+            padding: 0 .5rem;
+        }
+
+        .leadership-card {
+            border-radius: 16px;
+        }
 
         .leadership-card img,
         .leadership-card .no-photo {
-            height: 300px;
+            height: 320px;
+        }
+
+        .leadership-card .card-body {
+            padding: 1.45rem;
+        }
+
+        .leadership-card h3,
+        .leadership-card h4 {
+            font-size: 1.35rem;
         }
 
         .leadership-admin-controls {
@@ -264,236 +473,287 @@ Leadership -
         }
 
         .leadership-admin-controls .admin-icon {
-            width: 34px;
-            height: 34px;
+            width: 35px;
+            height: 35px;
         }
-
     }
 
+    @media (max-width: 420px) {
+
+        .leadership-hero {
+            padding-top: 6rem;
+        }
+
+        .leadership-card img,
+        .leadership-card .no-photo {
+            height: 290px;
+        }
+
+        .leadership-card .card-body {
+            padding: 1.3rem;
+        }
+    }
 </style>
 {% endblock %}
 
 
-
 {% block content %}
 
-<!-- HERO -->
-<section class="page-hero">
-    <div class="container">
-        <p class="eyebrow on-dark center justify-content-center d-flex">The People Who Serve</p>
-        <h1>Our Leadership</h1>
-    </div>
-</section>
+<div class="leadership-page">
 
-<section class="section-padding">
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
 
-    <div class="container">
+    <section class="leadership-hero">
 
-        <p class="section-subtitle text-center mb-5">
-            Spiritual leaders dedicated to serving God and His people.
-        </p>
+        <div class="container">
 
+            <div class="leadership-eyebrow">
+                The People Who Serve
+            </div>
 
-        {% if leadership %}
+            <h1>Our Leadership</h1>
 
-            <div class="row g-4" data-reveal>
+            <div class="leadership-hero-line"></div>
 
-                {% for leader in leadership %}
+        </div>
 
-                    <div class="col-lg-4 col-md-6">
-
-                        <div class="leadership-card">
+    </section>
 
 
-                            <!-- =================================
-                                 ADMIN CONTROLS
-                                 ONLY STAFF CAN SEE THESE
-                            ================================== -->
+    <!-- =====================================================
+         LEADERSHIP CONTENT
+    ====================================================== -->
 
-                            {% if user.is_authenticated and user.is_staff %}
+    <section class="leadership-section">
 
-                                <div class="leadership-admin-controls">
+        <div class="container">
 
-                                    <!-- EDIT -->
+            <div class="leadership-intro">
 
-                                    <a
-                                        href="{% url 'core:dashboard_edit_leadership' leader.pk %}"
-                                        class="admin-icon edit-icon"
-                                        title="Edit {{ leader.name }}"
-                                        aria-label="Edit {{ leader.name }}"
-                                    >
-                                        <i class="bi bi-pencil-fill"></i>
-                                    </a>
+                <div class="leadership-intro-label">
+                    Serving With Purpose
+                </div>
+
+                <h2>Meet Our Leaders</h2>
+
+                <p>
+                    Spiritual leaders dedicated to serving God,
+                    strengthening His people, and advancing the
+                    work of the ministry.
+                </p>
+
+            </div>
 
 
-                                    <!-- DELETE -->
+            {% if leadership %}
 
-                                    <form
-                                        method="POST"
-                                        action="{% url 'core:dashboard_delete_leadership' leader.pk %}"
-                                        onsubmit="return confirm('Are you sure you want to delete {{ leader.name|escapejs }}?');"
-                                    >
+                <div class="row g-4">
 
-                                        {% csrf_token %}
+                    {% for leader in leadership %}
 
-                                        <button
-                                            type="submit"
-                                            class="admin-icon delete-icon"
-                                            title="Delete {{ leader.name }}"
-                                            aria-label="Delete {{ leader.name }}"
+                        <div class="col-lg-4 col-md-6">
+
+                            <article class="leadership-card">
+
+
+                                <!-- ADMIN CONTROLS -->
+
+                                {% if user.is_authenticated and user.is_staff %}
+
+                                    <div class="leadership-admin-controls">
+
+                                        <a
+                                            href="{% url 'core:dashboard_edit_leadership' leader.pk %}"
+                                            class="admin-icon edit-icon"
+                                            title="Edit {{ leader.name }}"
+                                            aria-label="Edit {{ leader.name }}"
                                         >
-                                            <i class="bi bi-trash-fill"></i>
-                                        </button>
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </a>
 
-                                    </form>
+                                        <form
+                                            method="POST"
+                                            action="{% url 'core:dashboard_delete_leadership' leader.pk %}"
+                                            onsubmit="return confirm('Are you sure you want to delete {{ leader.name|escapejs }}?');"
+                                        >
 
-                                </div>
+                                            {% csrf_token %}
 
-                            {% endif %}
+                                            <button
+                                                type="submit"
+                                                class="admin-icon delete-icon"
+                                                title="Delete {{ leader.name }}"
+                                                aria-label="Delete {{ leader.name }}"
+                                            >
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
 
+                                        </form>
 
-
-                            <!-- =================================
-                                 LEADER PHOTO
-                            ================================== -->
-
-                            {% if leader.photo %}
-
-                                <img
-                                    src="{{ leader.photo.url }}"
-                                    alt="{{ leader.name }}"
-                                    loading="lazy"
-                                >
-
-                            {% else %}
-
-                                <div class="no-photo">
-                                    <div class="initial-ring">{{ leader.name|slice:":1" }}</div>
-                                </div>
-
-                            {% endif %}
-
-
-
-                            <!-- =================================
-                                 LEADER INFORMATION
-                            ================================== -->
-
-                            <div class="card-body">
-
-                                <h4>
-                                    {{ leader.name }}
-                                </h4>
-
-
-                                {% if leader.position %}
-
-                                    <p class="position">
-                                        {{ leader.position }}
-                                    </p>
-
-                                {% endif %}
-
-
-
-                                {% if leader.biography %}
-
-                                    <p style="color: var(--muted);">
-                                        {{ leader.biography|striptags|truncatewords:30 }}
-                                    </p>
-
-                                {% endif %}
-
-
-
-                                {% if leader.quote %}
-
-                                    <div class="quote">
-                                        "{{ leader.quote }}"
                                     </div>
 
                                 {% endif %}
 
 
+                                <!-- LEADER PHOTO -->
 
-                                <!-- SOCIAL LINKS -->
+                                <div class="leader-photo-wrap">
 
-                                <div class="social-links mt-3">
+                                    {% if leader.photo %}
 
-                                    {% if leader.facebook %}
-
-                                        <a
-                                            href="{{ leader.facebook }}"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            title="Facebook"
+                                        <img
+                                            src="{{ leader.photo.url }}"
+                                            alt="{{ leader.name }}"
+                                            loading="lazy"
                                         >
-                                            <i class="fab fa-facebook-f"></i>
-                                        </a>
 
-                                    {% endif %}
+                                    {% else %}
 
+                                        <div class="no-photo">
 
-                                    {% if leader.instagram %}
+                                            <div class="initial-ring">
+                                                {{ leader.name|slice:":1"|upper }}
+                                            </div>
 
-                                        <a
-                                            href="{{ leader.instagram }}"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            title="Instagram"
-                                        >
-                                            <i class="fab fa-instagram"></i>
-                                        </a>
-
-                                    {% endif %}
-
-
-                                    {% if leader.email %}
-
-                                        <a
-                                            href="mailto:{{ leader.email }}"
-                                            title="Email"
-                                        >
-                                            <i class="fas fa-envelope"></i>
-                                        </a>
-
-                                    {% endif %}
-
-
-                                    {% if leader.phone %}
-
-                                        <a
-                                            href="tel:{{ leader.phone }}"
-                                            title="Phone"
-                                        >
-                                            <i class="fas fa-phone"></i>
-                                        </a>
+                                        </div>
 
                                     {% endif %}
 
                                 </div>
 
-                            </div>
+
+                                <!-- LEADER INFORMATION -->
+
+                                <div class="card-body">
+
+                                    <h4>
+                                        {{ leader.name }}
+                                    </h4>
+
+
+                                    {% if leader.position %}
+
+                                        <div class="position">
+                                            {{ leader.position }}
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    {% if leader.biography %}
+
+                                        <p class="leader-biography">
+                                            {{ leader.biography|striptags|truncatewords:30 }}
+                                        </p>
+
+                                    {% endif %}
+
+
+                                    {% if leader.quote %}
+
+                                        <div class="leader-quote">
+                                            "{{ leader.quote }}"
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <!-- SOCIAL LINKS -->
+
+                                    {% if leader.facebook or leader.instagram or leader.email or leader.phone %}
+
+                                        <div class="social-links">
+
+                                            {% if leader.facebook %}
+
+                                                <a
+                                                    href="{{ leader.facebook }}"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    title="Facebook"
+                                                    aria-label="Facebook"
+                                                >
+                                                    <i class="fab fa-facebook-f"></i>
+                                                </a>
+
+                                            {% endif %}
+
+
+                                            {% if leader.instagram %}
+
+                                                <a
+                                                    href="{{ leader.instagram }}"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    title="Instagram"
+                                                    aria-label="Instagram"
+                                                >
+                                                    <i class="fab fa-instagram"></i>
+                                                </a>
+
+                                            {% endif %}
+
+
+                                            {% if leader.email %}
+
+                                                <a
+                                                    href="mailto:{{ leader.email }}"
+                                                    title="Email"
+                                                    aria-label="Email"
+                                                >
+                                                    <i class="fas fa-envelope"></i>
+                                                </a>
+
+                                            {% endif %}
+
+
+                                            {% if leader.phone %}
+
+                                                <a
+                                                    href="tel:{{ leader.phone }}"
+                                                    title="Phone"
+                                                    aria-label="Phone"
+                                                >
+                                                    <i class="fas fa-phone"></i>
+                                                </a>
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </article>
 
                         </div>
 
-                    </div>
+                    {% endfor %}
 
-                {% endfor %}
+                </div>
 
-            </div>
+            {% else %}
 
-        {% else %}
+                <div class="empty-state">
 
-            <div class="empty-state">
-                <i class="fas fa-user-circle"></i>
-                <p class="mb-0">Meet the servants entrusted with leading this ministry.</p>
-            </div>
+                    <i class="fas fa-user-circle"></i>
 
-        {% endif %}
+                    <p>
+                        Meet the servants entrusted with leading
+                        this ministry.
+                    </p>
 
-    </div>
+                </div>
 
-</section>
+            {% endif %}
+
+        </div>
+
+    </section>
+
+</div>
 
 {% endblock %}

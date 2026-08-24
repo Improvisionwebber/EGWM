@@ -5,125 +5,604 @@
 
 {% block extra_css %}
 <style>
+    /* =========================================================
+       EGWM DEVOTIONAL DETAIL
+       Clean • Mature • White • Black • Gold
+       ========================================================= */
+
+    :root {
+        --dev-gold: #c9a227;
+        --dev-gold-light: #e6cf87;
+        --dev-black: #111111;
+        --dev-text: #222222;
+        --dev-muted: #777777;
+        --dev-border: #e8e4d8;
+        --dev-soft: #faf9f5;
+    }
+
+    /* READING PROGRESS
+       Keep it underneath the navbar instead of fighting it.
+    */
     #reading-progress {
         position: fixed;
-        top: var(--nav-h);
+        top: var(--nav-h, 72px);
         left: 0;
-        height: 2px;
         width: 0%;
-        background: linear-gradient(90deg, var(--gold), var(--gold-light));
-        z-index: 1200;
+        height: 3px;
+        background: linear-gradient(
+            90deg,
+            var(--dev-gold),
+            var(--dev-gold-light)
+        );
+        z-index: 900;
         transition: width .1s linear;
     }
-    .navbar-premium.scrolled ~ #reading-progress,
-    #reading-progress { top: 72px; }
 
-    .devotional-detail img.featured {
-        width: 100%;
-        max-height: 460px;
-        object-fit: cover;
-        border-radius: var(--radius-lg);
-        margin-bottom: 2.5rem;
-        box-shadow: var(--shadow-md);
+    /* MAIN PAGE */
+
+    .devotional-page {
+        background: #fff;
+        min-height: 100vh;
+        padding-top: calc(var(--nav-h, 72px) + 3.5rem);
+        padding-bottom: 5rem;
     }
-    .devotional-detail .meta {
-        color: var(--muted);
-        font-size: 0.92rem;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1.5rem;
+
+    .devotional-detail {
+        width: 100%;
+        max-width: 820px;
+        margin: 0 auto;
+    }
+
+    /* BREADCRUMB */
+
+    .devotional-breadcrumb {
         margin-bottom: 1.5rem;
     }
-    .devotional-detail .meta span { display: inline-flex; align-items: center; gap: .4rem; }
-    .devotional-detail .meta i { color: var(--gold); }
+
+    .devotional-breadcrumb a {
+        color: var(--dev-gold);
+        text-decoration: none;
+        font-size: .78rem;
+        font-weight: 700;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        transition: color .2s ease;
+    }
+
+    .devotional-breadcrumb a:hover {
+        color: var(--dev-black);
+    }
+
+    .breadcrumb-arrow {
+        color: #bbb;
+        margin: 0 .45rem;
+    }
+
+    /* TITLE */
+
     .devotional-detail h1 {
-        font-size: clamp(2rem, 4vw, 2.9rem);
-        line-height: 1.15;
-        margin-bottom: 1rem;
+        color: var(--dev-black);
+        font-family: var(--font-display, "Playfair Display", serif);
+        font-size: clamp(2.15rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.12;
+        letter-spacing: -.025em;
+        margin: 0 0 1.25rem;
     }
-    .devotional-detail .content {
-        font-size: 1.15rem;
-        line-height: 1.95;
-        color: #222;
-        max-width: 760px;
+
+    /* META */
+
+    .devotional-meta {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: .65rem 1.35rem;
+        color: var(--dev-muted);
+        font-size: .85rem;
+        margin-bottom: 2rem;
     }
-    .devotional-detail .content p { margin-bottom: 1.4rem; }
-    .devotional-detail .scripture-box {
-        background: var(--off-white);
-        border-left: 4px solid var(--gold);
-        padding: 1.4rem 1.9rem;
-        border-radius: 8px;
-        margin: 2rem 0;
-        font-family: var(--font-display);
+
+    .devotional-meta span {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+    }
+
+    .devotional-meta i {
+        color: var(--dev-gold);
+        font-size: .8rem;
+    }
+
+    .meta-divider {
+        width: 4px;
+        height: 4px;
+        background: var(--dev-gold);
+        border-radius: 50%;
+        opacity: .65;
+    }
+
+    /* FEATURED IMAGE */
+
+    .devotional-featured {
+        width: 100%;
+        max-height: 500px;
+        object-fit: cover;
+        display: block;
+        border-radius: 18px;
+        margin-bottom: 2.8rem;
+        box-shadow:
+            0 18px 50px rgba(0, 0, 0, .10);
+    }
+
+    /* IMAGE PLACEHOLDER */
+
+    .devotional-image-placeholder {
+        width: 100%;
+        height: 300px;
+        border-radius: 18px;
+        background:
+            linear-gradient(
+                135deg,
+                #faf9f5,
+                #f2eee2
+            );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 2.8rem;
+        border: 1px solid var(--dev-border);
+    }
+
+    .devotional-image-placeholder i {
+        font-size: 3rem;
+        color: var(--dev-gold);
+        opacity: .75;
+    }
+
+    /* SCRIPTURE */
+
+    .scripture-box {
+        position: relative;
+        background: var(--dev-soft);
+        border: 1px solid var(--dev-border);
+        border-left: 4px solid var(--dev-gold);
+        border-radius: 10px;
+        padding: 1.5rem 1.7rem 1.5rem 1.8rem;
+        margin: 2.3rem 0 2.6rem;
+        color: #3d3a33;
+        font-family: var(
+            --font-display,
+            "Playfair Display",
+            Georgia,
+            serif
+        );
+        font-size: 1.08rem;
         font-style: italic;
-        font-size: 1.05rem;
+        line-height: 1.8;
     }
-    .related-devotional-card { transition: transform .3s var(--ease); }
-    .related-devotional-card:hover { transform: translateY(-4px); }
+
+    .scripture-box i {
+        color: var(--dev-gold);
+        margin-right: .5rem;
+        font-style: normal;
+    }
+
+    /* CONTENT */
+
+    .devotional-content {
+        color: var(--dev-text);
+        font-family: var(
+            --font-body,
+            "Inter",
+            Arial,
+            sans-serif
+        );
+        font-size: 1.08rem;
+        line-height: 1.95;
+    }
+
+    .devotional-content p {
+        margin-bottom: 1.5rem;
+    }
+
+    .devotional-content p:first-child {
+        font-size: 1.16rem;
+    }
+
+    .devotional-content strong {
+        color: var(--dev-black);
+        font-weight: 700;
+    }
+
+    .devotional-content em {
+        color: #444;
+    }
+
+    /* RELATED SECTION */
+
+    .related-section {
+        margin-top: 4rem;
+        padding-top: 2.5rem;
+        border-top: 1px solid var(--dev-border);
+    }
+
+    .related-eyebrow {
+        color: var(--dev-gold);
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+        margin-bottom: .5rem;
+    }
+
+    .related-title {
+        font-family: var(
+            --font-display,
+            "Playfair Display",
+            serif
+        );
+        font-size: 1.7rem;
+        font-weight: 700;
+        color: var(--dev-black);
+        margin-bottom: 1.4rem;
+    }
+
+    .related-card {
+        display: block;
+        height: 100%;
+        padding: 1.25rem;
+        background: #fff;
+        border: 1px solid var(--dev-border);
+        border-radius: 12px;
+        text-decoration: none;
+        transition:
+            transform .25s ease,
+            box-shadow .25s ease,
+            border-color .25s ease;
+    }
+
+    .related-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(201, 162, 39, .45);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, .07);
+    }
+
+    .related-card h6 {
+        color: var(--dev-black);
+        font-family: var(
+            --font-display,
+            "Playfair Display",
+            serif
+        );
+        font-size: 1.05rem;
+        line-height: 1.4;
+        margin-bottom: .45rem;
+    }
+
+    .related-date {
+        color: var(--dev-muted);
+        font-size: .78rem;
+    }
+
+    .related-date i {
+        color: var(--dev-gold);
+        margin-right: .3rem;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 768px) {
+
+        .devotional-page {
+            padding-top: calc(var(--nav-h, 72px) + 2rem);
+            padding-bottom: 3.5rem;
+        }
+
+        .devotional-detail {
+            max-width: 100%;
+        }
+
+        .devotional-detail h1 {
+            font-size: clamp(2rem, 8vw, 2.65rem);
+            line-height: 1.13;
+        }
+
+        .devotional-meta {
+            gap: .6rem 1rem;
+            margin-bottom: 1.5rem;
+            font-size: .78rem;
+        }
+
+        .meta-divider {
+            display: none;
+        }
+
+        .devotional-featured {
+            max-height: 330px;
+            border-radius: 13px;
+            margin-bottom: 2rem;
+        }
+
+        .devotional-image-placeholder {
+            height: 220px;
+            border-radius: 13px;
+            margin-bottom: 2rem;
+        }
+
+        .scripture-box {
+            padding: 1.25rem 1.2rem;
+            font-size: 1rem;
+            line-height: 1.75;
+            margin: 1.8rem 0 2rem;
+        }
+
+        .devotional-content {
+            font-size: 1rem;
+            line-height: 1.85;
+        }
+
+        .devotional-content p:first-child {
+            font-size: 1.05rem;
+        }
+
+        .related-section {
+            margin-top: 3rem;
+            padding-top: 2rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+
+        .devotional-page {
+            padding-top: calc(var(--nav-h, 72px) + 1.5rem);
+        }
+
+        .devotional-breadcrumb {
+            margin-bottom: 1rem;
+        }
+
+        .devotional-detail h1 {
+            font-size: 2rem;
+        }
+
+        .devotional-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .65rem;
+        }
+
+        .devotional-meta span {
+            min-width: 0;
+        }
+
+        .devotional-featured {
+            max-height: 260px;
+        }
+
+        .devotional-content {
+            font-size: .98rem;
+        }
+    }
 </style>
 {% endblock %}
 
+
 {% block content %}
+
 <div id="reading-progress"></div>
-<section class="section-padding" style="padding-top: 4.5rem;">
+
+<main class="devotional-page">
+
     <div class="container">
-        <div class="row">
-            <div class="col-lg-8 mx-auto devotional-detail" data-reveal>
-                <p class="eyebrow"><a href="{% url 'core:devotionals' %}" style="color:inherit;">Devotionals</a></p>
-                {% if devotional.featured_image %}
-                    <img class="featured" src="{{ devotional.featured_image.url }}" alt="{{ devotional.title }}">
-                {% endif %}
-                <h1>{{ devotional.title }}</h1>
-                <div class="meta">
-                    <span><i class="fas fa-user"></i> {{ devotional.author|default:"Pastor Kingsley Nwekwo" }}</span>
-                    <span><i class="fas fa-calendar-alt"></i> {{ devotional.created_at|date:"F d, Y" }}</span>
-                    <span><i class="fas fa-eye"></i> {{ devotional.views }} views</span>
-                    <span><i class="fas fa-clock"></i> {{ devotional.reading_time }} min read</span>
-                </div>
 
-                {% if devotional.scripture %}
-                    <div class="scripture-box">
-                        <i class="fas fa-book-open gold-text"></i> {{ devotional.scripture }}
-                    </div>
-                {% endif %}
+        <article class="devotional-detail" data-reveal>
 
-                <div class="content">
-                    {{ devotional.content|linebreaks }}
-                </div>
+            <!-- BREADCRUMB -->
 
-                <!-- Related -->
-                {% if related_devotionals %}
-                    <hr class="my-5" style="border-color: var(--border);">
-                    <p class="eyebrow">Continue Reading</p>
-                    <h4 class="mb-3">More Devotionals</h4>
-                    <div class="row g-3">
-                        {% for rel in related_devotionals %}
-                            <div class="col-md-6">
-                                <a href="{% url 'core:devotional_detail' rel.slug %}" class="text-decoration-none text-dark">
-                                    <div class="card premium-card related-devotional-card">
-                                        <div class="card-body">
-                                            <h6 class="mb-1">{{ rel.title|truncatechars:50 }}</h6>
-                                            <small style="color: var(--muted);">{{ rel.created_at|date:"M d, Y" }}</small>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
+            <div class="devotional-breadcrumb">
+                <a href="{% url 'core:devotionals' %}">
+                    Devotionals
+                </a>
+
+                <span class="breadcrumb-arrow">/</span>
+
+                <span style="color:#888; font-size:.78rem;">
+                    Daily Bread
+                </span>
             </div>
-        </div>
+
+
+            <!-- TITLE -->
+
+            <h1>{{ devotional.title }}</h1>
+
+
+            <!-- META -->
+
+            <div class="devotional-meta">
+
+                <span>
+                    <i class="fas fa-user"></i>
+                    {{ devotional.author|default:"Pastor Kingsley Nwekwo" }}
+                </span>
+
+                <span class="meta-divider"></span>
+
+                <span>
+                    <i class="fas fa-calendar-alt"></i>
+                    {{ devotional.created_at|date:"F d, Y" }}
+                </span>
+
+                <span class="meta-divider"></span>
+
+                <span>
+                    <i class="fas fa-eye"></i>
+                    {{ devotional.views }} views
+                </span>
+
+                <span class="meta-divider"></span>
+
+                <span>
+                    <i class="fas fa-clock"></i>
+                    {{ devotional.reading_time }} min read
+                </span>
+
+            </div>
+
+
+            <!-- FEATURED IMAGE -->
+
+            {% if devotional.featured_image %}
+
+                <img
+                    class="devotional-featured"
+                    src="{{ devotional.featured_image.url }}"
+                    alt="{{ devotional.title }}"
+                >
+
+            {% else %}
+
+                <div class="devotional-image-placeholder">
+                    <i class="fas fa-bible"></i>
+                </div>
+
+            {% endif %}
+
+
+            <!-- SCRIPTURE -->
+
+            {% if devotional.scripture %}
+
+                <div class="scripture-box">
+
+                    <i class="fas fa-book-open"></i>
+
+                    {{ devotional.scripture }}
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- DEVOTIONAL CONTENT -->
+
+            <div class="devotional-content">
+
+                {{ devotional.content|linebreaks }}
+
+            </div>
+
+
+            <!-- RELATED DEVOTIONALS -->
+
+            {% if related_devotionals %}
+
+                <section class="related-section">
+
+                    <div class="related-eyebrow">
+                        Continue Reading
+                    </div>
+
+                    <h2 class="related-title">
+                        More Devotionals
+                    </h2>
+
+                    <div class="row g-3">
+
+                        {% for rel in related_devotionals %}
+
+                            <div class="col-md-6">
+
+                                <a
+                                    href="{% url 'core:devotional_detail' rel.slug %}"
+                                    class="related-card"
+                                >
+
+                                    <h6>
+                                        {{ rel.title|truncatechars:50 }}
+                                    </h6>
+
+                                    <div class="related-date">
+
+                                        <i class="fas fa-calendar-alt"></i>
+
+                                        {{ rel.created_at|date:"M d, Y" }}
+
+                                    </div>
+
+                                </a>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </section>
+
+            {% endif %}
+
+        </article>
+
     </div>
-</section>
+
+</main>
+
 {% endblock %}
 
+
 {% block extra_js %}
-var bar = document.getElementById('reading-progress');
-function updateProgress() {
-    var h = document.documentElement;
-    var scrolled = (h.scrollTop) / ((h.scrollHeight - h.clientHeight) || 1) * 100;
-    if (bar) bar.style.width = scrolled + '%';
-}
-window.addEventListener('scroll', updateProgress, { passive: true });
-updateProgress();
+
+<script>
+
+(function () {
+
+    const bar = document.getElementById("reading-progress");
+
+    function updateProgress() {
+
+        if (!bar) return;
+
+        const documentHeight =
+            document.documentElement.scrollHeight -
+            document.documentElement.clientHeight;
+
+        if (documentHeight <= 0) {
+            bar.style.width = "0%";
+            return;
+        }
+
+        const scrollTop =
+            window.scrollY ||
+            document.documentElement.scrollTop;
+
+        const progress =
+            Math.min(
+                100,
+                Math.max(
+                    0,
+                    (scrollTop / documentHeight) * 100
+                )
+            );
+
+        bar.style.width = progress + "%";
+    }
+
+    window.addEventListener(
+        "scroll",
+        updateProgress,
+        { passive: true }
+    );
+
+    window.addEventListener(
+        "resize",
+        updateProgress
+    );
+
+    updateProgress();
+
+})();
+
+</script>
+
 {% endblock %}

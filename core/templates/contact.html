@@ -1,102 +1,532 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Contact Us - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
+{% block title %}
+Contact Us -
+{% if church_settings %}
+    {{ church_settings.church_name }}
+{% else %}
+    Embassy of God's Word Ministry
+{% endif %}
+{% endblock %}
+
 
 {% block extra_css %}
 <style>
+
+    /* =========================================================
+       PAGE HERO
+    ========================================================= */
+
     .page-hero {
-        background: linear-gradient(160deg, var(--black) 0%, var(--charcoal) 100%);
-        color: #fff;
-        padding: calc(var(--nav-h) + 4rem) 0 4.5rem;
+        background: #ffffff;
+        color: var(--black);
+        padding: calc(var(--nav-h) + 4rem) 0 4rem;
         margin-top: calc(-1 * var(--nav-h));
         text-align: center;
+        border-bottom: 1px solid var(--border);
     }
-    .page-hero h1 { color: #fff; font-size: clamp(2.2rem, 4.5vw, 3.2rem); }
 
-    .contact-info-box .directions-link { font-size: .85rem; font-weight: 600; color: var(--gold-dark); display: inline-flex; align-items: center; gap: .4rem; margin-top: .5rem; }
-    .contact-info-box .directions-link:hover { color: var(--gold); }
+    .page-hero h1 {
+        color: var(--black);
+        font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+        margin-bottom: .75rem;
+    }
 
-    .contact-form-card { border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); border: none; }
+    .page-hero .hero-description {
+        max-width: 600px;
+        margin: 0 auto;
+        color: var(--muted);
+        font-size: 1rem;
+        line-height: 1.7;
+    }
+
+
+    /* =========================================================
+       CONTACT SECTION
+    ========================================================= */
+
+    .contact-section {
+        background: #ffffff;
+    }
+
+    .contact-intro {
+        max-width: 700px;
+        margin: 0 auto 3.5rem;
+        text-align: center;
+    }
+
+    .contact-intro p {
+        color: var(--muted);
+        line-height: 1.8;
+        margin-bottom: 0;
+    }
+
+
+    /* =========================================================
+       CONTACT CARDS
+    ========================================================= */
+
+    .contact-card {
+        height: 100%;
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 2rem;
+        box-shadow: var(--shadow-sm);
+        transition:
+            transform .3s var(--ease),
+            box-shadow .3s var(--ease),
+            border-color .3s ease;
+    }
+
+    .contact-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md);
+        border-color: rgba(201, 162, 39, .45);
+    }
+
+    .contact-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: rgba(201, 162, 39, .10);
+        color: var(--gold-dark);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.25rem;
+        font-size: 1.15rem;
+    }
+
+    .contact-card h4 {
+        color: var(--black);
+        font-size: 1.15rem;
+        margin-bottom: .7rem;
+    }
+
+    .contact-card p {
+        color: var(--muted);
+        line-height: 1.7;
+        margin-bottom: 1rem;
+    }
+
+    .contact-card a {
+        color: var(--gold-dark);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .contact-card a:hover {
+        color: var(--gold);
+    }
+
+
+    /* =========================================================
+       ACTION BUTTONS
+    ========================================================= */
+
+    .contact-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+        padding: .65rem 1.15rem;
+        border-radius: 50px;
+        border: 1px solid var(--gold);
+        color: var(--black) !important;
+        background: transparent;
+        font-size: .85rem;
+        font-weight: 700;
+        transition: all .25s ease;
+    }
+
+    .contact-action:hover {
+        background: var(--gold);
+        color: #000 !important;
+        transform: translateY(-2px);
+    }
+
+
+    /* =========================================================
+       LOCATION CARD
+    ========================================================= */
+
+    .location-card {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-top: 2rem;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .location-card h3 {
+        color: var(--black);
+        margin-bottom: .75rem;
+    }
+
+    .location-card p {
+        color: var(--muted);
+        line-height: 1.8;
+        margin-bottom: 1.25rem;
+    }
+
+    .directions-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .55rem;
+        background: var(--gold);
+        color: #000 !important;
+        text-decoration: none;
+        padding: .75rem 1.4rem;
+        border-radius: 50px;
+        font-size: .85rem;
+        font-weight: 700;
+        transition: all .25s ease;
+    }
+
+    .directions-btn:hover {
+        background: var(--gold-light);
+        color: #000 !important;
+        transform: translateY(-2px);
+    }
+
+
+    /* =========================================================
+       PASTOR CONTACT
+    ========================================================= */
+
+    .pastor-contact {
+        background: #faf9f6;
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 2.5rem;
+        text-align: center;
+        margin-top: 2rem;
+    }
+
+    .pastor-contact .pastor-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: var(--gold);
+        color: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.25rem;
+        font-size: 1.35rem;
+    }
+
+    .pastor-contact h3 {
+        color: var(--black);
+        margin-bottom: .5rem;
+    }
+
+    .pastor-contact p {
+        color: var(--muted);
+        margin-bottom: 1.25rem;
+    }
+
+    .pastor-number {
+        display: block;
+        font-family: var(--font-display);
+        font-size: 1.35rem;
+        color: var(--black) !important;
+        margin-bottom: 1.25rem;
+    }
+
+
+    /* =========================================================
+       MOBILE
+    ========================================================= */
+
+    @media (max-width: 576px) {
+
+        .page-hero {
+            padding-bottom: 3rem;
+        }
+
+        .contact-card,
+        .location-card,
+        .pastor-contact {
+            padding: 1.75rem;
+        }
+
+        .contact-action,
+        .directions-btn {
+            width: 100%;
+        }
+
+    }
+
 </style>
 {% endblock %}
 
+
 {% block content %}
 
+<!-- =========================================================
+     HERO
+========================================================= -->
+
 <section class="page-hero">
-    <div class="container">
-        <p class="eyebrow on-dark center justify-content-center d-flex">Get In Touch</p>
+    <div class="container" data-reveal>
+
+        <p class="eyebrow center justify-content-center d-flex">
+            Get In Touch
+        </p>
+
         <h1>Contact Us</h1>
+
+        <p class="hero-description">
+            We would love to hear from you. Whether you have a question,
+            need prayer, or simply want to connect with us, we are here.
+        </p>
+
     </div>
 </section>
 
-<section class="section-padding" style="padding-top: 3.5rem;">
+
+<!-- =========================================================
+     CONTACT CONTENT
+========================================================= -->
+
+<section class="section-padding contact-section">
+
     <div class="container">
-        <p class="section-subtitle text-center mb-5">We would love to hear from you. Reach out to us.</p>
 
-        <div class="row g-5">
-            <div class="col-lg-5" data-reveal>
-                <div class="contact-info-box">
-                    <h4><i class="fas fa-map-marker-alt gold-text"></i> Our Location</h4>
-                    <p class="mb-0">{% if church_settings %}{{ church_settings.address }}{% else %}Peyi Road, opposite British Oasis International School, Ushafa Old Road, Bwari, Abuja{% endif %}</p>
-                    <a class="directions-link" target="_blank" rel="noopener noreferrer"
-                       href="https://www.google.com/maps/search/?api=1&query={% if church_settings %}{{ church_settings.address|urlencode }}{% else %}Peyi+Road+Ushafa+Bwari+Abuja{% endif %}">
-                        <i class="fas fa-diamond-turn-right"></i> Get Directions
-                    </a>
-                </div>
-                <div class="contact-info-box">
-                    <h4><i class="fas fa-phone gold-text"></i> Phone</h4>
-                    <p class="mb-0">{% if church_settings %}{{ church_settings.phone }}{% endif %}</p>
-                    {% if church_settings and church_settings.alternate_phone %}<p class="mb-0">{{ church_settings.alternate_phone }}</p>{% endif %}
-                </div>
-                <div class="contact-info-box">
-                    <h4><i class="fas fa-envelope gold-text"></i> Email</h4>
-                    <p class="mb-0">{% if church_settings %}{{ church_settings.email }}{% endif %}</p>
-                </div>
-                {% if church_settings and church_settings.office_hours %}
-                    <div class="contact-info-box">
-                        <h4><i class="fas fa-clock gold-text"></i> Office Hours</h4>
-                        <p class="mb-0">{{ church_settings.office_hours }}</p>
-                    </div>
-                {% endif %}
-            </div>
+        <div class="contact-intro" data-reveal>
 
-            <div class="col-lg-7" data-reveal>
-                <div class="card premium-card contact-form-card p-4 p-md-5">
-                    <p class="eyebrow">Send A Message</p>
-                    <h4 class="mb-4">We'll Get Back To You Soon</h4>
-                    <form method="post" action="{% url 'core:contact' %}">
-                        {% csrf_token %}
-                        {{ form.non_field_errors }}
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="{{ form.full_name.id_for_label }}" class="form-label">Full Name</label>
-                                {{ form.full_name }}
-                            </div>
-                            <div class="col-md-6">
-                                <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
-                                {{ form.email }}
-                            </div>
-                            <div class="col-md-6">
-                                <label for="{{ form.phone.id_for_label }}" class="form-label">Phone (optional)</label>
-                                {{ form.phone }}
-                            </div>
-                            <div class="col-md-6">
-                                <label for="{{ form.subject.id_for_label }}" class="form-label">Subject</label>
-                                {{ form.subject }}
-                            </div>
-                            <div class="col-12">
-                                <label for="{{ form.message.id_for_label }}" class="form-label">Message</label>
-                                {{ form.message }}
-                            </div>
-                            <div class="col-12">
-                                <button type="submit" class="btn btn-gold">Send Message</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+            <p class="eyebrow">
+                Connect With Us
+            </p>
+
+            <h2 class="mb-3">
+                We Are Here For You
+            </h2>
+
+            <p>
+                Reach out to Embassy of God's Word Ministry through any of
+                the contact options below. We look forward to connecting
+                with you.
+            </p>
+
         </div>
+
+
+        <!-- =====================================================
+             CONTACT CARDS
+        ====================================================== -->
+
+        <div class="row g-4" data-reveal>
+
+
+            <!-- PHONE -->
+
+            <div class="col-md-4">
+
+                <div class="contact-card">
+
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+
+                    <h4>Call Us</h4>
+
+                    <p>
+                        Speak directly with the ministry through our
+                        pastor's phone line.
+                    </p>
+
+                    <a
+                        href="tel:+2348065682282"
+                        class="contact-action"
+                    >
+                        <i class="fas fa-phone"></i>
+                        Call Pastor
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div class="col-md-4">
+
+                <div class="contact-card">
+
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+
+                    <h4>Email Us</h4>
+
+                    <p>
+                        Send us an email and we will get back to you
+                        as soon as possible.
+                    </p>
+
+                    <a
+                        href="mailto:embassyofgodswordministry@gmail.com"
+                        class="contact-action"
+                    >
+                        <i class="fas fa-envelope"></i>
+                        Send Email
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- LOCATION -->
+
+            <div class="col-md-4">
+
+                <div class="contact-card">
+
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+
+                    <h4>Visit Us</h4>
+
+                    <p>
+                        Join us physically at our ministry location
+                        in Bwari, Abuja.
+                    </p>
+
+                    <a
+                        href="https://www.google.com/maps/search/?api=1&query=Peyi+Road+opposite+British+Oasis+International+School+Ushafa+Old+Road+Bwari+Abuja"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="contact-action"
+                    >
+                        <i class="fas fa-directions"></i>
+                        Get Directions
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             LOCATION
+        ====================================================== -->
+
+        <div class="location-card" data-reveal>
+
+            <div class="row align-items-center">
+
+                <div class="col-lg-8">
+
+                    <p class="eyebrow mb-2">
+                        Our Location
+                    </p>
+
+                    <h3>
+                        Embassy of God's Word Ministry
+                    </h3>
+
+                    <p class="mb-lg-0">
+                        Peyi Road, opposite British Oasis International
+                        School, Ushafa Old Road, Bwari, Abuja.
+                    </p>
+
+                </div>
+
+                <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+
+                    <a
+                        href="https://www.google.com/maps/search/?api=1&query=Peyi+Road+opposite+British+Oasis+International+School+Ushafa+Old+Road+Bwari+Abuja"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="directions-btn"
+                    >
+                        <i class="fas fa-map-marked-alt"></i>
+                        Open In Google Maps
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             PASTOR CONTACT
+        ====================================================== -->
+
+        <div class="pastor-contact" data-reveal>
+
+            <div class="pastor-icon">
+                <i class="fas fa-user-tie"></i>
+            </div>
+
+            <p class="eyebrow mb-2">
+                Need To Speak With Someone?
+            </p>
+
+            <h3>
+                Contact The Pastor
+            </h3>
+
+            <p>
+                For enquiries, prayer, or further information,
+                you can reach the pastor directly.
+            </p>
+
+            <a
+                href="tel:+2348065682282"
+                class="pastor-number"
+            >
+                +234 806 568 2282
+            </a>
+
+            <a
+                href="tel:+2348065682282"
+                class="btn btn-gold"
+            >
+                <i class="fas fa-phone me-2"></i>
+                Call Now
+            </a>
+
+        </div>
+
+
+        <!-- =====================================================
+             EMAIL FOOTER
+        ====================================================== -->
+
+        <div class="text-center mt-5" data-reveal>
+
+            <p style="color: var(--muted); margin-bottom: .4rem;">
+                General enquiries
+            </p>
+
+            <a
+                href="mailto:embassyofgodswordministry@gmail.com"
+                style="
+                    color: var(--gold-dark);
+                    font-weight: 700;
+                    text-decoration: none;
+                "
+            >
+                embassyofgodswordministry@gmail.com
+            </a>
+
+        </div>
+
     </div>
+
 </section>
+
 {% endblock %}

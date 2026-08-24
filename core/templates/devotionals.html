@@ -1,101 +1,336 @@
 {% extends "base.html" %}
 
-{% block title %}Devotionals - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
+{% block title %}
+Devotionals -
+{% if church_settings %}
+    {{ church_settings.church_name }}
+{% else %}
+    Embassy of God's Word Ministry
+{% endif %}
+{% endblock %}
 
 {% block extra_css %}
 
 <style>
+    /* =========================================================
+       EGWM DEVOTIONALS
+       Clean • Mature • White • Black • Gold
+       Designed to work WITH base.html navbar
+       ========================================================= */
 
-    .page-hero {
-        background: linear-gradient(160deg, var(--black) 0%, var(--charcoal) 100%);
+    .devotionals-page {
+        --d-gold: #b8942e;
+        --d-gold-dark: #8f711f;
+        --d-black: #111111;
+        --d-text: #171717;
+        --d-muted: #6d6d6d;
+        --d-border: #e9e6df;
+        --d-soft: #f8f7f3;
+        --d-white: #ffffff;
+    }
+
+    /* =========================================================
+       HERO
+       No negative margins.
+       This means it will NEVER hide underneath the navbar.
+       ========================================================= */
+
+    .devotional-hero {
+        position: relative;
+        background: var(--d-black);
         color: #fff;
-        padding: calc(var(--nav-h) + 4rem) 0 4.5rem;
-        margin-top: calc(-1 * var(--nav-h));
+        padding: 72px 20px 78px;
+        overflow: hidden;
+    }
+
+    .devotional-hero::after {
+        content: "";
+        position: absolute;
+        width: 260px;
+        height: 260px;
+        border: 1px solid rgba(184, 148, 46, 0.22);
+        border-radius: 50%;
+        right: -100px;
+        top: -110px;
+        pointer-events: none;
+    }
+
+    .devotional-hero-inner {
+        position: relative;
+        z-index: 2;
+        max-width: 850px;
+        margin: 0 auto;
         text-align: center;
     }
-    .page-hero h1 { color: #fff; font-size: clamp(2.2rem, 4.5vw, 3.2rem); }
 
-    .search-bar-premium {
-        max-width: 560px;
-        margin: -2.5rem auto 0;
-        position: relative;
-        z-index: 5;
+    .devotional-kicker {
+        color: #d8bd6c;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        margin-bottom: 14px;
     }
-    .search-bar-premium .form-control {
-        border-radius: 50px 0 0 50px;
-        border: 1px solid var(--border);
-        padding: .9rem 1.5rem;
-        box-shadow: var(--shadow-md);
+
+    .devotional-hero h1 {
+        margin: 0;
+        color: #fff;
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: clamp(2.4rem, 5vw, 4rem);
+        font-weight: 700;
+        letter-spacing: -0.025em;
+        line-height: 1.05;
     }
-    .search-bar-premium .btn {
-        border-radius: 0 50px 50px 0;
-        padding: .9rem 1.75rem;
-        box-shadow: var(--shadow-md);
+
+    .devotional-hero-line {
+        width: 52px;
+        height: 2px;
+        background: var(--d-gold);
+        margin: 22px auto 0;
     }
+
+    .devotional-hero p {
+        max-width: 580px;
+        margin: 22px auto 0;
+        color: rgba(255,255,255,0.68);
+        font-size: 1rem;
+        line-height: 1.8;
+    }
+
+
+    /* =========================================================
+       MAIN SECTION
+       ========================================================= */
+
+    .devotionals-section {
+        background: #fff;
+        padding: 70px 0 90px;
+    }
+
+    .devotionals-intro {
+        max-width: 680px;
+        margin: 0 auto 38px;
+        text-align: center;
+    }
+
+    .devotionals-intro h2 {
+        color: var(--d-text);
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: clamp(1.7rem, 3vw, 2.25rem);
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .devotionals-intro p {
+        color: var(--d-muted);
+        font-size: 0.96rem;
+        line-height: 1.8;
+        margin: 0;
+    }
+
+
+    /* =========================================================
+       SEARCH
+       ========================================================= */
+
+    .devotional-search {
+        max-width: 620px;
+        margin: 0 auto 52px;
+    }
+
+    .devotional-search .input-group {
+        background: #fff;
+        border: 1px solid var(--d-border);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.045);
+    }
+
+    .devotional-search .form-control {
+        border: 0;
+        padding: 14px 18px;
+        min-height: 52px;
+        color: var(--d-text);
+        font-size: 0.92rem;
+        box-shadow: none !important;
+    }
+
+    .devotional-search .form-control::placeholder {
+        color: #999;
+    }
+
+    .devotional-search .form-control:focus {
+        box-shadow: none;
+    }
+
+    .devotional-search .btn {
+        min-width: 105px;
+        border: 0;
+        border-radius: 0;
+        background: var(--d-black);
+        color: #fff;
+        font-size: 0.82rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+    }
+
+    .devotional-search .btn:hover {
+        background: var(--d-gold-dark);
+    }
+
+
+    /* =========================================================
+       DEVOTIONAL GRID
+       ========================================================= */
 
     .devotional-card {
         position: relative;
-        background: #fff;
-        border: none;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: var(--shadow-sm);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
         height: 100%;
+        background: #fff;
+        border: 1px solid var(--d-border);
+        border-radius: 10px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease,
+            border-color 0.25s ease;
     }
 
     .devotional-card:hover {
-        transform: translateY(-6px);
-        box-shadow: var(--shadow-md);
+        transform: translateY(-4px);
+        border-color: rgba(184,148,46,0.35);
+        box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+    }
+
+    .devotional-image-wrap {
+        position: relative;
+        overflow: hidden;
+        background: var(--d-soft);
     }
 
     .devotional-card img {
         width: 100%;
-        height: 200px;
-        object-fit: cover;
+        height: 220px;
         display: block;
+        object-fit: cover;
+        transition: transform 0.45s ease;
+    }
+
+    .devotional-card:hover img {
+        transform: scale(1.025);
     }
 
     .devotional-card .no-image {
-        height: 200px;
+        height: 220px;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--off-white);
+        background:
+            linear-gradient(
+                135deg,
+                #faf9f6 0%,
+                #f2efe7 100%
+            );
     }
 
+    .devotional-card .no-image i {
+        color: var(--d-gold) !important;
+        opacity: 0.8;
+    }
+
+
+    /* =========================================================
+       CARD CONTENT
+       ========================================================= */
+
     .devotional-card .card-body {
-        padding: 1.5rem;
+        padding: 24px 24px 25px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .devotional-card .card-title {
+        color: var(--d-text);
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: 1.28rem;
+        line-height: 1.35;
+        font-weight: 700;
+        margin-bottom: 10px;
     }
 
     .devotional-card .scripture {
-        color: var(--gold-dark);
-        font-weight: 600;
-        font-size: .85rem;
-        letter-spacing: .03em;
+        color: var(--d-gold-dark);
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.11em;
         text-transform: uppercase;
+        margin-bottom: 13px;
+    }
+
+    .devotional-card .card-text {
+        color: var(--d-muted) !important;
+        font-size: 0.88rem;
+        line-height: 1.75;
+        margin-bottom: 18px;
     }
 
     .devotional-card .author {
-        color: var(--muted);
-        font-size: 0.85rem;
+        color: #888;
+        font-size: 0.78rem;
+        margin-top: auto;
+        margin-bottom: 18px;
+    }
+
+    .devotional-card .author::before {
+        content: "";
+        display: inline-block;
+        width: 22px;
+        height: 1px;
+        background: var(--d-gold);
+        margin-right: 8px;
+        vertical-align: middle;
     }
 
 
-    /* ==========================================
+    /* =========================================================
+       READ MORE BUTTON
+       ========================================================= */
+
+    .devotional-card .btn-gold {
+        align-self: flex-start;
+        background: var(--d-black);
+        border: 1px solid var(--d-black);
+        color: #fff;
+        border-radius: 6px;
+        padding: 9px 17px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        transition: all 0.25s ease;
+    }
+
+    .devotional-card .btn-gold:hover {
+        background: var(--d-gold);
+        border-color: var(--d-gold);
+        color: #fff;
+        transform: none;
+        box-shadow: none;
+    }
+
+
+    /* =========================================================
        ADMIN CONTROLS
-       ========================================== */
+       ========================================================= */
 
     .devotional-admin-controls {
         position: absolute;
         top: 12px;
         right: 12px;
-
+        z-index: 30;
         display: flex;
-        align-items: center;
-        gap: 8px;
-
-        z-index: 20;
+        gap: 7px;
     }
 
     .devotional-admin-controls form {
@@ -104,109 +339,221 @@
     }
 
     .admin-icon {
-        width: 38px;
-        height: 38px;
-
-        border-radius: 50%;
-
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
+        border: 1px solid rgba(0,0,0,0.08);
         display: flex;
         align-items: center;
         justify-content: center;
-
-        border: none;
-        text-decoration: none;
-
         cursor: pointer;
-
-        font-size: 15px;
-
-        transition:
-            transform 0.2s ease,
-            box-shadow 0.2s ease,
-            background 0.2s ease;
+        font-size: 13px;
+        transition: all 0.2s ease;
+        backdrop-filter: blur(8px);
     }
 
-
-    /* EDIT */
-
     .edit-icon {
-        background: rgba(255, 255, 255, 0.95);
-        color: var(--gold-dark);
-
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        background: rgba(255,255,255,0.94);
+        color: var(--d-gold-dark);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.12);
     }
 
     .edit-icon:hover {
-        background: var(--gold);
+        background: var(--d-gold);
         color: #fff;
-
-        transform: translateY(-2px) scale(1.05);
-
-        box-shadow: 0 6px 16px rgba(201, 162, 39, 0.35);
+        transform: translateY(-2px);
     }
 
-
-    /* DELETE */
-
     .delete-icon {
-        background: rgba(255, 255, 255, 0.95);
-        color: #dc3545;
-
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        background: rgba(255,255,255,0.94);
+        color: #a52d2d;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.12);
     }
 
     .delete-icon:hover {
-        background: #dc3545;
+        background: #a52d2d;
         color: #fff;
-
-        transform: translateY(-2px) scale(1.05);
-
-        box-shadow: 0 6px 16px rgba(220, 53, 69, 0.35);
+        transform: translateY(-2px);
     }
 
 
-    .devotional-admin-controls::before {
-        content: "";
-        position: absolute;
+    /* =========================================================
+       EMPTY STATE
+       ========================================================= */
 
-        top: -6px;
-        right: -6px;
-
-        width: 92px;
-        height: 50px;
-
-        background: rgba(0, 0, 0, 0.12);
-
-        border-radius: 30px;
-
-        filter: blur(8px);
-
-        z-index: -1;
+    .empty-state {
+        max-width: 650px;
+        margin: 30px auto 0;
+        padding: 65px 25px;
+        text-align: center;
+        border-top: 1px solid var(--d-border);
+        border-bottom: 1px solid var(--d-border);
     }
 
-    .empty-state { text-align: center; padding: 4rem 1rem; color: var(--muted); }
-    .empty-state i { font-size: 2.4rem; color: var(--gold); margin-bottom: 1rem; display: block; }
+    .empty-state i {
+        display: block;
+        color: var(--d-gold);
+        font-size: 2.2rem;
+        margin-bottom: 18px;
+    }
+
+    .empty-state p {
+        color: var(--d-muted);
+        font-size: 0.92rem;
+    }
 
 
-    /* MOBILE */
+    /* =========================================================
+       PAGINATION
+       ========================================================= */
 
-    @media (max-width: 576px) {
+    .devotional-pagination {
+        margin-top: 55px;
+    }
 
-        .devotional-admin-controls {
-            top: 10px;
-            right: 10px;
-            gap: 6px;
+    .devotional-pagination .page-link {
+        color: var(--d-text);
+        background: #fff;
+        border: 1px solid var(--d-border);
+        padding: 9px 14px;
+        font-size: 0.8rem;
+        box-shadow: none;
+    }
+
+    .devotional-pagination .page-link:hover {
+        color: var(--d-gold-dark);
+        background: var(--d-soft);
+    }
+
+    .devotional-pagination .page-item.active .page-link {
+        background: var(--d-black);
+        border-color: var(--d-black);
+        color: #fff;
+    }
+
+
+    /* =========================================================
+       TABLET
+       ========================================================= */
+
+    @media (max-width: 991px) {
+
+        .devotional-hero {
+            padding: 60px 20px 65px;
         }
 
-        .admin-icon {
-            width: 34px;
-            height: 34px;
-            font-size: 13px;
+        .devotionals-section {
+            padding: 55px 0 70px;
         }
 
         .devotional-card img,
         .devotional-card .no-image {
-            height: 190px;
+            height: 205px;
+        }
+    }
+
+
+    /* =========================================================
+       MOBILE
+       ========================================================= */
+
+    @media (max-width: 767px) {
+
+        .devotional-hero {
+            padding: 48px 18px 55px;
+        }
+
+        .devotional-hero h1 {
+            font-size: 2.45rem;
+        }
+
+        .devotional-hero p {
+            font-size: 0.88rem;
+            line-height: 1.7;
+        }
+
+        .devotionals-section {
+            padding: 45px 0 60px;
+        }
+
+        .devotionals-intro {
+            margin-bottom: 28px;
+        }
+
+        .devotionals-intro h2 {
+            font-size: 1.8rem;
+        }
+
+        .devotionals-intro p {
+            font-size: 0.88rem;
+        }
+
+        .devotional-search {
+            margin-bottom: 35px;
+        }
+
+        .devotional-card {
+            border-radius: 9px;
+        }
+
+        .devotional-card img,
+        .devotional-card .no-image {
+            height: 200px;
+        }
+
+        .devotional-card .card-body {
+            padding: 21px;
+        }
+
+        .devotional-card .card-title {
+            font-size: 1.18rem;
+        }
+
+        .devotional-card .card-text {
+            font-size: 0.86rem;
+        }
+    }
+
+
+    /* =========================================================
+       SMALL PHONES
+       ========================================================= */
+
+    @media (max-width: 480px) {
+
+        .devotional-hero {
+            padding: 42px 16px 48px;
+        }
+
+        .devotional-hero h1 {
+            font-size: 2.15rem;
+        }
+
+        .devotional-kicker {
+            font-size: 0.65rem;
+            letter-spacing: 0.17em;
+        }
+
+        .devotional-search .form-control {
+            min-width: 0;
+            padding-left: 14px;
+            padding-right: 10px;
+        }
+
+        .devotional-search .btn {
+            min-width: 85px;
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+
+        .devotional-admin-controls {
+            top: 9px;
+            right: 9px;
+        }
+
+        .admin-icon {
+            width: 33px;
+            height: 33px;
         }
     }
 </style>
@@ -216,258 +563,307 @@
 
 {% block content %}
 
-<!-- HERO -->
-<section class="page-hero">
-    <div class="container">
-        <p class="eyebrow on-dark center justify-content-center d-flex">Daily Bread</p>
-        <h1>Devotionals</h1>
-    </div>
-</section>
+<div class="devotionals-page">
 
-<section class="section-padding" style="padding-top: 3rem;">
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
 
-    <div class="container">
+    <section class="devotional-hero">
 
-        <p class="section-subtitle text-center mb-4">
-            Daily encouragement from God's word.
-        </p>
+        <div class="devotional-hero-inner">
+
+            <div class="devotional-kicker">
+                Daily Bread
+            </div>
+
+            <h1>Devotionals</h1>
+
+            <div class="devotional-hero-line"></div>
+
+            <p>
+                Quiet moments in God's Word.
+                Daily encouragement, reflection and truth for your walk with Christ.
+            </p>
+
+        </div>
+
+    </section>
 
 
-        <!-- SEARCH -->
+    <!-- =====================================================
+         CONTENT
+         ===================================================== -->
 
-        <form
-            class="mb-5 search-bar-premium"
-            method="get"
-            action="{% url 'core:devotionals' %}"
-        >
+    <section class="devotionals-section">
 
-            <div class="input-group">
+        <div class="container">
 
-                <input
-                    type="text"
-                    name="q"
-                    class="form-control"
-                    placeholder="Search devotionals..."
-                    value="{{ search_query }}"
-                >
+            <div class="devotionals-intro">
 
-                <button
-                    class="btn btn-gold"
-                    type="submit"
-                >
-                    Search
-                </button>
+                <h2>Grow in the Word</h2>
+
+                <p>
+                    Take a moment to reflect, learn and strengthen your faith
+                    through Scripture and biblical encouragement.
+                </p>
 
             </div>
 
-        </form>
+
+            <!-- SEARCH -->
+
+            <form
+                class="devotional-search"
+                method="get"
+                action="{% url 'core:devotionals' %}"
+            >
+
+                <div class="input-group">
+
+                    <input
+                        type="text"
+                        name="q"
+                        class="form-control"
+                        placeholder="Search devotionals..."
+                        value="{{ search_query }}"
+                    >
+
+                    <button
+                        class="btn"
+                        type="submit"
+                    >
+                        Search
+                    </button>
+
+                </div>
+
+            </form>
 
 
-        {% if devotionals %}
+            {% if devotionals %}
 
-            <!-- DEVOTIONAL GRID -->
+                <!-- =================================================
+                     DEVOTIONAL GRID
+                     ================================================= -->
 
-            <div class="row g-4" data-reveal>
+                <div class="row g-4">
 
-                {% for devotional in devotionals %}
+                    {% for devotional in devotionals %}
 
-                    <div class="col-md-4">
+                        <div class="col-lg-4 col-md-6">
 
-                        <div class="devotional-card">
+                            <article class="devotional-card">
 
+                                <!-- ADMIN CONTROLS -->
 
-                            {% if user.is_staff %}
+                                {% if user.is_staff %}
 
-                                <div class="devotional-admin-controls">
+                                    <div class="devotional-admin-controls">
 
-                                    <a
-                                        href="{% url 'core:dashboard_edit_devotional' devotional.pk %}"
-                                        class="admin-icon edit-icon"
-                                        title="Edit devotional"
-                                        aria-label="Edit devotional"
-                                    >
-                                        <i class="bi bi-pencil-fill"></i>
-                                    </a>
-
-                                    <form
-                                        method="post"
-                                        action="{% url 'core:dashboard_delete_devotional' devotional.pk %}"
-                                        onsubmit="return confirm('Are you sure you want to delete this devotional?');"
-                                    >
-
-                                        {% csrf_token %}
-
-                                        <button
-                                            type="submit"
-                                            class="admin-icon delete-icon"
-                                            title="Delete devotional"
-                                            aria-label="Delete devotional"
+                                        <a
+                                            href="{% url 'core:dashboard_edit_devotional' devotional.pk %}"
+                                            class="admin-icon edit-icon"
+                                            title="Edit devotional"
+                                            aria-label="Edit devotional"
                                         >
-                                            <i class="bi bi-trash-fill"></i>
-                                        </button>
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </a>
 
-                                    </form>
+                                        <form
+                                            method="post"
+                                            action="{% url 'core:dashboard_delete_devotional' devotional.pk %}"
+                                            onsubmit="return confirm('Are you sure you want to delete this devotional?');"
+                                        >
 
-                                </div>
+                                            {% csrf_token %}
 
-                            {% endif %}
+                                            <button
+                                                type="submit"
+                                                class="admin-icon delete-icon"
+                                                title="Delete devotional"
+                                                aria-label="Delete devotional"
+                                            >
+                                                <i class="bi bi-trash-fill"></i>
+                                            </button>
 
+                                        </form>
 
-                            {% if devotional.featured_image %}
+                                    </div>
 
-                                <img
-                                    src="{{ devotional.featured_image.url }}"
-                                    alt="{{ devotional.title }}"
-                                    loading="lazy"
-                                >
-
-                            {% else %}
-
-                                <div class="no-image">
-
-                                    <i
-                                        class="fas fa-bible"
-                                        style="font-size: 3rem; color: var(--gold);"
-                                    ></i>
-
-                                </div>
-
-                            {% endif %}
+                                {% endif %}
 
 
-                            <div class="card-body">
+                                <!-- IMAGE -->
 
-                                <h5 class="card-title">
-                                    {{ devotional.title }}
-                                </h5>
+                                <div class="devotional-image-wrap">
 
+                                    {% if devotional.featured_image %}
 
-                                <p class="scripture">
-                                    {{ devotional.scripture|default:"Scripture reference" }}
-                                </p>
-
-
-                                <p class="card-text" style="color: var(--muted);">
-
-                                    {% if devotional.excerpt %}
-
-                                        {{ devotional.excerpt|truncatewords:20 }}
+                                        <img
+                                            src="{{ devotional.featured_image.url }}"
+                                            alt="{{ devotional.title }}"
+                                            loading="lazy"
+                                        >
 
                                     {% else %}
 
-                                        {{ devotional.content|striptags|truncatewords:20 }}
+                                        <div class="no-image">
+
+                                            <i class="fas fa-bible fa-2x"></i>
+
+                                        </div>
 
                                     {% endif %}
 
-                                </p>
+                                </div>
 
 
-                                <p class="author">
+                                <!-- CONTENT -->
 
-                                    By
-                                    {{ devotional.author|default:"Pastor Kingsley Nwekwo" }}
+                                <div class="card-body">
 
-                                </p>
+                                    <h5 class="card-title">
+                                        {{ devotional.title }}
+                                    </h5>
+
+                                    <p class="scripture">
+                                        {{ devotional.scripture|default:"Scripture reference" }}
+                                    </p>
+
+                                    <p class="card-text">
+
+                                        {% if devotional.excerpt %}
+
+                                            {{ devotional.excerpt|truncatewords:20 }}
+
+                                        {% else %}
+
+                                            {{ devotional.content|striptags|truncatewords:20 }}
+
+                                        {% endif %}
+
+                                    </p>
 
 
-                                <a
-                                    href="{% url 'core:devotional_detail' devotional.slug %}"
-                                    class="btn btn-gold btn-sm"
-                                >
-                                    Read More
-                                </a>
+                                    <p class="author">
 
-                            </div>
+                                        By
+                                        {{ devotional.author|default:"Pastor Kingsley Nwekwo" }}
+
+                                    </p>
+
+
+                                    <a
+                                        href="{% url 'core:devotional_detail' devotional.slug %}"
+                                        class="btn btn-gold btn-sm"
+                                    >
+                                        Read More
+                                    </a>
+
+                                </div>
+
+                            </article>
 
                         </div>
 
-                    </div>
+                    {% endfor %}
 
-                {% endfor %}
-
-            </div>
+                </div>
 
 
-            <!-- PAGINATION -->
+                <!-- =================================================
+                     PAGINATION
+                     ================================================= -->
 
-            {% if devotionals.paginator.num_pages > 1 %}
+                {% if devotionals.paginator.num_pages > 1 %}
 
-                <nav class="mt-5">
+                    <nav
+                        class="devotional-pagination"
+                        aria-label="Devotional pagination"
+                    >
 
-                    <ul class="pagination justify-content-center">
+                        <ul class="pagination justify-content-center flex-wrap gap-1">
+
+                            {% if devotionals.has_previous %}
+
+                                <li class="page-item">
+
+                                    <a
+                                        class="page-link"
+                                        href="?page={{ devotionals.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                                    >
+                                        Previous
+                                    </a>
+
+                                </li>
+
+                            {% endif %}
 
 
-                        {% if devotionals.has_previous %}
+                            {% for num in devotionals.paginator.page_range %}
 
-                            <li class="page-item">
-
-                                <a
-                                    class="page-link"
-                                    href="?page={{ devotionals.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                                <li
+                                    class="page-item
+                                    {% if devotionals.number == num %}
+                                        active
+                                    {% endif %}"
                                 >
-                                    Previous
-                                </a>
 
-                            </li>
+                                    <a
+                                        class="page-link"
+                                        href="?page={{ num }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                                    >
+                                        {{ num }}
+                                    </a>
 
-                        {% endif %}
+                                </li>
 
-
-                        {% for num in devotionals.paginator.page_range %}
-
-                            <li
-                                class="page-item
-                                {% if devotionals.number == num %}
-                                    active
-                                {% endif %}"
-                            >
-
-                                <a
-                                    class="page-link"
-                                    href="?page={{ num }}{% if search_query %}&q={{ search_query }}{% endif %}"
-                                >
-                                    {{ num }}
-                                </a>
-
-                            </li>
-
-                        {% endfor %}
+                            {% endfor %}
 
 
-                        {% if devotionals.has_next %}
+                            {% if devotionals.has_next %}
 
-                            <li class="page-item">
+                                <li class="page-item">
 
-                                <a
-                                    class="page-link"
-                                    href="?page={{ devotionals.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}"
-                                >
-                                    Next
-                                </a>
+                                    <a
+                                        class="page-link"
+                                        href="?page={{ devotionals.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                                    >
+                                        Next
+                                    </a>
 
-                            </li>
+                                </li>
 
-                        {% endif %}
+                            {% endif %}
+
+                        </ul>
+
+                    </nav>
+
+                {% endif %}
 
 
-                    </ul>
+            {% else %}
 
-                </nav>
+                <!-- EMPTY -->
+
+                <div class="empty-state">
+
+                    <i class="fas fa-bible"></i>
+
+                    <p class="mb-0">
+                        Fresh encouragement from God's Word is coming soon.
+                    </p>
+
+                </div>
 
             {% endif %}
 
+        </div>
 
-        {% else %}
+    </section>
 
-            <div class="empty-state">
-                <i class="fas fa-bible"></i>
-                <p class="mb-0">Fresh encouragement from God's Word is coming soon.</p>
-            </div>
-
-        {% endif %}
-
-    </div>
-
-</section>
+</div>
 
 {% endblock %}

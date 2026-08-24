@@ -1,153 +1,1090 @@
-{% load static %}<!DOCTYPE html>
+{% load static %}
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}{% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}</title>
-  <meta name="description" content="{% block meta_description %}Embassy of God's Word Ministry (EGWM), Bwari, Abuja — Glory Service Sundays 9:00 AM, Prayer Band Tuesdays, Communion Thursdays, All Night Friday, Evangelism Saturday mornings.{% endblock %}">
-  <meta property="og:title" content="{% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}">
-  <meta property="og:description" content="A place where God's Word is taught, faith is strengthened, and lives are transformed.">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --gold:#B8912B; --gold-light:#DFC77E; --gold-deep:#7A5E14;
-      --ink:#0E0E0D; --muted:#6B6960; --ivory:#F7F5F0; --line:rgba(14,14,13,.10);
-      --gold-grad:linear-gradient(135deg,#7A5E14 0%,#B8912B 42%,#E4CF8C 66%,#A9832A 100%);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Embassy of God's Word Ministry{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{% if church_settings and church_settings.meta_description %}{{ church_settings.meta_description }}{% else %}Embassy of God's Word Ministry – Abuja, Nigeria. Pastor Kingsley Nwekwo. Worship, prayer, and community.{% endif %}{% endblock %}">
+    <link rel="icon" href="{% if church_settings and church_settings.favicon %}{{ church_settings.favicon.url }}{% else %}#{% endif %}" type="image/x-icon">
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts: Inter for modern clean look -->
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    {% block extra_head %}{% endblock %}
+
+<style>
+    :root {
+        --gold: #B9973E;
+        --gold-dark: #92752B;
+        --gold-soft: #D8C48A;
+
+        --black: #111111;
+        --black-soft: #1B1B1B;
+
+        --white: #FFFFFF;
+        --cream: #FAF9F6;
+
+        --text: #171717;
+        --muted: #6F6F6F;
+        --border: #E8E5DE;
     }
-    *,*::before,*::after{box-sizing:border-box;}
-    body{margin:0;font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased;}
-    a{color:inherit;text-decoration:none;}
-    h1,h2,h3,.display{font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;letter-spacing:-.015em;}
-    .b-wrap{max-width:1240px;margin:0 auto;padding:0 clamp(1.2rem,4vw,3rem);}
-    /* NAV */
-    .b-nav{position:fixed;inset:0 0 auto 0;z-index:60;padding:1.1rem 0;transition:background .4s,box-shadow .4s,padding .4s;}
-    .b-nav.is-solid{background:rgba(255,255,255,.94);backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--line);padding:.7rem 0;}
-    .b-nav__row{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;}
-    .b-brand{display:flex;align-items:center;gap:.75rem;}
-    .b-brand__mark{width:38px;height:38px;background:var(--gold-grad);display:grid;place-items:center;color:#fff;font-family:'Cormorant Garamond',serif;font-size:1.15rem;}
-    .b-brand__name{font-family:'Cormorant Garamond',serif;font-size:1.12rem;line-height:1.1;color:#fff;}
-    .b-brand__sub{display:block;font-family:'Inter',sans-serif;font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-light);}
-    .b-nav.is-solid .b-brand__name{color:var(--ink);}
-    .b-nav.is-solid .b-brand__sub{color:var(--gold-deep);}
-    .b-menu{display:flex;align-items:center;gap:1.6rem;}
-    .b-menu a{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.86);}
-    .b-nav.is-solid .b-menu a{color:var(--muted);}
-    .b-menu a:hover{color:var(--gold);}
-    .b-cta{padding:.7rem 1.4rem;background:var(--gold-grad);color:#fff !important;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;}
-    .b-burger{display:none;background:none;border:0;padding:.4rem;cursor:pointer;}
-    .b-burger span{display:block;width:24px;height:1.5px;background:#fff;margin:5px 0;}
-    .b-nav.is-solid .b-burger span{background:var(--ink);}
-    @media (max-width:991px){
-      .b-burger{display:block;}
-      .b-menu{position:fixed;inset:0 0 0 auto;width:min(80vw,340px);background:#fff;flex-direction:column;align-items:flex-start;justify-content:center;padding:2.5rem;gap:1.3rem;transform:translateX(100%);transition:transform .45s cubic-bezier(.22,.61,.36,1);}
-      .b-menu.is-open{transform:none;}
-      .b-menu a{color:var(--ink);font-size:.85rem;}
+
+    * {
+        box-sizing: border-box;
     }
-    .b-main{min-height:60vh;}
-    /* FOOTER */
-    .b-foot{background:#0E0E0D;color:rgba(255,255,255,.72);padding:5rem 0 2rem;margin-top:0;}
-    .b-foot h4{font-family:'Inter',sans-serif;font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-light);margin:0 0 1.2rem;}
-    .b-foot__grid{display:grid;grid-template-columns:1.4fr 1fr 1.2fr;gap:3rem;}
-    @media (max-width:860px){.b-foot__grid{grid-template-columns:1fr;gap:2.4rem;}}
-    .b-foot p{margin:.35rem 0;font-size:.9rem;line-height:1.7;}
-    .b-foot a:hover{color:var(--gold-light);}
-    .b-foot__list{list-style:none;margin:0;padding:0;display:grid;gap:.55rem;font-size:.9rem;}
-    .b-foot__svc{display:flex;justify-content:space-between;gap:1rem;border-bottom:1px solid rgba(255,255,255,.08);padding:.5rem 0;font-size:.88rem;}
-    .b-foot__svc span:last-child{color:var(--gold-light);}
-    .b-foot__base{margin-top:3rem;padding-top:1.4rem;border-top:1px solid rgba(255,255,255,.1);display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem;font-size:.78rem;color:rgba(255,255,255,.5);}
-    .b-foot__rule{width:52px;height:2px;background:var(--gold-grad);margin:0 0 1.6rem;}
-  </style>
-  {% block extra_css %}{% endblock %}
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        margin: 0;
+        padding-top: 82px;
+        background: var(--white);
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+        font-size: 15px;
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---------------------------------
+       TYPOGRAPHY
+    --------------------------------- */
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        margin-top: 0;
+        color: var(--black);
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        line-height: 1.1;
+    }
+
+    h1 {
+        font-size: clamp(3rem, 6vw, 5.5rem);
+    }
+
+    h2 {
+        font-size: clamp(2.4rem, 4vw, 4rem);
+    }
+
+    h3 {
+        font-size: 2.3rem;
+    }
+
+    h4 {
+        font-size: 1.9rem;
+    }
+
+    h5 {
+        font-size: 1.45rem;
+    }
+
+    h6 {
+        font-size: 1.2rem;
+    }
+
+    p {
+        color: #4E4E4E;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+        transition:
+            color 0.25s ease,
+            background-color 0.25s ease,
+            border-color 0.25s ease;
+    }
+
+    a:hover {
+        color: var(--gold-dark);
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    /* ---------------------------------
+       GLOBAL UTILITIES
+    --------------------------------- */
+
+    .gold-text {
+        color: var(--gold) !important;
+    }
+
+    .gold-bg {
+        background-color: var(--gold) !important;
+    }
+
+    .black-bg {
+        background-color: var(--black) !important;
+    }
+
+    .charcoal-bg {
+        background-color: var(--black-soft) !important;
+    }
+
+    .section-padding {
+        padding: 105px 0;
+    }
+
+    .section-title {
+        position: relative;
+        margin-bottom: 18px;
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: clamp(2.5rem, 4vw, 3.8rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--black);
+    }
+
+    .section-title::after {
+        content: "";
+        display: block;
+        width: 48px;
+        height: 2px;
+        margin-top: 18px;
+        background: var(--gold);
+    }
+
+    .section-subtitle {
+        max-width: 680px;
+        margin: 0 auto;
+        color: var(--muted);
+        font-size: 1rem;
+        line-height: 1.8;
+    }
+
+    /* Small editorial label */
+
+    .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 15px;
+        color: var(--gold-dark);
+        font-family: "DM Sans", sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 2.8px;
+        text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+        content: "";
+        width: 28px;
+        height: 1px;
+        background: var(--gold);
+    }
+
+    /* ---------------------------------
+       NAVBAR
+    --------------------------------- */
+
+    .navbar-premium {
+        min-height: 82px;
+        padding: 0.75rem 0;
+        background: rgba(255, 255, 255, 0.97);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.035);
+        backdrop-filter: blur(12px);
+    }
+
+    .navbar-premium .navbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        color: var(--black) !important;
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 1.65rem;
+        font-weight: 700;
+        letter-spacing: 0;
+    }
+
+    .navbar-premium .navbar-brand img {
+        width: auto;
+        max-height: 48px;
+        margin-right: 3px;
+    }
+
+    .navbar-premium .navbar-brand span {
+        white-space: nowrap;
+    }
+
+    .navbar-premium .nav-link {
+        position: relative;
+        padding: 0.65rem 0.9rem !important;
+        color: #333 !important;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+        border-radius: 0;
+    }
+
+    .navbar-premium .nav-link::after {
+        content: "";
+        position: absolute;
+        left: 0.9rem;
+        right: 0.9rem;
+        bottom: 4px;
+        height: 1px;
+        background: var(--gold);
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform 0.25s ease;
+    }
+
+    .navbar-premium .nav-link:hover,
+    .navbar-premium .nav-link.active {
+        color: var(--gold-dark) !important;
+        background: transparent;
+    }
+
+    .navbar-premium .nav-link:hover::after,
+    .navbar-premium .nav-link.active::after {
+        transform: scaleX(1);
+    }
+
+    /* Prayer button */
+
+    .navbar-premium .nav-link .badge {
+        border-radius: 3px !important;
+        font-family: "DM Sans", sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+
+    /* Dropdown */
+
+    .navbar-premium .dropdown-menu {
+        min-width: 210px;
+        margin-top: 12px;
+        padding: 8px;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.10);
+    }
+
+    .navbar-premium .dropdown-item {
+        padding: 10px 13px;
+        color: #333;
+        font-size: 13px;
+        border-radius: 2px;
+    }
+
+    .navbar-premium .dropdown-item:hover {
+        background: var(--cream);
+        color: var(--gold-dark);
+    }
+
+    /* Navbar search */
+
+    .navbar-premium .form-control {
+        min-width: 155px;
+        border: 1px solid var(--border);
+        border-radius: 2px;
+        background: var(--white);
+        font-size: 12px;
+    }
+
+    .navbar-premium .form-control:focus {
+        border-color: var(--gold);
+        box-shadow: none;
+    }
+
+    .navbar-toggler {
+        padding: 7px 9px;
+        border: 1px solid var(--border) !important;
+        border-radius: 2px;
+    }
+
+    .navbar-toggler:focus {
+        box-shadow: 0 0 0 2px rgba(185, 151, 62, 0.15);
+    }
+
+    /* ---------------------------------
+       BUTTONS
+    --------------------------------- */
+
+    .btn-gold {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+
+        padding: 12px 25px;
+
+        background: var(--gold);
+        border: 1px solid var(--gold);
+        border-radius: 3px;
+
+        color: var(--black);
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+
+        transition: all 0.25s ease;
+    }
+
+    .btn-gold:hover {
+        background: var(--gold-dark);
+        border-color: var(--gold-dark);
+        color: var(--white);
+        transform: translateY(-1px);
+    }
+
+    .btn-outline-gold {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+
+        padding: 11px 24px;
+
+        background: transparent;
+        border: 1px solid var(--gold);
+        border-radius: 3px;
+
+        color: var(--gold-dark);
+        font-size: 13px;
+        font-weight: 700;
+
+        transition: all 0.25s ease;
+    }
+
+    .btn-outline-gold:hover {
+        background: var(--black);
+        border-color: var(--black);
+        color: var(--white);
+    }
+
+    /* ---------------------------------
+       CARDS
+    --------------------------------- */
+
+    .premium-card {
+        overflow: hidden;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        box-shadow: none;
+        transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease,
+            border-color 0.3s ease;
+    }
+
+    .premium-card:hover {
+        transform: translateY(-4px);
+        border-color: #D8D2C5;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.07);
+    }
+
+    .premium-card .card-img-top {
+        height: 240px;
+        object-fit: cover;
+        border-radius: 0;
+    }
+
+    /* ---------------------------------
+       HERO
+    --------------------------------- */
+
+    .hero-slide {
+        position: relative;
+        display: flex;
+        align-items: center;
+        min-height: 82vh;
+        background-color: var(--black-soft);
+        background-position: center;
+        background-size: cover;
+    }
+
+    .hero-slide::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(
+                90deg,
+                rgba(10, 10, 10, 0.82) 0%,
+                rgba(10, 10, 10, 0.58) 48%,
+                rgba(10, 10, 10, 0.20) 100%
+            );
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 760px;
+        color: var(--white);
+    }
+
+    .hero-content h1 {
+        margin-bottom: 22px;
+        color: var(--white);
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: clamp(3.2rem, 6vw, 5.7rem);
+        font-weight: 600;
+        line-height: 0.98;
+    }
+
+    .hero-content h1 .gold-text {
+        color: var(--gold-soft) !important;
+    }
+
+    .hero-content p {
+        max-width: 650px;
+        margin-bottom: 30px;
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 1.05rem;
+        line-height: 1.8;
+    }
+
+    /* ---------------------------------
+       FORMS
+    --------------------------------- */
+
+    .form-control-premium,
+    .form-select {
+        min-height: 48px;
+        padding: 11px 14px;
+        background: var(--white);
+        border: 1px solid #D9D6CE;
+        border-radius: 3px;
+        color: var(--text);
+        font-size: 14px;
+    }
+
+    .form-control-premium:focus,
+    .form-select:focus {
+        background: var(--white);
+        border-color: var(--gold);
+        box-shadow: 0 0 0 3px rgba(185, 151, 62, 0.10);
+    }
+
+    textarea.form-control-premium {
+        min-height: 140px;
+    }
+
+    /* ---------------------------------
+       FOOTER
+    --------------------------------- */
+
+    .footer-premium {
+        padding: 75px 0 28px;
+        background: var(--black);
+        color: rgba(255, 255, 255, 0.72);
+    }
+
+    .footer-premium h5 {
+        margin-bottom: 20px;
+        color: var(--white);
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    .footer-premium h5::after {
+        content: "";
+        display: block;
+        width: 28px;
+        height: 1px;
+        margin-top: 10px;
+        background: var(--gold);
+    }
+
+    .footer-premium p,
+    .footer-premium li {
+        color: rgba(255, 255, 255, 0.62);
+        font-size: 13px;
+    }
+
+    .footer-premium a {
+        color: rgba(255, 255, 255, 0.62);
+    }
+
+    .footer-premium a:hover {
+        color: var(--gold-soft);
+    }
+
+    .footer-premium .social-icons a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 38px;
+        height: 38px;
+        margin-right: 7px;
+
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 50%;
+
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .footer-premium .social-icons a:hover {
+        background: var(--gold);
+        border-color: var(--gold);
+        color: var(--black);
+        transform: translateY(-2px);
+    }
+
+    .footer-bottom {
+        margin-top: 45px;
+        padding-top: 22px;
+        border-top: 1px solid rgba(255, 255, 255, 0.10);
+        color: rgba(255, 255, 255, 0.42);
+        font-size: 12px;
+    }
+
+    /* ---------------------------------
+       ALERTS
+    --------------------------------- */
+
+    .alert-premium {
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        box-shadow: none;
+    }
+
+    /* ---------------------------------
+       BACK TO TOP
+    --------------------------------- */
+
+    #back-to-top {
+        position: fixed;
+        right: 25px;
+        bottom: 25px;
+
+        display: none;
+
+        width: 45px;
+        height: 45px;
+
+        background: var(--black);
+        border: 1px solid var(--gold);
+        border-radius: 3px;
+
+        color: var(--gold-soft);
+        font-size: 14px;
+
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
+
+        transition: all 0.25s ease;
+        z-index: 1000;
+    }
+
+    #back-to-top:hover {
+        background: var(--gold);
+        color: var(--black);
+        transform: translateY(-3px);
+    }
+
+    /* ---------------------------------
+       SMALL GOLD DETAILS
+    --------------------------------- */
+
+    .gold-rule {
+        width: 55px;
+        height: 2px;
+        margin: 20px 0;
+        background: var(--gold);
+    }
+
+    .border-gold {
+        border-color: var(--gold) !important;
+    }
+
+    /* ---------------------------------
+       RESPONSIVE
+    --------------------------------- */
+
+    @media (max-width: 991px) {
+
+        body {
+            padding-top: 72px;
+        }
+
+        .navbar-premium {
+            min-height: 72px;
+        }
+
+        .navbar-premium .navbar-collapse {
+            margin-top: 15px;
+            padding: 12px 0 18px;
+            border-top: 1px solid var(--border);
+        }
+
+        .navbar-premium .nav-link {
+            padding: 10px 4px !important;
+        }
+
+        .navbar-premium .nav-link::after {
+            display: none;
+        }
+
+        .navbar-premium .navbar-brand {
+            font-size: 1.45rem;
+        }
+
+        .navbar-premium .navbar-brand img {
+            max-height: 40px;
+        }
+
+        .navbar-premium form {
+            margin-top: 12px;
+            margin-left: 0 !important;
+        }
+
+        .section-padding {
+            padding: 75px 0;
+        }
+
+        .hero-slide {
+            min-height: 76vh;
+        }
+    }
+
+    @media (max-width: 576px) {
+
+        body {
+            font-size: 14px;
+        }
+
+        .section-padding {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            font-size: 2.7rem;
+        }
+
+        .hero-content h1 {
+            font-size: 3.2rem;
+        }
+
+        .hero-content p {
+            font-size: 0.95rem;
+        }
+
+        .navbar-premium .navbar-brand span {
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .premium-card .card-img-top {
+            height: 210px;
+        }
+    }
+</style>
+
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
 
-<header class="b-nav" id="bNav">
-  <div class="b-wrap b-nav__row">
-    <a class="b-brand" href="/">
-      <span class="b-brand__mark">E</span>
-      <span class="b-brand__name">{% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God&rsquo;s Word{% endif %}
-        <span class="b-brand__sub">Ministry</span>
-      </span>
-    </a>
-    <nav class="b-menu" id="bMenu">
-      <a href="/">Home</a>
-      <a href="{% url 'core:about' %}">About</a>
-      <a href="{% url 'core:leadership' %}">Leadership</a>
-      <a href="{% url 'core:events' %}">Events</a>
-      <a href="{% url 'core:devotionals' %}">Devotionals</a>
-      <a href="{% url 'core:testimonies' %}">Testimonies</a>
-      <a href="{% url 'core:gallery' %}">Gallery</a>
-      <a class="b-cta" href="{% url 'core:prayer_request' %}">Need Prayer?</a>
+    <!-- ==================== NAVBAR ==================== -->
+    <nav class="navbar navbar-expand-lg navbar-premium fixed-top">
+        <div class="container">
+        <a class="navbar-brand" href="{% url 'core:home' %}">
+            <img 
+                src="{% static 'images/logo.jpg' %}" 
+                alt="Embassy of God's Word Ministry"
+            >
+            <span>Embassy of God's Word</span>
+        </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'core:home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'core:about' %}">About</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'leadership' %}active{% endif %}" href="{% url 'core:leadership' %}">Leadership</a></li>
+                    {% comment %} <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'ministries' %}active{% endif %}" href="{% url 'core:ministries' %}">Ministries</a></li> {% endcomment %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {% if request.resolver_match.app_name == 'core' and request.resolver_match.url_name in 'devotionals,devotional_detail,events,event_detail' %}active{% endif %}" href="#" id="mediaDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Media
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="mediaDropdown">
+                            <li><a class="dropdown-item" href="{% url 'core:devotionals' %}">Devotionals</a></li>
+                            <li><a class="dropdown-item" href="{% url 'core:events' %}">Events</a></li>
+                            <li><a class="dropdown-item" href="{% url 'core:gallery' %}">Gallery</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'testimonies' %}active{% endif %}" href="{% url 'core:testimonies' %}">Testimonies</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'give' %}active{% endif %}" href="{% url 'core:give' %}">Give</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'core:contact' %}">Contact</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:prayer_request' %}">
+                            <span class="badge bg-gold text-dark px-3 py-2" style="background-color: var(--gold);">Prayer</span>
+                        </a>
+                    </li>
+                </ul>
+                <!-- Search form in navbar (optional) -->
+                <form class="d-flex ms-lg-3" action="{% url 'core:search_results' %}" method="get">
+                    <div class="input-group">
+                        <input class="form-control form-control-sm" type="search" name="q" placeholder="Search..." aria-label="Search">
+                        <button class="btn btn-outline-gold btn-sm" type="submit"><i class="fas fa-search"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </nav>
-    <button class="b-burger" id="bBurger" type="button" aria-label="Toggle menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-</header>
 
-<main class="b-main">
-  {% block content %}{% endblock %}
-</main>
+    <!-- ==================== MESSAGES ==================== -->
+    {% if messages %}
+        <div class="container mt-3">
+            {% for message in messages %}
+                <div class="alert alert-premium alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 
-<footer class="b-foot">
-  <div class="b-wrap b-foot__grid">
-    <div>
-      <div class="b-foot__rule"></div>
-      <h4>{% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God&rsquo;s Word Ministry{% endif %}</h4>
-      <p>{% if church_settings and church_settings.address %}{{ church_settings.address }}{% else %}Peyi Road, opposite British Oasis International School, Ushafa Old Road, Bwari, Abuja{% endif %}</p>
-      {% if church_settings and church_settings.phone %}<p><a href="tel:{{ church_settings.phone }}">{{ church_settings.phone }}</a></p>{% endif %}
-      {% if church_settings and church_settings.email %}<p><a href="mailto:{{ church_settings.email }}">{{ church_settings.email }}</a></p>{% endif %}
+    <!-- ==================== MAIN CONTENT ==================== -->
+    {% block content %}
+    {% endblock %}
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="footer-premium">
+
+    <div class="container">
+
+        <!-- Gold accent line -->
+        <div class="footer-accent"></div>
+
+        <div class="row g-5">
+
+            <!-- CHURCH INFO -->
+            <div class="col-lg-4">
+
+                <div class="footer-brand">
+
+                    {% if church_settings and church_settings.logo %}
+                        <img
+                            src="{{ church_settings.logo.url }}"
+                            alt="{{ church_settings.church_name }}"
+                            class="footer-logo"
+                        >
+                    {% endif %}
+
+                    <div>
+                        <h4>Embassy of God's Word Ministry</h4>
+                        <span>Abuja, Nigeria</span>
+                    </div>
+
+                </div>
+
+                <p class="footer-description">
+                    A place of worship, prayer, fellowship and the Word of God.
+                    We welcome you to join us and grow together in faith.
+                </p>
+
+                <div class="footer-contact">
+
+                    <div class="footer-contact-item">
+                        <i class="fas fa-location-dot"></i>
+                        <span>
+                            Along Peyi Road, Opp British Oasis Academy,
+                            Bwari Area Council, Abuja, Nigeria
+                        </span>
+                    </div>
+
+                    {% if church_settings and church_settings.phone %}
+                    <div class="footer-contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>{{ church_settings.phone }}</span>
+                    </div>
+                    {% endif %}
+
+                    {% if church_settings and church_settings.email %}
+                    <div class="footer-contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>{{ church_settings.email }}</span>
+                    </div>
+                    {% endif %}
+
+                </div>
+
+                <!-- SOCIALS -->
+                <div class="social-icons mt-4">
+
+                    {% if church_settings %}
+
+                        {% if church_settings.facebook %}
+                            <a
+                                href="{{ church_settings.facebook }}"
+                                target="_blank"
+                                rel="noopener"
+                                aria-label="Facebook"
+                            >
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                        {% endif %}
+
+                        {% if church_settings.instagram %}
+                            <a
+                                href="{{ church_settings.instagram }}"
+                                target="_blank"
+                                rel="noopener"
+                                aria-label="Instagram"
+                            >
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        {% endif %}
+
+                        {% if church_settings.youtube %}
+                            <a
+                                href="{{ church_settings.youtube }}"
+                                target="_blank"
+                                rel="noopener"
+                                aria-label="YouTube"
+                            >
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                        {% endif %}
+
+                        {% if church_settings.tiktok %}
+                            <a
+                                href="{{ church_settings.tiktok }}"
+                                target="_blank"
+                                rel="noopener"
+                                aria-label="TikTok"
+                            >
+                                <i class="fab fa-tiktok"></i>
+                            </a>
+                        {% endif %}
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- QUICK LINKS -->
+            <div class="col-lg-2 col-md-6">
+
+                <h5 class="footer-heading">Explore</h5>
+
+                <ul class="footer-links">
+
+                    <li>
+                        <a href="{% url 'core:home' %}">Home</a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'core:about' %}">About Us</a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'core:leadership' %}">Leadership</a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'core:events' %}">Events</a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'core:gallery' %}">Gallery</a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'core:testimonies' %}">Testimonies</a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'core:contact' %}">Contact</a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <!-- SERVICE TIMES -->
+            <div class="col-lg-3 col-md-6">
+
+                <h5 class="footer-heading">Our Services</h5>
+
+                <div class="service-list">
+
+                    <div class="service-item">
+                        <div>
+                            <strong>Sunday</strong>
+                            <span>9:00 AM</span>
+                        </div>
+
+                        <small>Glory Service</small>
+                        <em>Main Auditorium</em>
+                    </div>
+
+
+                    <div class="service-item">
+                        <div>
+                            <strong>Tuesday</strong>
+                            <span>Prayer Band</span>
+                        </div>
+
+                        <small>Prayer Band Meeting</small>
+                        <em>Main Auditorium</em>
+                    </div>
+
+
+                    <div class="service-item">
+                        <div>
+                            <strong>Thursday</strong>
+                            <span>Communion</span>
+                        </div>
+
+                        <small>Communion Service</small>
+                        <em>Main Auditorium</em>
+                    </div>
+
+
+                    <div class="service-item">
+                        <div>
+                            <strong>Friday</strong>
+                            <span>All Night</span>
+                        </div>
+
+                        <small>All Night Service</small>
+                        <em>Main Auditorium</em>
+                    </div>
+
+
+                    <div class="service-item">
+                        <div>
+                            <strong>Saturday</strong>
+                            <span>Morning</span>
+                        </div>
+
+                        <small>Evangelism &amp; Outreach</small>
+                        <em>Community Outreach</em>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- NEWSLETTER -->
+            <div class="col-lg-3">
+
+                <h5 class="footer-heading">Stay Connected</h5>
+
+                <p class="newsletter-text">
+                    Stay connected with Embassy of God's Word Ministry
+                    and receive ministry updates, devotionals and announcements.
+                </p>
+
+                <form
+                    action="{% url 'core:newsletter_subscribe' %}"
+                    method="post"
+                    class="newsletter-form"
+                >
+
+                    {% csrf_token %}
+
+                    <div class="newsletter-input">
+
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Email address"
+                            required
+                        >
+
+                        <button type="submit" aria-label="Subscribe">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- FOOTER BOTTOM -->
+        <div class="footer-bottom">
+
+            <div>
+                <span>
+                    &copy; {% now "Y" %}
+                    Embassy of God's Word Ministry
+                </span>
+            </div>
+
+            <div>
+                <span>All rights reserved.</span>
+            </div>
+
+        </div>
+
     </div>
-    <div>
-      <h4>Explore</h4>
-      <ul class="b-foot__list">
-        <li><a href="{% url 'core:about' %}">About Us</a></li>
-        <li><a href="{% url 'core:first_visit' %}">Plan Your First Visit</a></li>
-        <li><a href="{% url 'core:events' %}">Events</a></li>
-        <li><a href="{% url 'core:devotionals' %}">Devotionals</a></li>
-        <li><a href="{% url 'core:testimonies' %}">Testimonies</a></li>
-        <li><a href="{% url 'core:gallery' %}">Gallery</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4>Service Times</h4>
-      {% if service_schedule %}
-        {% for service in service_schedule %}
-          <div class="b-foot__svc"><span>{{ service.get_day_display }} &middot; {{ service.name }}</span><span>{{ service.start_time|time:"g:i A" }}</span></div>
-        {% endfor %}
-      {% else %}
-        <div class="b-foot__svc"><span>Sunday &middot; Glory Service</span><span>9:00 AM</span></div>
-        <div class="b-foot__svc"><span>Tuesday &middot; Prayer Band Meeting</span><span>Evening</span></div>
-        <div class="b-foot__svc"><span>Thursday &middot; Communion Service</span><span>Evening</span></div>
-        <div class="b-foot__svc"><span>Friday &middot; All Night Service</span><span>Night</span></div>
-        <div class="b-foot__svc"><span>Saturday &middot; Evangelism</span><span>Morning</span></div>
-      {% endif %}
-    </div>
-  </div>
-  <div class="b-wrap b-foot__base">
-    <span>&copy; {% now "Y" %} {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God&rsquo;s Word Ministry{% endif %}. All rights reserved.</span>
-    <span>Bwari, Abuja &middot; Nigeria</span>
-  </div>
+
 </footer>
 
-<script>
-(function(){
-  var nav = document.getElementById('bNav');
-  var onScroll = function(){ nav.classList.toggle('is-solid', window.scrollY > 40); };
-  onScroll(); window.addEventListener('scroll', onScroll, { passive:true });
-  var burger = document.getElementById('bBurger'), menu = document.getElementById('bMenu');
-  if (burger && menu) {
-    burger.addEventListener('click', function(){
-      var open = menu.classList.toggle('is-open');
-      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-  }
-})();
-{% block extra_js %}{% endblock %}
-</script>
+    <!-- ==================== BACK TO TOP ==================== -->
+    <button id="back-to-top" class="btn" aria-label="Back to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- ==================== SCRIPTS ==================== -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Back to top button
+        const backBtn = document.getElementById('back-to-top');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 300) {
+                backBtn.style.display = 'block';
+            } else {
+                backBtn.style.display = 'none';
+            }
+        });
+        backBtn.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Auto-dismiss alerts after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    const closeBtn = alert.querySelector('.btn-close');
+                    if (closeBtn) closeBtn.click();
+                }, 5000);
+            });
+        });
+
+        // Placeholder for any additional JS
+        {% block extra_js %}{% endblock %}
+    </script>
 </body>
 </html>

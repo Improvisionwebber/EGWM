@@ -1,151 +1,903 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Gallery - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
+{% block title %}
+Gallery -
+{% if church_settings %}
+    {{ church_settings.church_name }}
+{% else %}
+    Embassy of God's Word Ministry
+{% endif %}
+{% endblock %}
+
 
 {% block extra_css %}
 <style>
-    .page-hero {
-        background: linear-gradient(160deg, var(--black) 0%, var(--charcoal) 100%);
+
+    /* =========================================================
+       EGWM GALLERY PAGE
+       Scoped to prevent conflicts with base.html
+    ========================================================= */
+
+    .gallery-page {
+        background: var(--off-white);
+        min-height: 100vh;
+    }
+
+
+    /* =========================================================
+       HERO
+       IMPORTANT:
+       No negative margin — prevents navbar overlap.
+    ========================================================= */
+
+    .gallery-page .gallery-hero {
+        position: relative;
+        background:
+            radial-gradient(
+                circle at 50% 0%,
+                rgba(201, 162, 39, 0.10),
+                transparent 45%
+            ),
+            linear-gradient(
+                160deg,
+                var(--black) 0%,
+                var(--charcoal) 100%
+            );
+
         color: #fff;
-        padding: calc(var(--nav-h) + 4rem) 0 4.5rem;
-        margin-top: calc(-1 * var(--nav-h));
+
+        /* Content begins below fixed navbar */
+        padding: calc(var(--nav-h) + 3.5rem) 0 4.5rem;
+
+        text-align: center;
+        overflow: hidden;
+        isolation: isolate;
+    }
+
+
+    .gallery-page .gallery-hero::before {
+        content: "";
+        position: absolute;
+        width: 320px;
+        height: 320px;
+        border: 1px solid rgba(201, 162, 39, 0.14);
+        border-radius: 50%;
+        top: -180px;
+        left: 50%;
+        transform: translateX(-50%);
+        pointer-events: none;
+    }
+
+
+    .gallery-page .gallery-hero::after {
+        content: "";
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+        top: -90px;
+        left: 50%;
+        transform: translateX(-50%);
+        pointer-events: none;
+    }
+
+
+    .gallery-page .gallery-hero .container {
+        position: relative;
+        z-index: 2;
+    }
+
+
+    .gallery-page .gallery-hero h1 {
+        color: #fff;
+        font-size: clamp(2.3rem, 5vw, 3.5rem);
+        line-height: 1.1;
+        margin-bottom: 0;
+        letter-spacing: -0.02em;
+    }
+
+
+    .gallery-page .gallery-hero .eyebrow {
+        margin-bottom: .85rem;
+    }
+
+
+    /* =========================================================
+       INTRO
+    ========================================================= */
+
+    .gallery-page .gallery-section {
+        padding-top: 4rem;
+        padding-bottom: 5rem;
+    }
+
+
+    .gallery-page .gallery-intro {
+        max-width: 650px;
+        margin: 0 auto 3rem;
         text-align: center;
     }
-    .page-hero h1 { color: #fff; font-size: clamp(2.2rem, 4.5vw, 3.2rem); }
 
-    .album-card {
-        background: #fff;
-        border: none;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: var(--shadow-sm);
-        transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+
+    .gallery-page .gallery-intro p {
+        margin-bottom: 0;
+    }
+
+
+    /* =========================================================
+       ALBUM GRID
+    ========================================================= */
+
+    .gallery-page .album-grid {
         position: relative;
+        z-index: 1;
     }
-    .album-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
-    .album-card .cover-wrap { position: relative; overflow: hidden; height: 240px; }
-    .album-card img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease); display: block; }
-    .album-card:hover img { transform: scale(1.08); }
-    .album-card .cover-wrap::after {
-        content: '';
-        position: absolute; inset: 0;
-        background: linear-gradient(0deg, rgba(0,0,0,.55) 0%, transparent 55%);
+
+
+    .gallery-page .album-card {
+        position: relative;
+        height: 100%;
+
+        background: #fff;
+        border: 1px solid rgba(0, 0, 0, 0.045);
+        border-radius: 18px;
+
+        overflow: hidden;
+
+        box-shadow:
+            0 8px 28px rgba(0, 0, 0, 0.055);
+
+        transition:
+            transform .35s var(--ease),
+            box-shadow .35s var(--ease),
+            border-color .35s ease;
     }
-    .album-card .cover-wrap.no-image { display: flex; align-items: center; justify-content: center; background: var(--off-white); }
-    .album-card .cover-wrap.no-image::after { display: none; }
-    .album-card .card-body { padding: 1.3rem 1.4rem; border-top: 2px solid var(--gold); }
-    .album-card .image-count { color: var(--muted); font-size: 0.88rem; }
 
-    /* Masonry grid inside the album modal */
-    .modal-gallery {
-        columns: 3 180px;
-        column-gap: .6rem;
+
+    .gallery-page .album-card:hover {
+        transform: translateY(-7px);
+
+        box-shadow:
+            0 18px 45px rgba(0, 0, 0, 0.10);
+
+        border-color: rgba(201, 162, 39, 0.22);
     }
-    .modal-gallery .masonry-item { break-inside: avoid; margin-bottom: .6rem; position: relative; overflow: hidden; border-radius: 10px; border: 1px solid var(--border); }
-    .modal-gallery img { width: 100%; display: block; border-radius: 0; transition: transform .4s var(--ease); cursor: zoom-in; }
-    .modal-gallery .masonry-item:hover img { transform: scale(1.05); }
-    @media (max-width: 576px) { .modal-gallery { columns: 2 140px; } }
 
-    .modal-content { border-radius: var(--radius); border: none; }
-    .modal-header { border-bottom: 1px solid var(--border); }
-    .modal-header .modal-title { font-family: var(--font-display); }
 
-    .empty-state { text-align: center; padding: 4rem 1rem; color: var(--muted); }
-    .empty-state i { font-size: 2.4rem; color: var(--gold); margin-bottom: 1rem; display: block; }
+    /* =========================================================
+       COVER
+    ========================================================= */
+
+    .gallery-page .cover-wrap {
+        position: relative;
+        height: 245px;
+        overflow: hidden;
+        background: var(--charcoal);
+    }
+
+
+    .gallery-page .cover-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+
+        transition:
+            transform .7s var(--ease),
+            filter .4s ease;
+    }
+
+
+    .gallery-page .album-card:hover .cover-wrap img {
+        transform: scale(1.06);
+        filter: brightness(.92);
+    }
+
+
+    /* Elegant image overlay */
+
+    .gallery-page .cover-wrap::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+
+        background:
+            linear-gradient(
+                to top,
+                rgba(0, 0, 0, .55),
+                rgba(0, 0, 0, .05) 65%,
+                transparent
+            );
+
+        pointer-events: none;
+    }
+
+
+    /* Empty album cover */
+
+    .gallery-page .cover-wrap.no-image {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background:
+            radial-gradient(
+                circle at center,
+                rgba(201, 162, 39, .10),
+                transparent 60%
+            ),
+            linear-gradient(
+                145deg,
+                var(--charcoal),
+                var(--black)
+            );
+    }
+
+
+    .gallery-page .cover-wrap.no-image::before {
+        content: "";
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        border: 1px solid rgba(201, 162, 39, .30);
+        border-radius: 50%;
+    }
+
+
+    .gallery-page .cover-wrap.no-image::after {
+        display: none;
+    }
+
+
+    .gallery-page .cover-wrap.no-image i {
+        position: relative;
+        z-index: 2;
+        color: var(--gold) !important;
+    }
+
+
+    /* =========================================================
+       ALBUM BODY
+    ========================================================= */
+
+    .gallery-page .album-card .card-body {
+        position: relative;
+        padding: 1.45rem 1.5rem 1.55rem;
+        border-top: 2px solid var(--gold);
+    }
+
+
+    .gallery-page .album-card .card-body h5 {
+        font-family: var(--font-display);
+        font-size: 1.15rem;
+        line-height: 1.3;
+        margin-bottom: .35rem;
+        color: var(--black);
+    }
+
+
+    .gallery-page .image-count {
+        color: var(--muted);
+        font-size: .86rem;
+        margin-bottom: 1rem !important;
+    }
+
+
+    .gallery-page .image-count::before {
+        content: "•";
+        color: var(--gold);
+        margin-right: .45rem;
+    }
+
+
+    /* =========================================================
+       VIEW ALBUM BUTTON
+    ========================================================= */
+
+    .gallery-page .album-card .btn {
+        transition:
+            background .25s ease,
+            color .25s ease,
+            transform .25s ease;
+    }
+
+
+    .gallery-page .album-card .btn:hover {
+        transform: translateY(-1px);
+    }
+
+
+    /* =========================================================
+       MODAL
+       Keep it above navbar/base header.
+    ========================================================= */
+
+    .gallery-page .gallery-modal {
+        z-index: 2000;
+    }
+
+
+    .modal-backdrop.show {
+        z-index: 1990;
+    }
+
+
+    .gallery-page .gallery-modal .modal-dialog {
+        max-width: 1050px;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+
+
+    .gallery-page .gallery-modal .modal-content {
+        border: none;
+        border-radius: 20px;
+        overflow: hidden;
+
+        background: #fff;
+
+        box-shadow:
+            0 30px 90px rgba(0, 0, 0, .35);
+    }
+
+
+    .gallery-page .gallery-modal .modal-header {
+        padding: 1.2rem 1.5rem;
+
+        background:
+            linear-gradient(
+                145deg,
+                var(--black),
+                var(--charcoal)
+            );
+
+        border-bottom: 1px solid rgba(201, 162, 39, .25);
+    }
+
+
+    .gallery-page .gallery-modal .modal-title {
+        color: #fff;
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+    }
+
+
+    .gallery-page .gallery-modal .btn-close {
+        filter: invert(1);
+        opacity: .85;
+    }
+
+
+    .gallery-page .gallery-modal .btn-close:hover {
+        opacity: 1;
+    }
+
+
+    .gallery-page .gallery-modal .modal-body {
+        padding: 1.25rem;
+        background: #fafafa;
+    }
+
+
+    /* =========================================================
+       MASONRY GALLERY
+    ========================================================= */
+
+    .gallery-page .modal-gallery {
+        columns: 3 200px;
+        column-gap: .7rem;
+    }
+
+
+    .gallery-page .masonry-item {
+        break-inside: avoid;
+        margin-bottom: .7rem;
+
+        position: relative;
+        overflow: hidden;
+
+        border-radius: 10px;
+        background: #fff;
+
+        border: 1px solid rgba(0, 0, 0, .06);
+    }
+
+
+    .gallery-page .modal-gallery img {
+        width: 100%;
+        height: auto;
+        display: block;
+
+        cursor: zoom-in;
+
+        transition:
+            transform .45s var(--ease),
+            filter .35s ease;
+    }
+
+
+    .gallery-page .masonry-item:hover img {
+        transform: scale(1.04);
+        filter: brightness(.94);
+    }
+
+
+    /* =========================================================
+       EMPTY STATE
+    ========================================================= */
+
+    .gallery-page .empty-state {
+        max-width: 520px;
+        margin: 2rem auto 0;
+
+        text-align: center;
+        padding: 4.5rem 1.5rem;
+
+        color: var(--muted);
+        background: #fff;
+
+        border-radius: 18px;
+        border: 1px solid var(--border);
+
+        box-shadow: var(--shadow-sm);
+    }
+
+
+    .gallery-page .empty-state i {
+        display: block;
+        font-size: 2.7rem;
+        color: var(--gold);
+        margin-bottom: 1rem;
+    }
+
+
+    /* =========================================================
+       PAGINATION
+    ========================================================= */
+
+    .gallery-page .pagination {
+        gap: .35rem;
+    }
+
+
+    .gallery-page .pagination .page-link {
+        border-radius: 8px !important;
+        border: 1px solid var(--border);
+        color: var(--black);
+        background: #fff;
+
+        min-width: 40px;
+        text-align: center;
+
+        transition:
+            background .2s ease,
+            color .2s ease,
+            border-color .2s ease;
+    }
+
+
+    .gallery-page .pagination .page-link:hover {
+        background: var(--gold);
+        border-color: var(--gold);
+        color: #000;
+    }
+
+
+    .gallery-page .pagination .page-item.active .page-link {
+        background: var(--black);
+        border-color: var(--black);
+        color: #fff;
+    }
+
+
+    /* =========================================================
+       MOBILE
+    ========================================================= */
+
+    @media (max-width: 767px) {
+
+        .gallery-page .gallery-hero {
+            padding:
+                calc(var(--nav-h) + 2.7rem)
+                1rem
+                3.3rem;
+        }
+
+
+        .gallery-page .gallery-hero h1 {
+            font-size: 2.35rem;
+        }
+
+
+        .gallery-page .gallery-section {
+            padding-top: 3rem;
+            padding-bottom: 4rem;
+        }
+
+
+        .gallery-page .gallery-intro {
+            margin-bottom: 2.2rem;
+        }
+
+
+        .gallery-page .cover-wrap {
+            height: 220px;
+        }
+
+
+        .gallery-page .gallery-modal .modal-dialog {
+            margin: .6rem;
+        }
+
+
+        .gallery-page .gallery-modal .modal-body {
+            padding: .75rem;
+        }
+
+
+        .gallery-page .modal-gallery {
+            columns: 2 130px;
+            column-gap: .45rem;
+        }
+
+
+        .gallery-page .masonry-item {
+            margin-bottom: .45rem;
+            border-radius: 8px;
+        }
+
+    }
+
+
+    @media (max-width: 400px) {
+
+        .gallery-page .cover-wrap {
+            height: 205px;
+        }
+
+
+        .gallery-page .album-card .card-body {
+            padding: 1.25rem;
+        }
+
+
+        .gallery-page .modal-gallery {
+            columns: 2 115px;
+        }
+
+    }
+
 </style>
 {% endblock %}
 
+
 {% block content %}
 
-<section class="page-hero">
-    <div class="container">
-        <p class="eyebrow on-dark center justify-content-center d-flex">In Pictures</p>
-        <h1>Photo Gallery</h1>
-    </div>
-</section>
+<div class="gallery-page">
 
-<section class="section-padding" style="padding-top: 3.5rem;">
-    <div class="container">
-        <p class="section-subtitle text-center mb-5">Memorable moments captured in worship and fellowship.</p>
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
 
-        {% if albums %}
-            <div class="row g-4" data-reveal>
-                {% for album in albums %}
-                    <div class="col-md-4">
-                        <div class="album-card">
-                            <div class="cover-wrap {% if not album.cover_image %}no-image{% endif %}">
-                                {% if album.cover_image %}
-                                    <img src="{{ album.cover_image.url }}" alt="{{ album.title }}" loading="lazy">
-                                {% else %}
-                                    <i class="fas fa-images" style="font-size: 3rem; color: var(--gold);"></i>
-                                {% endif %}
-                            </div>
-                            <div class="card-body">
-                                <h5 class="mb-1">{{ album.title }}</h5>
-                                <p class="image-count mb-3">{{ album.images.count }} images</p>
-                                <a href="#" class="btn btn-outline-gold btn-sm" data-bs-toggle="modal" data-bs-target="#albumModal{{ album.id }}">View Album</a>
-                            </div>
-                        </div>
-                    </div>
+    <section class="gallery-hero">
 
-                    <!-- Modal for album images -->
-                    <div class="modal fade" id="albumModal{{ album.id }}" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog modal-lg modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">{{ album.title }}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="container">
+
+            <p class="eyebrow on-dark center justify-content-center d-flex">
+                In Pictures
+            </p>
+
+            <h1>Photo Gallery</h1>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         GALLERY CONTENT
+    ====================================================== -->
+
+    <section class="gallery-section">
+
+        <div class="container">
+
+            <div class="gallery-intro">
+
+                <p class="section-subtitle">
+                    Memorable moments captured in worship, fellowship,
+                    service and the journey of our ministry.
+                </p>
+
+            </div>
+
+
+            {% if albums %}
+
+                <div class="row g-4 album-grid" data-reveal>
+
+                    {% for album in albums %}
+
+                        <div class="col-lg-4 col-md-6">
+
+                            <article class="album-card">
+
+                                <!-- ALBUM COVER -->
+
+                                <div class="cover-wrap {% if not album.cover_image %}no-image{% endif %}">
+
+                                    {% if album.cover_image %}
+
+                                        <img
+                                            src="{{ album.cover_image.url }}"
+                                            alt="{{ album.title }}"
+                                            loading="lazy"
+                                        >
+
+                                    {% else %}
+
+                                        <i
+                                            class="fas fa-images"
+                                            style="font-size: 3rem; color: var(--gold);"
+                                        ></i>
+
+                                    {% endif %}
+
                                 </div>
-                                <div class="modal-body">
-                                    <div class="modal-gallery">
-                                        {% for image in album.images.all %}
-                                            <div class="masonry-item">
-                                                <img src="{{ image.image.url }}" alt="{{ image.caption|default:'Gallery image' }}" data-bs-toggle="tooltip" title="{{ image.caption }}">
-                                            </div>
-                                        {% empty %}
-                                            <p>No images in this album.</p>
-                                        {% endfor %}
+
+
+                                <!-- ALBUM INFO -->
+
+                                <div class="card-body">
+
+                                    <h5>
+                                        {{ album.title }}
+                                    </h5>
+
+                                    <p class="image-count">
+                                        {{ album.images.count }} images
+                                    </p>
+
+                                    <a
+                                        href="#"
+                                        class="btn btn-outline-gold btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#albumModal{{ album.id }}"
+                                    >
+                                        View Album
+                                        <i class="fas fa-arrow-right ms-2"></i>
+                                    </a>
+
+                                </div>
+
+                            </article>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             ALBUM MODAL
+                        ================================================== -->
+
+                        <div
+                            class="modal fade gallery-modal"
+                            id="albumModal{{ album.id }}"
+                            tabindex="-1"
+                            aria-labelledby="albumModalLabel{{ album.id }}"
+                            aria-hidden="true"
+                        >
+
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+
+                                        <h5
+                                            class="modal-title"
+                                            id="albumModalLabel{{ album.id }}"
+                                        >
+                                            {{ album.title }}
+                                        </h5>
+
+                                        <button
+                                            type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="modal"
+                                            aria-label="Close"
+                                        ></button>
+
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
 
-            <!-- Pagination -->
-            {% if albums.paginator.num_pages > 1 %}
-                <nav class="mt-5">
-                    <ul class="pagination justify-content-center">
-                        {% if albums.has_previous %}
-                            <li class="page-item"><a class="page-link" href="?page={{ albums.previous_page_number }}">Previous</a></li>
-                        {% endif %}
-                        {% for num in albums.paginator.page_range %}
-                            <li class="page-item {% if albums.number == num %}active{% endif %}">
-                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                            </li>
-                        {% endfor %}
-                        {% if albums.has_next %}
-                            <li class="page-item"><a class="page-link" href="?page={{ albums.next_page_number }}">Next</a></li>
-                        {% endif %}
-                    </ul>
-                </nav>
+
+                                    <div class="modal-body">
+
+                                        <div class="modal-gallery">
+
+                                            {% for image in album.images.all %}
+
+                                                <div class="masonry-item">
+
+                                                    <img
+                                                        src="{{ image.image.url }}"
+                                                        alt="{{ image.caption|default:'Gallery image' }}"
+                                                        loading="lazy"
+                                                        data-bs-toggle="tooltip"
+                                                        title="{{ image.caption|default:'' }}"
+                                                    >
+
+                                                </div>
+
+                                            {% empty %}
+
+                                                <div class="text-center py-5 w-100">
+
+                                                    <i
+                                                        class="fas fa-images"
+                                                        style="font-size: 2.5rem; color: var(--gold);"
+                                                    ></i>
+
+                                                    <p class="mt-3 mb-0 text-muted">
+                                                        No images in this album yet.
+                                                    </p>
+
+                                                </div>
+
+                                            {% endfor %}
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- =====================================================
+                     PAGINATION
+                ====================================================== -->
+
+                {% if albums.paginator.num_pages > 1 %}
+
+                    <nav
+                        class="mt-5"
+                        aria-label="Gallery pagination"
+                    >
+
+                        <ul class="pagination justify-content-center">
+
+                            {% if albums.has_previous %}
+
+                                <li class="page-item">
+
+                                    <a
+                                        class="page-link"
+                                        href="?page={{ albums.previous_page_number }}"
+                                    >
+                                        Previous
+                                    </a>
+
+                                </li>
+
+                            {% endif %}
+
+
+                            {% for num in albums.paginator.page_range %}
+
+                                <li
+                                    class="page-item
+                                    {% if albums.number == num %}active{% endif %}"
+                                >
+
+                                    <a
+                                        class="page-link"
+                                        href="?page={{ num }}"
+                                    >
+                                        {{ num }}
+                                    </a>
+
+                                </li>
+
+                            {% endfor %}
+
+
+                            {% if albums.has_next %}
+
+                                <li class="page-item">
+
+                                    <a
+                                        class="page-link"
+                                        href="?page={{ albums.next_page_number }}"
+                                    >
+                                        Next
+                                    </a>
+
+                                </li>
+
+                            {% endif %}
+
+                        </ul>
+
+                    </nav>
+
+                {% endif %}
+
+
+            {% else %}
+
+                <!-- EMPTY STATE -->
+
+                <div class="empty-state">
+
+                    <i class="fas fa-images"></i>
+
+                    <p class="mb-0">
+                        Moments from our ministry journey will appear here.
+                    </p>
+
+                </div>
+
             {% endif %}
-        {% else %}
-            <div class="empty-state">
-                <i class="fas fa-images"></i>
-                <p class="mb-0">Moments from our ministry journey will appear here.</p>
-            </div>
-        {% endif %}
-    </div>
-</section>
+
+        </div>
+
+    </section>
+
+</div>
+
 {% endblock %}
 
+
 {% block extra_js %}
-// Initialize tooltips for gallery images
-var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-var tooltipList = tooltipTriggerList.map(function (el) {
-    return new bootstrap.Tooltip(el);
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    /*
+     * Bootstrap gallery tooltips
+     */
+    var tooltipTriggerList = [].slice.call(
+        document.querySelectorAll(
+            '.gallery-page [data-bs-toggle="tooltip"]'
+        )
+    );
+
+    tooltipTriggerList.forEach(function (el) {
+        new bootstrap.Tooltip(el);
+    });
+
+
+    /*
+     * Keep gallery modals above the fixed navbar.
+     * Bootstrap normally handles this, but this makes
+     * the behavior reliable with a custom premium navbar.
+     */
+    document.querySelectorAll(".gallery-modal").forEach(function (modal) {
+
+        modal.addEventListener("show.bs.modal", function () {
+
+            document.body.classList.add("gallery-modal-open");
+
+        });
+
+        modal.addEventListener("hidden.bs.modal", function () {
+
+            document.body.classList.remove("gallery-modal-open");
+
+        });
+
+    });
+
 });
+</script>
+
 {% endblock %}

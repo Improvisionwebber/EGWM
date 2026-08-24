@@ -1,95 +1,802 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}{{ event.title }} - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
+{% block title %}
+    {{ event.title }} -
+    {% if church_settings %}
+        {{ church_settings.church_name }}
+    {% else %}
+        Embassy of God's Word Ministry
+    {% endif %}
+{% endblock %}
+
 
 {% block extra_css %}
 <style>
-    .event-detail img.banner {
-        width: 100%;
-        max-height: 460px;
-        object-fit: cover;
-        border-radius: var(--radius-lg);
-        margin-bottom: 2rem;
-        box-shadow: var(--shadow-md);
+
+/* =========================================================
+   EVENT DETAIL — MATURE / HEADER SAFE
+========================================================= */
+
+.event-detail-page {
+    position: relative;
+    isolation: isolate;
+    overflow-x: hidden;
+    background: #fff;
+}
+
+
+/* =========================================================
+   TOP INTRO / HERO
+========================================================= */
+
+.event-detail-page .detail-hero {
+    position: relative;
+    z-index: 1;
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(201, 162, 39, 0.10),
+            transparent 42%
+        ),
+        linear-gradient(
+            160deg,
+            var(--black) 0%,
+            var(--charcoal) 100%
+        );
+
+    color: #fff;
+
+    /* Do NOT pull this underneath the base navbar */
+    margin-top: 0;
+
+    padding:
+        clamp(6.5rem, 11vw, 8.5rem)
+        0
+        clamp(3.5rem, 6vw, 4.8rem);
+
+    text-align: center;
+
+    overflow: hidden;
+}
+
+.event-detail-page .detail-hero::before {
+    content: "";
+
+    position: absolute;
+
+    width: 430px;
+    height: 430px;
+
+    top: -280px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    background: rgba(201, 162, 39, .08);
+
+    border-radius: 50%;
+
+    filter: blur(75px);
+
+    pointer-events: none;
+}
+
+.event-detail-page .detail-hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+.event-detail-page .detail-hero h1 {
+    color: #fff;
+
+    font-size: clamp(
+        2rem,
+        4.5vw,
+        3.25rem
+    );
+
+    line-height: 1.15;
+
+    max-width: 900px;
+
+    margin: .75rem auto 0;
+
+    font-weight: 700;
+
+    letter-spacing: -.02em;
+}
+
+.event-detail-page .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+
+    color: rgba(255,255,255,.72);
+
+    text-decoration: none;
+
+    font-size: .85rem;
+    font-weight: 600;
+
+    transition:
+        color .2s ease,
+        transform .2s ease;
+}
+
+.event-detail-page .back-link:hover {
+    color: var(--gold-light);
+    transform: translateX(-3px);
+}
+
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.event-detail-page .detail-content {
+    position: relative;
+    z-index: 2;
+
+    padding-top: clamp(3rem, 6vw, 5rem);
+    padding-bottom: clamp(4rem, 7vw, 6rem);
+}
+
+.event-detail-page .article-column {
+    max-width: 820px;
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   BANNER
+========================================================= */
+
+.event-detail-page .event-banner {
+    width: 100%;
+
+    max-height: 500px;
+
+    object-fit: cover;
+
+    display: block;
+
+    border-radius: 20px;
+
+    margin-bottom: 2.25rem;
+
+    box-shadow: var(--shadow-md);
+
+    border: 1px solid rgba(0,0,0,.04);
+}
+
+
+/* =========================================================
+   EVENT TYPE
+========================================================= */
+
+.event-detail-page .event-badge-large {
+    display: inline-flex;
+    align-items: center;
+
+    background: rgba(201, 162, 39, .13);
+
+    color: var(--gold-dark);
+
+    border: 1px solid rgba(201, 162, 39, .20);
+
+    padding: .45rem 1rem;
+
+    border-radius: 50px;
+
+    font-size: .73rem;
+
+    font-weight: 700;
+
+    letter-spacing: .08em;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.event-detail-page .event-title {
+    font-size: clamp(
+        2rem,
+        4vw,
+        3rem
+    );
+
+    line-height: 1.15;
+
+    color: var(--black);
+
+    margin: 1rem 0 1.5rem;
+
+    letter-spacing: -.025em;
+}
+
+
+/* =========================================================
+   INFORMATION PANEL
+========================================================= */
+
+.event-detail-page .info-panel {
+    position: relative;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--off-white),
+            #fff
+        );
+
+    border: 1px solid var(--border);
+
+    border-radius: 16px;
+
+    padding:
+        1.5rem
+        1.6rem;
+
+    margin:
+        1.75rem
+        0
+        2rem;
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,.035);
+}
+
+.event-detail-page .info-panel::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 3px;
+    height: 100%;
+
+    background: var(--gold);
+
+    border-radius: 16px 0 0 16px;
+}
+
+.event-detail-page .info-panel p {
+    color: var(--muted);
+
+    font-size: .95rem;
+
+    margin-bottom: .85rem;
+
+    display: flex;
+    align-items: flex-start;
+
+    line-height: 1.6;
+}
+
+.event-detail-page .info-panel p:last-child {
+    margin-bottom: 0;
+}
+
+.event-detail-page .info-panel i {
+    color: var(--gold);
+
+    width: 20px;
+
+    margin-right: 9px;
+
+    margin-top: 3px;
+
+    flex-shrink: 0;
+}
+
+.event-detail-page .info-panel a {
+    color: var(--gold-dark);
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition: color .2s ease;
+}
+
+.event-detail-page .info-panel a:hover {
+    color: var(--gold);
+}
+
+
+/* =========================================================
+   COUNTDOWN
+========================================================= */
+
+.event-detail-page .countdown-tag {
+    display: inline-flex;
+    align-items: center;
+
+    background: rgba(201, 162, 39, .09);
+
+    color: var(--gold-dark);
+
+    padding: .35rem .7rem;
+
+    border-radius: 7px;
+
+    font-size: .8rem;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   REGISTRATION BUTTON
+========================================================= */
+
+.event-detail-page .register-button {
+    display: inline-flex;
+    align-items: center;
+
+    padding: .75rem 1.35rem;
+
+    font-weight: 600;
+
+    box-shadow:
+        0 7px 20px rgba(201,162,39,.18);
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+.event-detail-page .register-button:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 25px rgba(201,162,39,.25);
+}
+
+
+/* =========================================================
+   EVENT DESCRIPTION
+========================================================= */
+
+.event-detail-page .content {
+    font-size: 1.08rem;
+
+    line-height: 1.95;
+
+    color: #292929;
+
+    max-width: 780px;
+}
+
+.event-detail-page .content p {
+    margin-bottom: 1.45rem;
+}
+
+.event-detail-page .content h2,
+.event-detail-page .content h3,
+.event-detail-page .content h4 {
+    color: var(--black);
+
+    margin-top: 2.2rem;
+
+    margin-bottom: 1rem;
+
+    line-height: 1.3;
+}
+
+.event-detail-page .content strong {
+    color: var(--black);
+}
+
+.event-detail-page .content a {
+    color: var(--gold-dark);
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.event-detail-page .section-divider {
+    border: 0;
+
+    border-top: 1px solid var(--border);
+
+    margin:
+        4rem
+        0
+        2.5rem;
+}
+
+
+/* =========================================================
+   RELATED EVENTS
+========================================================= */
+
+.event-detail-page .related-heading {
+    color: var(--black);
+
+    font-weight: 700;
+
+    margin-bottom: 1.25rem;
+}
+
+.event-detail-page .related-event-card {
+    height: 100%;
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    background: #fff;
+
+    box-shadow: var(--shadow-sm);
+
+    transition:
+        transform .3s var(--ease),
+        box-shadow .3s var(--ease),
+        border-color .3s ease;
+}
+
+.event-detail-page .related-event-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow: var(--shadow-md);
+
+    border-color:
+        rgba(201,162,39,.25);
+}
+
+.event-detail-page .related-event-card .card-body {
+    padding: 1.25rem;
+}
+
+.event-detail-page .related-event-card h6 {
+    color: var(--black);
+
+    line-height: 1.4;
+}
+
+.event-detail-page .related-event-card small {
+    color: var(--muted);
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 767px) {
+
+    .event-detail-page .detail-hero {
+        padding:
+            6.5rem
+            1rem
+            3.7rem;
     }
-    .event-detail .info-panel {
-        background: var(--off-white);
-        border-radius: var(--radius);
-        padding: 1.75rem 2rem;
-        margin: 1.75rem 0 2.25rem;
+
+    .event-detail-page .detail-hero h1 {
+        font-size: 2rem;
     }
-    .event-detail .info-panel p { color: var(--muted); font-size: 1rem; margin-bottom: .85rem; }
-    .event-detail .info-panel p:last-child { margin-bottom: 0; }
-    .event-detail .info-panel i { color: var(--gold); margin-right: 10px; width: 18px; }
-    .event-detail .info-panel a { color: var(--gold-dark); font-weight: 600; }
-    .event-detail .info-panel a:hover { color: var(--gold); }
-    .event-detail .content { font-size: 1.08rem; line-height: 1.9; color: #222; }
-    .event-detail .event-badge-large {
-        background: var(--gold);
-        color: #000;
-        padding: 0.5rem 1.5rem;
-        border-radius: 50px;
-        font-weight: 700;
-        font-size: 0.95rem;
-        display: inline-block;
+
+    .event-detail-page .detail-content {
+        padding-top: 2.75rem;
     }
-    .related-event-card { transition: transform .3s var(--ease); }
-    .related-event-card:hover { transform: translateY(-4px); }
+
+    .event-detail-page .event-banner {
+        max-height: 360px;
+
+        border-radius: 15px;
+
+        margin-bottom: 1.75rem;
+    }
+
+    .event-detail-page .event-title {
+        font-size: 2rem;
+    }
+
+    .event-detail-page .info-panel {
+        padding: 1.3rem 1.25rem;
+    }
+
+    .event-detail-page .content {
+        font-size: 1rem;
+        line-height: 1.85;
+    }
+
+    .event-detail-page .section-divider {
+        margin:
+            3rem
+            0
+            2rem;
+    }
+}
+
+
+@media (max-width: 400px) {
+
+    .event-detail-page .detail-hero {
+        padding-top: 6rem;
+    }
+
+    .event-detail-page .detail-hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .event-detail-page .event-banner {
+        max-height: 300px;
+    }
+
+}
+
 </style>
 {% endblock %}
 
+
 {% block content %}
-<section class="section-padding" style="padding-top: 4.5rem;">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 mx-auto event-detail" data-reveal>
-                <p class="eyebrow"><a href="{% url 'core:events' %}" style="color:inherit;">Events</a></p>
+
+<div class="event-detail-page">
+
+    <!-- =====================================================
+         DARK EVENT HERO
+    ====================================================== -->
+
+    <section class="detail-hero">
+
+        <div class="container">
+
+            <a
+                href="{% url 'core:events' %}"
+                class="back-link"
+            >
+                <i class="fas fa-arrow-left"></i>
+                Back to Events
+            </a>
+
+
+            <p class="eyebrow on-dark mt-4 mb-0">
+                Gather With Us
+            </p>
+
+
+            <h1>
+                {{ event.title }}
+            </h1>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         EVENT CONTENT
+    ====================================================== -->
+
+    <section class="detail-content">
+
+        <div class="container">
+
+            <article
+                class="article-column"
+                data-reveal
+            >
+
                 {% if event.banner %}
-                    <img class="banner" src="{{ event.banner.url }}" alt="{{ event.title }}">
+
+                    <img
+                        class="event-banner"
+                        src="{{ event.banner.url }}"
+                        alt="{{ event.title }}"
+                        loading="eager"
+                    >
+
                 {% endif %}
-                <span class="event-badge-large">{{ event.get_event_type_display }}</span>
-                <h1 class="mt-3">{{ event.title }}</h1>
+
+
+                <!-- EVENT TYPE -->
+
+                <span class="event-badge-large">
+                    {{ event.get_event_type_display }}
+                </span>
+
+
+                <!-- TITLE -->
+
+                <h2 class="event-title">
+                    {{ event.title }}
+                </h2>
+
+
+                <!-- EVENT INFORMATION -->
 
                 <div class="info-panel">
-                    <p><i class="fas fa-calendar-alt"></i> {{ event.start_date|date:"F d, Y" }}{% if event.end_date %} – {{ event.end_date|date:"F d, Y" }}{% endif %}</p>
-                    <p><i class="fas fa-clock"></i> {{ event.start_date|date:"g:i A" }}</p>
-                    <p><i class="fas fa-map-pin"></i> {{ event.venue }}</p>
-                    {% if event.registration_link %}<p><i class="fas fa-link"></i> <a href="{{ event.registration_link }}" target="_blank" rel="noopener noreferrer">Register Here</a></p>{% endif %}
-                    {% if event.google_maps_link %}<p><i class="fas fa-map-marked-alt"></i> <a href="{{ event.google_maps_link }}" target="_blank" rel="noopener noreferrer">Get Directions</a></p>{% endif %}
-                    {% if event.countdown %}<p><span class="countdown-tag"><i class="fas fa-clock"></i> {{ event.start_date|timeuntil }} remaining</span></p>{% endif %}
+
+                    <p>
+                        <i class="fas fa-calendar-alt"></i>
+
+                        <span>
+                            {{ event.start_date|date:"F d, Y" }}
+
+                            {% if event.end_date %}
+                                – {{ event.end_date|date:"F d, Y" }}
+                            {% endif %}
+                        </span>
+                    </p>
+
+
+                    <p>
+                        <i class="fas fa-clock"></i>
+
+                        <span>
+                            {{ event.start_date|date:"g:i A" }}
+                        </span>
+                    </p>
+
+
+                    <p>
+                        <i class="fas fa-map-pin"></i>
+
+                        <span>
+                            {{ event.venue }}
+                        </span>
+                    </p>
+
+
+                    {% if event.registration_link %}
+
+                        <p>
+                            <i class="fas fa-link"></i>
+
+                            <a
+                                href="{{ event.registration_link }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Register Here
+                            </a>
+                        </p>
+
+                    {% endif %}
+
+
+                    {% if event.google_maps_link %}
+
+                        <p>
+                            <i class="fas fa-map-marked-alt"></i>
+
+                            <a
+                                href="{{ event.google_maps_link }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Get Directions
+                            </a>
+                        </p>
+
+                    {% endif %}
+
+
+                    {% if event.countdown %}
+
+                        <p>
+
+                            <span class="countdown-tag">
+
+                                <i class="fas fa-clock"></i>
+
+                                {{ event.start_date|timeuntil }}
+                                remaining
+
+                            </span>
+
+                        </p>
+
+                    {% endif %}
+
                 </div>
+
+
+                <!-- REGISTRATION -->
 
                 {% if event.registration_link %}
-                    <a href="{{ event.registration_link }}" target="_blank" rel="noopener noreferrer" class="btn btn-gold mb-4">Register Now <i class="fas fa-arrow-right ms-2"></i></a>
+
+                    <a
+                        href="{{ event.registration_link }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="btn btn-gold register-button mb-4"
+                    >
+
+                        Register Now
+
+                        <i class="fas fa-arrow-right ms-2"></i>
+
+                    </a>
+
                 {% endif %}
+
+
+                <!-- DESCRIPTION -->
 
                 <div class="content">
+
                     {{ event.description|linebreaks }}
+
                 </div>
 
-                <!-- Related Events -->
+
+                <!-- =================================================
+                     RELATED EVENTS
+                ================================================== -->
+
                 {% if related_events %}
-                    <hr class="my-5" style="border-color: var(--border);">
-                    <p class="eyebrow">Keep Exploring</p>
-                    <h4 class="mb-3">More Events</h4>
+
+                    <hr class="section-divider">
+
+
+                    <p class="eyebrow">
+                        Keep Exploring
+                    </p>
+
+
+                    <h4 class="related-heading">
+                        More Events
+                    </h4>
+
+
                     <div class="row g-3">
+
                         {% for rel in related_events %}
+
                             <div class="col-md-6">
-                                <a href="{% url 'core:event_detail' rel.slug %}" class="text-decoration-none text-dark">
-                                    <div class="card premium-card related-event-card">
+
+                                <a
+                                    href="{% url 'core:event_detail' rel.slug %}"
+                                    class="text-decoration-none"
+                                >
+
+                                    <div class="related-event-card">
+
                                         <div class="card-body">
-                                            <h6 class="mb-1">{{ rel.title|truncatechars:50 }}</h6>
-                                            <small style="color: var(--muted);">{{ rel.start_date|date:"M d, Y" }}</small>
+
+                                            <h6 class="mb-1">
+                                                {{ rel.title|truncatechars:50 }}
+                                            </h6>
+
+                                            <small>
+                                                {{ rel.start_date|date:"M d, Y" }}
+                                            </small>
+
                                         </div>
+
                                     </div>
+
                                 </a>
+
                             </div>
+
                         {% endfor %}
+
                     </div>
+
                 {% endif %}
-            </div>
+
+            </article>
+
         </div>
-    </div>
-</section>
+
+    </section>
+
+</div>
+
 {% endblock %}
