@@ -23,10 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-)v9bow6z^@*3c3ulic2ub5^cmp9zlpnp%b&*)w5$$k_!-8!$!!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-                        
+ALLOWED_HOSTS = ['egwm.org.ng', 'www.egwm.org.ng', 'localhost', '127.0.0.1']                        
 
 # Application definition
 
