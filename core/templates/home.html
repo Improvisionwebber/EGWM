@@ -353,29 +353,280 @@
 @media (max-width:1100px){
   .e-gallery{grid-template-columns:repeat(3,1fr);}
 }
+@media (max-width: 991px) {
+
+  .e-hero{
+    min-height: 720px;
+    height: 100svh;
+    max-height: 900px;
+    padding: 0;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .e-hero__media{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .e-hero__video{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+  }
+
+  .e-hero__inner{
+    width: 100%;
+    grid-template-columns: 1fr;
+    padding: 0 2rem 4.5rem;
+    position: relative;
+    z-index: 5;
+  }
+
+  .e-hero__stage{
+    height: auto;
+    order: initial;
+  }
+
+  .e-hero__card,
+  .e-hero__cue{
+    display: none;
+  }
+
+  .e-welcome,
+  .e-leader,
+  .e-dev,
+  .e-visit,
+  .e-news__grid{
+    grid-template-columns: 1fr;
+  }
+
+  .e-grid--3,
+  .e-grid--2{
+    grid-template-columns: 1fr;
+  }
+
+  .e-dev__frame,
+  .e-leader__frame{
+    order: -1;
+  }
+
+  .e-gallery{
+    grid-template-columns: repeat(2,1fr);
+    grid-auto-rows: 150px;
+  }
+
+  .e-gallery a:nth-child(4){
+    grid-row: span 1;
+  }
+
+  .e-gallery a:nth-child(5){
+    grid-column: span 2;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .e-hero{
+    min-height: 680px;
+    height: 100svh;
+    max-height: none;
+  }
+
+  .e-hero__inner{
+    padding: 0 1.25rem 3.25rem;
+  }
+
+  .e-hero__copy{
+    width: 100%;
+  }
+
+  .e-hero h1{
+    font-size: clamp(2.5rem, 12vw, 3.8rem);
+    line-height: .98;
+  }
+
+  .e-hero__sub{
+    max-width: 340px;
+  }
+
+  .e-hero__actions{
+    width: 100%;
+    max-width: 340px;
+  }
+
+  .e-hero__actions .e-btn{
+    width: 100%;
+    justify-content: center;
+  }
+
+  .e-card,
+  .e-service,
+  .e-testi{
+    padding: 1.6rem;
+  }
+
+  .e-gallery{
+    grid-template-columns: 1fr;
+    grid-auto-rows: 200px;
+  }
+
+  .e-gallery a:nth-child(1),
+  .e-gallery a:nth-child(5){
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+}
+
+
+@media (prefers-reduced-motion: reduce){
+
+  .egwm *,
+  .egwm *::before,
+  .egwm *::after{
+    animation: none!important;
+    transition-duration: .01ms!important;
+  }
+
+  .e-reveal{
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  /* Keep the hero visible even when reduced motion is enabled */
+  .e-hero__video{
+    display: block;
+  }
+}
 @media (max-width:991px){
-  .e-hero{min-height:auto;padding:calc(var(--nav-h,0px) + 6rem) 0 6rem;}
-  .e-hero__inner{grid-template-columns:1fr;}
-  .e-hero__stage{height:340px;order:-1;}
-  .e-hero__card,.e-hero__cue{display:none;}
-  .e-welcome,.e-leader,.e-dev,.e-visit,.e-news__grid{grid-template-columns:1fr;}
-  .e-grid--3,.e-grid--2{grid-template-columns:1fr;}
-  .e-dev__frame,.e-leader__frame{order:-1;}
-  .e-gallery{grid-template-columns:repeat(2,1fr);grid-auto-rows:150px;}
-  .e-gallery a:nth-child(4){grid-row:span 1;}
-  .e-gallery a:nth-child(5){grid-column:span 2;}
+
+  .e-hero{
+    min-height:680px;
+    padding:calc(var(--nav-h,0px) + 5rem) 0 5rem;
+    overflow:hidden;
+  }
+
+  .e-hero__media{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+  }
+
+  .e-hero__video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+  }
+
+  .e-hero__inner{
+    grid-template-columns:1fr;
+    position:relative;
+    z-index:5;
+  }
+
+  .e-hero__stage{
+    height:340px;
+    order:-1;
+  }
+
+  .e-hero__card,
+  .e-hero__cue{
+    display:none;
+  }
+
+  .e-welcome,
+  .e-leader,
+  .e-dev,
+  .e-visit,
+  .e-news__grid{
+    grid-template-columns:1fr;
+  }
+
+  .e-grid--3,
+  .e-grid--2{
+    grid-template-columns:1fr;
+  }
+
+  .e-dev__frame,
+  .e-leader__frame{
+    order:-1;
+  }
+
+  .e-gallery{
+    grid-template-columns:repeat(2,1fr);
+    grid-auto-rows:150px;
+  }
+
+  .e-gallery a:nth-child(4){
+    grid-row:span 1;
+  }
+
+  .e-gallery a:nth-child(5){
+    grid-column:span 2;
+  }
 }
+
 @media (max-width:600px){
-  .e-hero h1{font-size:clamp(2.2rem,10vw,3rem);}
-  .e-hero__actions .e-btn{width:100%;justify-content:center;}
-  .e-card,.e-service,.e-testi{padding:1.6rem;}
-  .e-gallery{grid-template-columns:1fr;grid-auto-rows:200px;}
-  .e-gallery a:nth-child(1),.e-gallery a:nth-child(5){grid-column:span 1;grid-row:span 1;}
+
+  .e-hero{
+    min-height:650px;
+    padding:calc(var(--nav-h,0px) + 4rem) 0 4rem;
+  }
+
+  .e-hero__video{
+    object-position:center center;
+  }
+
+  .e-hero h1{
+    font-size:clamp(2.2rem,10vw,3rem);
+  }
+
+  .e-hero__actions .e-btn{
+    width:100%;
+    justify-content:center;
+  }
+
+  .e-card,
+  .e-service,
+  .e-testi{
+    padding:1.6rem;
+  }
+
+  .e-gallery{
+    grid-template-columns:1fr;
+    grid-auto-rows:200px;
+  }
+
+  .e-gallery a:nth-child(1),
+  .e-gallery a:nth-child(5){
+    grid-column:span 1;
+    grid-row:span 1;
+  }
 }
+
 @media (prefers-reduced-motion:reduce){
-  .egwm *,.egwm *::before,.egwm *::after{animation:none!important;transition-duration:.01ms!important;}
-  .e-reveal{opacity:1;transform:none;filter:none;}
-  .e-hero__video{display:none;}
+
+  .egwm *,.egwm *::before,.egwm *::after{
+    animation:none!important;
+    transition-duration:.01ms!important;
+  }
+
+  .e-reveal{
+    opacity:1;
+    transform:none;
+    filter:none;
+  }
+
+  .e-hero__video{
+    display:block;
+  }
 }
 </style>
 {% endblock %}
@@ -387,69 +638,162 @@
        HERO
        ===================================================================== -->
   <section class="e-hero" id="eHero" aria-label="Welcome">
-    <div class="e-hero__media">
-      <video class="e-hero__video" id="eHeroVideo" autoplay muted loop playsinline preload="none"
-             poster="{% if hero_slides %}{% for slide in hero_slides %}{% if forloop.first and slide.image %}{{ slide.image.url }}{% endif %}{% endfor %}{% endif %}"
-             aria-hidden="true" tabindex="-1">
-        <source src="https://cdn.coverr.co/videos/coverr-light-rays-through-a-window-2606/1080p.mp4" type="video/mp4">
-      </video>
+<div class="e-hero__media">
+    <video
+        class="e-hero__video"
+        id="eHeroVideo"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"
+        aria-hidden="true"
+    >
+        <source src="{% static 'videos/herovideo.mp4' %}" type="video/mp4">
+    </video>
+</div>
 
-      {% if hero_slides %}
-        {% for slide in hero_slides %}
-          <div class="e-hero__slide{% if forloop.first %} is-active{% endif %}" data-hero-slide="{{ forloop.counter0 }}"
-               {% if slide.image %}style="background-image:url('{{ slide.image.url }}')"{% endif %} role="img"
-               aria-label="{{ slide.title|default:'Hero image' }}"></div>
-        {% endfor %}
-      {% else %}
-        <div class="e-hero__slide is-active" style="background-image:url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&w=2000&q=80')" role="img" aria-label="Cathedral light"></div>
-      {% endif %}
-    </div>
+<div class="e-hero__scrim" aria-hidden="true"></div>
+<div class="e-hero__grid" aria-hidden="true"></div>
+<canvas id="eHeroParticles" aria-hidden="true"></canvas>
 
-    <div class="e-hero__scrim" aria-hidden="true"></div>
-    <div class="e-hero__grid" aria-hidden="true"></div>
-    <canvas id="eHeroParticles" aria-hidden="true"></canvas>
+<div class="e-hero__inner">
 
-    <div class="e-hero__inner">
-      <div class="e-hero__copy" data-parallax="0.4">
-        <span class="e-hero__eyebrow">{% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}</span>
+    <div class="e-hero__copy" data-parallax="0.4">
+
+        <span class="e-hero__eyebrow">
+            {% if church_settings %}
+                {{ church_settings.church_name }}
+            {% else %}
+                Embassy of God's Word Ministry
+            {% endif %}
+        </span>
 
         {% if hero_slides %}
-          {% for slide in hero_slides %}
-            <div class="e-hero__slidecopy{% if forloop.first %} is-active{% endif %}" data-hero-copy="{{ forloop.counter0 }}">
-              {% if slide.title %}<h1>{{ slide.title }}</h1>{% endif %}
-              {% if slide.subtitle %}<p class="e-hero__sub">{{ slide.subtitle }}</p>{% endif %}
-              <div class="e-hero__actions">
-                {% if slide.button_text and slide.button_link %}
-                  <a href="{{ slide.button_link }}" class="e-btn e-btn--gold">{{ slide.button_text }}</a>
-                {% endif %}
-                <a href="{% url 'core:about' %}" class="e-btn e-btn--ghost">Explore The Ministry</a>
-              </div>
-            </div>
-          {% endfor %}
+
+            {% for slide in hero_slides %}
+
+                <div
+                    class="e-hero__slidecopy{% if forloop.first %} is-active{% endif %}"
+                    data-hero-copy="{{ forloop.counter0 }}"
+                >
+
+                    {% if slide.title %}
+                        <h1>{{ slide.title }}</h1>
+                    {% endif %}
+
+                    {% if slide.subtitle %}
+                        <p class="e-hero__sub">{{ slide.subtitle }}</p>
+                    {% endif %}
+
+                    <div class="e-hero__actions">
+
+                        {% if slide.button_text and slide.button_link %}
+                            <a
+                                href="{{ slide.button_link }}"
+                                class="e-btn e-btn--gold"
+                            >
+                                {{ slide.button_text }}
+                            </a>
+                        {% endif %}
+
+                        <a
+                            href="{% url 'core:about' %}"
+                            class="e-btn e-btn--ghost"
+                        >
+                            Explore The Ministry
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
         {% else %}
-          <div class="e-hero__slidecopy is-active">
-            {% if homepage_settings %}
-              <h1>{{ homepage_settings.hero_title|default:"The Word Of God Is Alive." }}</h1>
-              <p class="e-hero__sub">{{ homepage_settings.hero_subtitle|default:"A place where God's Word is taught, faith is strengthened, and lives are transformed." }}</p>
-              <div class="e-hero__actions">
-                {% if homepage_settings.hero_button_text and homepage_settings.hero_button_link %}
-                  <a href="{{ homepage_settings.hero_button_link }}" class="e-btn e-btn--gold">{{ homepage_settings.hero_button_text }}</a>
+
+            <div class="e-hero__slidecopy is-active">
+
+                {% if homepage_settings %}
+
+                    <h1>
+                        {{ homepage_settings.hero_title|default:"The Word Of God Is Alive." }}
+                    </h1>
+
+                    <p class="e-hero__sub">
+                        {{ homepage_settings.hero_subtitle|default:"A place where God's Word is taught, faith is strengthened, and lives are transformed." }}
+                    </p>
+
+                    <div class="e-hero__actions">
+
+                        {% if homepage_settings.hero_button_text and homepage_settings.hero_button_link %}
+
+                            <a
+                                href="{{ homepage_settings.hero_button_link }}"
+                                class="e-btn e-btn--gold"
+                            >
+                                {{ homepage_settings.hero_button_text }}
+                            </a>
+
+                        {% else %}
+
+                            <a
+                                href="{% url 'core:first_visit' %}"
+                                class="e-btn e-btn--gold"
+                            >
+                                Join Us
+                            </a>
+
+                        {% endif %}
+
+                        <a
+                            href="{% url 'core:about' %}"
+                            class="e-btn e-btn--ghost"
+                        >
+                            Explore The Ministry
+                        </a>
+
+                    </div>
+
                 {% else %}
-                  <a href="{% url 'core:first_visit' %}" class="e-btn e-btn--gold">Join Us</a>
+
+                    <h1>
+                        The Word Of God
+                        <br>
+                        <em>Is Alive.</em>
+                    </h1>
+
+                    <p class="e-hero__sub">
+                        A place where God's Word is taught, faith is strengthened, and lives are transformed.
+                    </p>
+
+                    <div class="e-hero__actions">
+
+                        <a
+                            href="{% url 'core:first_visit' %}"
+                            class="e-btn e-btn--gold"
+                        >
+                            Join Us
+                        </a>
+
+                        <a
+                            href="{% url 'core:about' %}"
+                            class="e-btn e-btn--ghost"
+                        >
+                            Explore The Ministry
+                        </a>
+
+                    </div>
+
                 {% endif %}
-                <a href="{% url 'core:about' %}" class="e-btn e-btn--ghost">Explore The Ministry</a>
-              </div>
-            {% else %}
-              <h1>The Word Of God<br><em>Is Alive.</em></h1>
-              <p class="e-hero__sub">A place where God's Word is taught, faith is strengthened, and lives are transformed.</p>
-              <div class="e-hero__actions">
-                <a href="{% url 'core:first_visit' %}" class="e-btn e-btn--gold">Join Us</a>
-                <a href="{% url 'core:about' %}" class="e-btn e-btn--ghost">Explore The Ministry</a>
-              </div>
-            {% endif %}
-          </div>
+
+            </div>
+
         {% endif %}
-      </div>
+
+    </div>
+
+</div>
 
       <div class="e-hero__stage" id="eStage" aria-hidden="true">
         <div class="e-halo"></div>
@@ -519,7 +863,7 @@
         <span class="e-welcome__ring e-welcome__ring--1" aria-hidden="true"></span>
         <span class="e-welcome__ring e-welcome__ring--2" aria-hidden="true"></span>
         <img class="e-welcome__img" loading="lazy"
-             src="{% static 'images/churchexterior.jpg' %}"
+             src="{% static 'images/churchexterior.JPG' %}"
              alt="Worshippers gathered in prayer">
       </div>
     </div>

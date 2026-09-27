@@ -206,5 +206,5 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 LOGIN_URL = "/admin/login/"
-MEDIA_URL = "/media/"
+MEDIA_URL = "https://egwm.org.ng/media/"
 MEDIA_ROOT = BASE_DIR / "media"
