@@ -12,748 +12,717 @@ Gallery -
 
 
 {% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
 <style>
+/* =========================================================
+   GALLERY PAGE
+   Self-contained colours (--gv-*) so nothing depends on
+   base.html variables. Matches Events and Devotionals.
+========================================================= */
 
-    /* =========================================================
-       EGWM GALLERY PAGE
-       Scoped to prevent conflicts with base.html
-    ========================================================= */
+.gallery-page,
+.gv-modal,
+.gv-lightbox {
+    --gv-ink: #16130c;
+    --gv-ink-soft: #2a2416;
+    --gv-gold: #c9a227;
+    --gv-gold-light: #e6c65c;
+    --gv-gold-dark: #8f7212;
+    --gv-paper: #faf8f3;
+    --gv-text: #2b2a26;
+    --gv-muted: #6f6b60;
+    --gv-line: #e8e3d5;
+    --gv-ease: cubic-bezier(.22, .8, .24, 1);
+    --gv-shadow-sm: 0 1px 2px rgba(22, 19, 12, .05), 0 4px 14px rgba(22, 19, 12, .06);
+    --gv-shadow-lg: 0 2px 4px rgba(22, 19, 12, .05), 0 22px 44px -12px rgba(22, 19, 12, .22);
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
 
-    .gallery-page {
-        background: var(--off-white);
-        min-height: 100vh;
+.gallery-page {
+    position: relative;
+    isolation: isolate;
+    overflow-x: hidden;
+    min-height: 100vh;
+    background: var(--gv-paper);
+    color: var(--gv-text);
+}
+
+.gallery-page h1,
+.gallery-page .album-title,
+.gv-modal .modal-title {
+    font-family: "Fraunces", Georgia, "Times New Roman", serif;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.gallery-page .gallery-hero {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    color: #fff;
+    background-color: var(--gv-ink);
+    background-image:
+        radial-gradient(ellipse at 50% -10%, rgba(201, 162, 39, .28), transparent 55%),
+        linear-gradient(165deg, #1d1810 0%, #0f0d08 100%);
+    padding: clamp(8rem, 15vw, 11rem) 1rem clamp(4.5rem, 8vw, 6.5rem);
+}
+
+.gallery-page .gallery-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(ellipse at center, #000 20%, transparent 70%);
+            mask-image: radial-gradient(ellipse at center, #000 20%, transparent 70%);
+    pointer-events: none;
+}
+
+.gallery-page .gallery-hero::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gv-gold), transparent);
+}
+
+.gallery-page .hero-inner {
+    position: relative;
+    z-index: 2;
+    will-change: transform, opacity;
+}
+
+.gallery-page .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    margin: 0 0 1.1rem;
+    color: var(--gv-gold-light);
+    font-size: .95rem;
+    font-weight: 500;
+}
+
+.gallery-page .hero-eyebrow::before,
+.gallery-page .hero-eyebrow::after {
+    content: "";
+    width: 34px;
+    height: 1px;
+    background: currentColor;
+    opacity: .6;
+}
+
+.gallery-page .gallery-hero h1 {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(2.8rem, 7vw, 4.75rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -.02em;
+}
+
+.gallery-page .hero-sub {
+    max-width: 560px;
+    margin: 1.2rem auto 0;
+    color: rgba(255, 255, 255, .78);
+    font-size: 1.05rem;
+    line-height: 1.65;
+}
+
+.gallery-page .hero-inner > * {
+    opacity: 0;
+    transform: translateY(18px);
+    animation: gv-rise .8s var(--gv-ease) forwards;
+}
+.gallery-page .hero-inner > *:nth-child(2) { animation-delay: .12s; }
+.gallery-page .hero-inner > *:nth-child(3) { animation-delay: .24s; }
+
+@keyframes gv-rise {
+    to { opacity: 1; transform: none; }
+}
+
+
+/* =========================================================
+   ALBUMS
+========================================================= */
+
+.gallery-page .gallery-section {
+    padding: clamp(3.5rem, 6vw, 5.5rem) 0 clamp(4rem, 8vw, 7rem);
+}
+
+.gallery-page .album-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--gv-line);
+    border-radius: 18px;
+    box-shadow: var(--gv-shadow-sm);
+    transition: transform .4s var(--gv-ease), box-shadow .4s var(--gv-ease), border-color .3s ease;
+}
+
+.gallery-page .album-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 4;
+    background: linear-gradient(90deg, var(--gv-gold), var(--gv-gold-light));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .5s var(--gv-ease);
+}
+
+.gallery-page .album-card:hover,
+.gallery-page .album-card:focus-within {
+    transform: translateY(-8px);
+    box-shadow: var(--gv-shadow-lg);
+    border-color: rgba(201, 162, 39, .45);
+}
+
+.gallery-page .album-card:hover::before,
+.gallery-page .album-card:focus-within::before {
+    transform: scaleX(1);
+}
+
+.gallery-page .cover-wrap {
+    position: relative;
+    height: 250px;
+    overflow: hidden;
+    background: var(--gv-ink-soft);
+}
+
+.gallery-page .cover-wrap img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform .8s var(--gv-ease);
+}
+
+.gallery-page .album-card:hover .cover-wrap img {
+    transform: scale(1.08);
+}
+
+.gallery-page .cover-wrap::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(22, 19, 12, .5), transparent 55%);
+    pointer-events: none;
+}
+
+.gallery-page .cover-wrap.no-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gv-gold);
+    font-size: 3rem;
+    background:
+        radial-gradient(circle at 50% 40%, rgba(201, 162, 39, .28), transparent 60%),
+        linear-gradient(160deg, #2a2416, #16130c);
+}
+
+.gallery-page .cover-wrap.no-image::after { display: none; }
+
+.gallery-page .count-pill {
+    position: absolute;
+    left: 14px;
+    bottom: 14px;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    padding: .45rem .85rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .95);
+    color: var(--gv-ink);
+    font-size: .8rem;
+    font-weight: 600;
+    line-height: 1;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .25);
+}
+
+.gallery-page .count-pill i { color: var(--gv-gold-dark); }
+
+.gallery-page .album-card .card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1.4rem 1.5rem 1.6rem;
+}
+
+.gallery-page .album-title {
+    margin: 0 0 1.1rem;
+    color: var(--gv-ink);
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.3;
+    transition: color .25s ease;
+}
+
+.gallery-page .album-card:hover .album-title {
+    color: var(--gv-gold-dark);
+}
+
+.gallery-page .btn-album {
+    align-self: flex-start;
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    padding: .7rem 1.3rem;
+    border: 2px solid var(--gv-line);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--gv-ink);
+    font-size: .9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background .3s ease, color .3s ease, border-color .3s ease;
+}
+
+.gallery-page .btn-album i {
+    font-size: .78rem;
+    transition: transform .3s var(--gv-ease);
+}
+
+.gallery-page .album-card:hover .btn-album {
+    background: var(--gv-gold);
+    border-color: var(--gv-gold);
+    color: var(--gv-ink);
+}
+
+.gallery-page .album-card:hover .btn-album i {
+    transform: translateX(4px);
+}
+
+.gallery-page .btn-album:focus-visible,
+.gallery-page .pagination .page-link:focus-visible {
+    outline: 3px solid var(--gv-gold);
+    outline-offset: 3px;
+}
+
+
+/* empty + pagination */
+
+.gallery-page .empty-state {
+    max-width: 560px;
+    margin: 1rem auto 0;
+    padding: 3.5rem 1.5rem;
+    text-align: center;
+    background: #fff;
+    border: 1.5px dashed #d9d2bd;
+    border-radius: 18px;
+}
+
+.gallery-page .empty-state i {
+    display: block;
+    margin-bottom: 1rem;
+    color: var(--gv-gold);
+    font-size: 2.4rem;
+}
+
+.gallery-page .empty-state p {
+    margin: 0;
+    color: var(--gv-muted);
+    font-size: 1.02rem;
+}
+
+.gallery-page .pagination {
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.gallery-page .pagination .page-link {
+    min-width: 42px;
+    text-align: center;
+    padding: .55rem .85rem;
+    border: 1px solid var(--gv-line);
+    border-radius: 10px !important;
+    background: #fff;
+    color: var(--gv-ink);
+    font-weight: 500;
+    transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+.gallery-page .pagination .page-link:hover {
+    background: rgba(201, 162, 39, .14);
+    border-color: var(--gv-gold);
+    color: var(--gv-ink);
+    transform: translateY(-2px);
+}
+
+.gallery-page .pagination .page-item.active .page-link {
+    background: var(--gv-ink);
+    border-color: var(--gv-ink);
+    color: var(--gv-gold-light);
+}
+
+
+/* scroll reveal (only when JS runs) */
+
+.gallery-page.gv-js .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity .7s var(--gv-ease), transform .7s var(--gv-ease);
+    transition-delay: var(--gv-delay, 0ms);
+}
+
+.gallery-page.gv-js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+}
+
+
+/* =========================================================
+   ALBUM MODAL
+   Lives OUTSIDE .gallery-page in the HTML so it always sits
+   above the navbar and the backdrop (no stacking-context trap).
+========================================================= */
+
+.gv-modal { z-index: 2000; }
+.modal-backdrop.show { z-index: 1990; }
+
+.gv-modal .modal-dialog {
+    max-width: 1080px;
+}
+
+.gv-modal .modal-content {
+    border: 0;
+    border-radius: 22px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, .4);
+}
+
+.gv-modal .modal-header {
+    padding: 1.15rem 1.5rem;
+    border-bottom: 0;
+    background: linear-gradient(145deg, #1d1810, #0f0d08);
+    position: relative;
+}
+
+.gv-modal .modal-header::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gv-gold), transparent);
+}
+
+.gv-modal .modal-title {
+    color: #fff;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.gv-modal .modal-sub {
+    display: block;
+    margin-top: .2rem;
+    color: var(--gv-gold-light);
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: .82rem;
+    font-weight: 500;
+}
+
+.gv-modal .btn-close {
+    filter: invert(1);
+    opacity: .8;
+    transition: opacity .2s ease, transform .3s var(--gv-ease);
+}
+
+.gv-modal .btn-close:hover {
+    opacity: 1;
+    transform: rotate(90deg);
+}
+
+.gv-modal .modal-body {
+    padding: 1.25rem;
+    background: var(--gv-paper);
+}
+
+.gv-modal .modal-gallery {
+    columns: 3 200px;
+    column-gap: .8rem;
+}
+
+.gv-modal .masonry-item {
+    position: relative;
+    margin-bottom: .8rem;
+    overflow: hidden;
+    border-radius: 12px;
+    background: var(--gv-ink-soft);
+    break-inside: avoid;
+    box-shadow: var(--gv-shadow-sm);
+}
+
+.gv-modal .masonry-item img {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: zoom-in;
+    transition: transform .7s var(--gv-ease), filter .4s ease;
+}
+
+.gv-modal .masonry-item:hover img {
+    transform: scale(1.06);
+    filter: brightness(.82);
+}
+
+.gv-modal .zoom-hint {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .95);
+    color: var(--gv-ink);
+    font-size: .85rem;
+    opacity: 0;
+    transform: scale(.7);
+    transition: opacity .3s ease, transform .3s var(--gv-ease);
+    pointer-events: none;
+}
+
+.gv-modal .masonry-item:hover .zoom-hint {
+    opacity: 1;
+    transform: none;
+}
+
+.gv-modal .gv-empty-album {
+    column-span: all;
+    padding: 3rem 1rem;
+    text-align: center;
+    color: var(--gv-muted);
+}
+
+.gv-modal .gv-empty-album i {
+    display: block;
+    margin-bottom: .9rem;
+    color: var(--gv-gold);
+    font-size: 2.4rem;
+}
+
+
+/* =========================================================
+   LIGHTBOX (full-screen photo viewer)
+========================================================= */
+
+.gv-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 2200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 8, 4, .94);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .3s ease, visibility .3s ease;
+    -webkit-user-select: none;
+            user-select: none;
+}
+
+.gv-lightbox.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.gv-lightbox .lb-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 92vw;
+    max-height: 92vh;
+}
+
+.gv-lightbox .lb-img {
+    max-width: 92vw;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 20px 70px rgba(0, 0, 0, .6);
+    transition: opacity .25s ease, transform .35s var(--gv-ease);
+}
+
+.gv-lightbox .lb-img.is-swapping {
+    opacity: 0;
+    transform: scale(.97);
+}
+
+.gv-lightbox .lb-caption {
+    min-height: 1.4em;
+    margin: 1rem 0 0;
+    max-width: 640px;
+    text-align: center;
+    color: rgba(255, 255, 255, .85);
+    font-size: .95rem;
+    line-height: 1.5;
+}
+
+.gv-lightbox .lb-counter {
+    margin-top: .35rem;
+    color: var(--gv-gold-light);
+    font-size: .82rem;
+    font-weight: 600;
+}
+
+.gv-lightbox .lb-btn {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .08);
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background .25s ease, color .25s ease, transform .25s var(--gv-ease);
+}
+
+.gv-lightbox .lb-btn:hover {
+    background: var(--gv-gold);
+    color: var(--gv-ink);
+    border-color: var(--gv-gold);
+}
+
+.gv-lightbox .lb-close { top: 18px; right: 18px; }
+.gv-lightbox .lb-prev  { left: 18px;  top: 50%; margin-top: -24px; }
+.gv-lightbox .lb-next  { right: 18px; top: 50%; margin-top: -24px; }
+.gv-lightbox .lb-prev:hover { transform: translateX(-3px); }
+.gv-lightbox .lb-next:hover { transform: translateX(3px); }
+.gv-lightbox .lb-close:hover { transform: rotate(90deg); }
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 767px) {
+    .gallery-page .cover-wrap { height: 225px; }
+    .gv-modal .modal-dialog { margin: .6rem; }
+    .gv-modal .modal-body { padding: .75rem; }
+    .gv-modal .modal-gallery { columns: 2 130px; column-gap: .5rem; }
+    .gv-modal .masonry-item { margin-bottom: .5rem; border-radius: 9px; }
+    .gv-lightbox .lb-prev { left: 8px; }
+    .gv-lightbox .lb-next { right: 8px; }
+    .gv-lightbox .lb-btn { width: 42px; height: 42px; }
+}
+
+@media (max-width: 400px) {
+    .gallery-page .cover-wrap { height: 205px; }
+    .gallery-page .hero-eyebrow::before,
+    .gallery-page .hero-eyebrow::after { width: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gallery-page *, .gallery-page *::before, .gallery-page *::after,
+    .gv-modal *, .gv-lightbox * {
+        animation: none !important;
+        transition-duration: .01ms !important;
     }
-
-
-    /* =========================================================
-       HERO
-       IMPORTANT:
-       No negative margin — prevents navbar overlap.
-    ========================================================= */
-
-    .gallery-page .gallery-hero {
-        position: relative;
-        background:
-            radial-gradient(
-                circle at 50% 0%,
-                rgba(201, 162, 39, 0.10),
-                transparent 45%
-            ),
-            linear-gradient(
-                160deg,
-                var(--black) 0%,
-                var(--charcoal) 100%
-            );
-
-        color: #fff;
-
-        /* Content begins below fixed navbar */
-        padding: calc(var(--nav-h) + 3.5rem) 0 4.5rem;
-
-        text-align: center;
-        overflow: hidden;
-        isolation: isolate;
-    }
-
-
-    .gallery-page .gallery-hero::before {
-        content: "";
-        position: absolute;
-        width: 320px;
-        height: 320px;
-        border: 1px solid rgba(201, 162, 39, 0.14);
-        border-radius: 50%;
-        top: -180px;
-        left: 50%;
-        transform: translateX(-50%);
-        pointer-events: none;
-    }
-
-
-    .gallery-page .gallery-hero::after {
-        content: "";
-        position: absolute;
-        width: 180px;
-        height: 180px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 50%;
-        top: -90px;
-        left: 50%;
-        transform: translateX(-50%);
-        pointer-events: none;
-    }
-
-
-    .gallery-page .gallery-hero .container {
-        position: relative;
-        z-index: 2;
-    }
-
-
-    .gallery-page .gallery-hero h1 {
-        color: #fff;
-        font-size: clamp(2.3rem, 5vw, 3.5rem);
-        line-height: 1.1;
-        margin-bottom: 0;
-        letter-spacing: -0.02em;
-    }
-
-
-    .gallery-page .gallery-hero .eyebrow {
-        margin-bottom: .85rem;
-    }
-
-
-    /* =========================================================
-       INTRO
-    ========================================================= */
-
-    .gallery-page .gallery-section {
-        padding-top: 4rem;
-        padding-bottom: 5rem;
-    }
-
-
-    .gallery-page .gallery-intro {
-        max-width: 650px;
-        margin: 0 auto 3rem;
-        text-align: center;
-    }
-
-
-    .gallery-page .gallery-intro p {
-        margin-bottom: 0;
-    }
-
-
-    /* =========================================================
-       ALBUM GRID
-    ========================================================= */
-
-    .gallery-page .album-grid {
-        position: relative;
-        z-index: 1;
-    }
-
-
-    .gallery-page .album-card {
-        position: relative;
-        height: 100%;
-
-        background: #fff;
-        border: 1px solid rgba(0, 0, 0, 0.045);
-        border-radius: 18px;
-
-        overflow: hidden;
-
-        box-shadow:
-            0 8px 28px rgba(0, 0, 0, 0.055);
-
-        transition:
-            transform .35s var(--ease),
-            box-shadow .35s var(--ease),
-            border-color .35s ease;
-    }
-
-
-    .gallery-page .album-card:hover {
-        transform: translateY(-7px);
-
-        box-shadow:
-            0 18px 45px rgba(0, 0, 0, 0.10);
-
-        border-color: rgba(201, 162, 39, 0.22);
-    }
-
-
-    /* =========================================================
-       COVER
-    ========================================================= */
-
-    .gallery-page .cover-wrap {
-        position: relative;
-        height: 245px;
-        overflow: hidden;
-        background: var(--charcoal);
-    }
-
-
-    .gallery-page .cover-wrap img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-
-        transition:
-            transform .7s var(--ease),
-            filter .4s ease;
-    }
-
-
-    .gallery-page .album-card:hover .cover-wrap img {
-        transform: scale(1.06);
-        filter: brightness(.92);
-    }
-
-
-    /* Elegant image overlay */
-
-    .gallery-page .cover-wrap::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-
-        background:
-            linear-gradient(
-                to top,
-                rgba(0, 0, 0, .55),
-                rgba(0, 0, 0, .05) 65%,
-                transparent
-            );
-
-        pointer-events: none;
-    }
-
-
-    /* Empty album cover */
-
-    .gallery-page .cover-wrap.no-image {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        background:
-            radial-gradient(
-                circle at center,
-                rgba(201, 162, 39, .10),
-                transparent 60%
-            ),
-            linear-gradient(
-                145deg,
-                var(--charcoal),
-                var(--black)
-            );
-    }
-
-
-    .gallery-page .cover-wrap.no-image::before {
-        content: "";
-        position: absolute;
-        width: 100px;
-        height: 100px;
-        border: 1px solid rgba(201, 162, 39, .30);
-        border-radius: 50%;
-    }
-
-
-    .gallery-page .cover-wrap.no-image::after {
-        display: none;
-    }
-
-
-    .gallery-page .cover-wrap.no-image i {
-        position: relative;
-        z-index: 2;
-        color: var(--gold) !important;
-    }
-
-
-    /* =========================================================
-       ALBUM BODY
-    ========================================================= */
-
-    .gallery-page .album-card .card-body {
-        position: relative;
-        padding: 1.45rem 1.5rem 1.55rem;
-        border-top: 2px solid var(--gold);
-    }
-
-
-    .gallery-page .album-card .card-body h5 {
-        font-family: var(--font-display);
-        font-size: 1.15rem;
-        line-height: 1.3;
-        margin-bottom: .35rem;
-        color: var(--black);
-    }
-
-
-    .gallery-page .image-count {
-        color: var(--muted);
-        font-size: .86rem;
-        margin-bottom: 1rem !important;
-    }
-
-
-    .gallery-page .image-count::before {
-        content: "•";
-        color: var(--gold);
-        margin-right: .45rem;
-    }
-
-
-    /* =========================================================
-       VIEW ALBUM BUTTON
-    ========================================================= */
-
-    .gallery-page .album-card .btn {
-        transition:
-            background .25s ease,
-            color .25s ease,
-            transform .25s ease;
-    }
-
-
-    .gallery-page .album-card .btn:hover {
-        transform: translateY(-1px);
-    }
-
-
-    /* =========================================================
-       MODAL
-       Keep it above navbar/base header.
-    ========================================================= */
-
-    .gallery-page .gallery-modal {
-        z-index: 2000;
-    }
-
-
-    .modal-backdrop.show {
-        z-index: 1990;
-    }
-
-
-    .gallery-page .gallery-modal .modal-dialog {
-        max-width: 1050px;
-        margin-top: 2rem;
-        margin-bottom: 2rem;
-    }
-
-
-    .gallery-page .gallery-modal .modal-content {
-        border: none;
-        border-radius: 20px;
-        overflow: hidden;
-
-        background: #fff;
-
-        box-shadow:
-            0 30px 90px rgba(0, 0, 0, .35);
-    }
-
-
-    .gallery-page .gallery-modal .modal-header {
-        padding: 1.2rem 1.5rem;
-
-        background:
-            linear-gradient(
-                145deg,
-                var(--black),
-                var(--charcoal)
-            );
-
-        border-bottom: 1px solid rgba(201, 162, 39, .25);
-    }
-
-
-    .gallery-page .gallery-modal .modal-title {
-        color: #fff;
-        font-family: var(--font-display);
-        font-size: 1.25rem;
-    }
-
-
-    .gallery-page .gallery-modal .btn-close {
-        filter: invert(1);
-        opacity: .85;
-    }
-
-
-    .gallery-page .gallery-modal .btn-close:hover {
-        opacity: 1;
-    }
-
-
-    .gallery-page .gallery-modal .modal-body {
-        padding: 1.25rem;
-        background: #fafafa;
-    }
-
-
-    /* =========================================================
-       MASONRY GALLERY
-    ========================================================= */
-
-    .gallery-page .modal-gallery {
-        columns: 3 200px;
-        column-gap: .7rem;
-    }
-
-
-    .gallery-page .masonry-item {
-        break-inside: avoid;
-        margin-bottom: .7rem;
-
-        position: relative;
-        overflow: hidden;
-
-        border-radius: 10px;
-        background: #fff;
-
-        border: 1px solid rgba(0, 0, 0, .06);
-    }
-
-
-    .gallery-page .modal-gallery img {
-        width: 100%;
-        height: auto;
-        display: block;
-
-        cursor: zoom-in;
-
-        transition:
-            transform .45s var(--ease),
-            filter .35s ease;
-    }
-
-
-    .gallery-page .masonry-item:hover img {
-        transform: scale(1.04);
-        filter: brightness(.94);
-    }
-
-
-    /* =========================================================
-       EMPTY STATE
-    ========================================================= */
-
-    .gallery-page .empty-state {
-        max-width: 520px;
-        margin: 2rem auto 0;
-
-        text-align: center;
-        padding: 4.5rem 1.5rem;
-
-        color: var(--muted);
-        background: #fff;
-
-        border-radius: 18px;
-        border: 1px solid var(--border);
-
-        box-shadow: var(--shadow-sm);
-    }
-
-
-    .gallery-page .empty-state i {
-        display: block;
-        font-size: 2.7rem;
-        color: var(--gold);
-        margin-bottom: 1rem;
-    }
-
-
-    /* =========================================================
-       PAGINATION
-    ========================================================= */
-
-    .gallery-page .pagination {
-        gap: .35rem;
-    }
-
-
-    .gallery-page .pagination .page-link {
-        border-radius: 8px !important;
-        border: 1px solid var(--border);
-        color: var(--black);
-        background: #fff;
-
-        min-width: 40px;
-        text-align: center;
-
-        transition:
-            background .2s ease,
-            color .2s ease,
-            border-color .2s ease;
-    }
-
-
-    .gallery-page .pagination .page-link:hover {
-        background: var(--gold);
-        border-color: var(--gold);
-        color: #000;
-    }
-
-
-    .gallery-page .pagination .page-item.active .page-link {
-        background: var(--black);
-        border-color: var(--black);
-        color: #fff;
-    }
-
-
-    /* =========================================================
-       MOBILE
-    ========================================================= */
-
-    @media (max-width: 767px) {
-
-        .gallery-page .gallery-hero {
-            padding:
-                calc(var(--nav-h) + 2.7rem)
-                1rem
-                3.3rem;
-        }
-
-
-        .gallery-page .gallery-hero h1 {
-            font-size: 2.35rem;
-        }
-
-
-        .gallery-page .gallery-section {
-            padding-top: 3rem;
-            padding-bottom: 4rem;
-        }
-
-
-        .gallery-page .gallery-intro {
-            margin-bottom: 2.2rem;
-        }
-
-
-        .gallery-page .cover-wrap {
-            height: 220px;
-        }
-
-
-        .gallery-page .gallery-modal .modal-dialog {
-            margin: .6rem;
-        }
-
-
-        .gallery-page .gallery-modal .modal-body {
-            padding: .75rem;
-        }
-
-
-        .gallery-page .modal-gallery {
-            columns: 2 130px;
-            column-gap: .45rem;
-        }
-
-
-        .gallery-page .masonry-item {
-            margin-bottom: .45rem;
-            border-radius: 8px;
-        }
-
-    }
-
-
-    @media (max-width: 400px) {
-
-        .gallery-page .cover-wrap {
-            height: 205px;
-        }
-
-
-        .gallery-page .album-card .card-body {
-            padding: 1.25rem;
-        }
-
-
-        .gallery-page .modal-gallery {
-            columns: 2 115px;
-        }
-
-    }
-
+    .gallery-page .hero-inner > * { opacity: 1; transform: none; }
+    .gallery-page.gv-js .reveal { opacity: 1; transform: none; }
+}
 </style>
 {% endblock %}
 
 
 {% block content %}
 
-<div class="gallery-page">
+<div class="gallery-page" id="galleryPage">
 
     <!-- =====================================================
          HERO
     ====================================================== -->
 
     <section class="gallery-hero">
-
         <div class="container">
-
-            <p class="eyebrow on-dark center justify-content-center d-flex">
-                In Pictures
-            </p>
-
-            <h1>Photo Gallery</h1>
-
+            <div class="hero-inner" id="heroInner">
+                <p class="hero-eyebrow">In pictures</p>
+                <h1>Photo Gallery</h1>
+                <p class="hero-sub">
+                    Memorable moments captured in worship, fellowship, service and the journey of our ministry.
+                </p>
+            </div>
         </div>
-
     </section>
 
 
     <!-- =====================================================
-         GALLERY CONTENT
+         ALBUMS
     ====================================================== -->
 
     <section class="gallery-section">
-
         <div class="container">
-
-            <div class="gallery-intro">
-
-                <p class="section-subtitle">
-                    Memorable moments captured in worship, fellowship,
-                    service and the journey of our ministry.
-                </p>
-
-            </div>
-
 
             {% if albums %}
 
-                <div class="row g-4 album-grid" data-reveal>
+                <div class="row g-4 album-grid">
 
                     {% for album in albums %}
 
-                        <div class="col-lg-4 col-md-6">
+                        <div class="col-lg-4 col-md-6 reveal" style="--gv-delay: {{ forloop.counter0 }}00ms;">
 
                             <article class="album-card">
 
-                                <!-- ALBUM COVER -->
-
                                 <div class="cover-wrap {% if not album.cover_image %}no-image{% endif %}">
-
                                     {% if album.cover_image %}
-
                                         <img
                                             src="{{ album.cover_image.url }}"
                                             alt="{{ album.title }}"
                                             loading="lazy"
                                         >
-
                                     {% else %}
-
-                                        <i
-                                            class="fas fa-images"
-                                            style="font-size: 3rem; color: var(--gold);"
-                                        ></i>
-
+                                        <i class="fas fa-images"></i>
                                     {% endif %}
 
+                                    {% with total=album.images.count %}
+                                        <span class="count-pill">
+                                            <i class="fas fa-camera"></i>
+                                            {{ total }} photo{{ total|pluralize }}
+                                        </span>
+                                    {% endwith %}
                                 </div>
 
-
-                                <!-- ALBUM INFO -->
-
                                 <div class="card-body">
-
-                                    <h5>
-                                        {{ album.title }}
-                                    </h5>
-
-                                    <p class="image-count">
-                                        {{ album.images.count }} images
-                                    </p>
+                                    <h3 class="album-title">{{ album.title }}</h3>
 
                                     <a
-                                        href="#"
-                                        class="btn btn-outline-gold btn-sm"
+                                        href="#albumModal{{ album.id }}"
+                                        class="btn-album stretched-link"
                                         data-bs-toggle="modal"
                                         data-bs-target="#albumModal{{ album.id }}"
+                                        aria-label="View album {{ album.title }}"
                                     >
-                                        View Album
-                                        <i class="fas fa-arrow-right ms-2"></i>
+                                        View album <i class="fas fa-arrow-right"></i>
                                     </a>
-
                                 </div>
 
                             </article>
-
-                        </div>
-
-
-                        <!-- =================================================
-                             ALBUM MODAL
-                        ================================================== -->
-
-                        <div
-                            class="modal fade gallery-modal"
-                            id="albumModal{{ album.id }}"
-                            tabindex="-1"
-                            aria-labelledby="albumModalLabel{{ album.id }}"
-                            aria-hidden="true"
-                        >
-
-                            <div class="modal-dialog modal-lg modal-dialog-centered">
-
-                                <div class="modal-content">
-
-                                    <div class="modal-header">
-
-                                        <h5
-                                            class="modal-title"
-                                            id="albumModalLabel{{ album.id }}"
-                                        >
-                                            {{ album.title }}
-                                        </h5>
-
-                                        <button
-                                            type="button"
-                                            class="btn-close"
-                                            data-bs-dismiss="modal"
-                                            aria-label="Close"
-                                        ></button>
-
-                                    </div>
-
-
-                                    <div class="modal-body">
-
-                                        <div class="modal-gallery">
-
-                                            {% for image in album.images.all %}
-
-                                                <div class="masonry-item">
-
-                                                    <img
-                                                        src="{{ image.image.url }}"
-                                                        alt="{{ image.caption|default:'Gallery image' }}"
-                                                        loading="lazy"
-                                                        data-bs-toggle="tooltip"
-                                                        title="{{ image.caption|default:'' }}"
-                                                    >
-
-                                                </div>
-
-                                            {% empty %}
-
-                                                <div class="text-center py-5 w-100">
-
-                                                    <i
-                                                        class="fas fa-images"
-                                                        style="font-size: 2.5rem; color: var(--gold);"
-                                                    ></i>
-
-                                                    <p class="mt-3 mb-0 text-muted">
-                                                        No images in this album yet.
-                                                    </p>
-
-                                                </div>
-
-                                            {% endfor %}
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
 
                         </div>
 
@@ -762,97 +731,108 @@ Gallery -
                 </div>
 
 
-                <!-- =====================================================
-                     PAGINATION
-                ====================================================== -->
+                <!-- PAGINATION -->
 
                 {% if albums.paginator.num_pages > 1 %}
-
-                    <nav
-                        class="mt-5"
-                        aria-label="Gallery pagination"
-                    >
-
+                    <nav class="mt-5" aria-label="Gallery pagination">
                         <ul class="pagination justify-content-center">
 
                             {% if albums.has_previous %}
-
                                 <li class="page-item">
-
-                                    <a
-                                        class="page-link"
-                                        href="?page={{ albums.previous_page_number }}"
-                                    >
-                                        Previous
-                                    </a>
-
+                                    <a class="page-link" href="?page={{ albums.previous_page_number }}">Previous</a>
                                 </li>
-
                             {% endif %}
 
-
                             {% for num in albums.paginator.page_range %}
-
-                                <li
-                                    class="page-item
-                                    {% if albums.number == num %}active{% endif %}"
-                                >
-
-                                    <a
-                                        class="page-link"
-                                        href="?page={{ num }}"
-                                    >
-                                        {{ num }}
-                                    </a>
-
+                                <li class="page-item {% if albums.number == num %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
                                 </li>
-
                             {% endfor %}
 
-
                             {% if albums.has_next %}
-
                                 <li class="page-item">
-
-                                    <a
-                                        class="page-link"
-                                        href="?page={{ albums.next_page_number }}"
-                                    >
-                                        Next
-                                    </a>
-
+                                    <a class="page-link" href="?page={{ albums.next_page_number }}">Next</a>
                                 </li>
-
                             {% endif %}
 
                         </ul>
-
                     </nav>
-
                 {% endif %}
-
 
             {% else %}
 
-                <!-- EMPTY STATE -->
-
-                <div class="empty-state">
-
+                <div class="empty-state reveal">
                     <i class="fas fa-images"></i>
-
-                    <p class="mb-0">
-                        Moments from our ministry journey will appear here.
-                    </p>
-
+                    <p>No albums yet. Moments from our ministry journey will appear here soon.</p>
                 </div>
 
             {% endif %}
 
         </div>
-
     </section>
 
 </div>
+
+
+{% if albums %}
+    {# Modals sit outside .gallery-page on purpose, so they stay above the navbar and backdrop #}
+    {% for album in albums %}
+
+        <div
+            class="modal fade gv-modal"
+            id="albumModal{{ album.id }}"
+            tabindex="-1"
+            aria-labelledby="albumModalLabel{{ album.id }}"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="albumModalLabel{{ album.id }}">
+                            {{ album.title }}
+                            {% with total=album.images.count %}
+                                <span class="modal-sub">{{ total }} photo{{ total|pluralize }}</span>
+                            {% endwith %}
+                        </h5>
+
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="modal-gallery">
+
+                            {% for image in album.images.all %}
+                                <div class="masonry-item">
+                                    <img
+                                        src="{{ image.image.url }}"
+                                        alt="{{ image.caption|default:'Gallery image' }}"
+                                        data-caption="{{ image.caption|default:'' }}"
+                                        loading="lazy"
+                                    >
+                                    <span class="zoom-hint" aria-hidden="true"><i class="fas fa-expand"></i></span>
+                                </div>
+                            {% empty %}
+                                <div class="gv-empty-album">
+                                    <i class="fas fa-images"></i>
+                                    <p class="mb-0">No photos in this album yet.</p>
+                                </div>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    {% endfor %}
+{% endif %}
 
 {% endblock %}
 
@@ -862,41 +842,148 @@ Gallery -
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-    /*
-     * Bootstrap gallery tooltips
-     */
-    var tooltipTriggerList = [].slice.call(
-        document.querySelectorAll(
-            '.gallery-page [data-bs-toggle="tooltip"]'
-        )
-    );
+    var page = document.getElementById("galleryPage");
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    tooltipTriggerList.forEach(function (el) {
-        new bootstrap.Tooltip(el);
+    /* ---------- Scroll reveal for album cards ---------- */
+    if (page && "IntersectionObserver" in window && !reduce) {
+        page.classList.add("gv-js");
+
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add("is-visible");
+                io.unobserve(entry.target);
+            });
+        }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+
+        page.querySelectorAll(".reveal").forEach(function (el) { io.observe(el); });
+    }
+
+    /* ---------- Hero drifts up and fades on scroll ---------- */
+    var hero = document.getElementById("heroInner");
+    if (hero && !reduce) {
+        var ticking = false;
+        window.addEventListener("scroll", function () {
+            if (ticking) return;
+            ticking = true;
+            window.requestAnimationFrame(function () {
+                var y = Math.min(window.scrollY, 600);
+                hero.style.transform = "translateY(" + (y * 0.18) + "px)";
+                hero.style.opacity = String(1 - y / 700);
+                ticking = false;
+            });
+        }, { passive: true });
+    }
+
+    /* ---------- Lightbox ---------- */
+    var lb = document.createElement("div");
+    lb.className = "gv-lightbox";
+    lb.setAttribute("role", "dialog");
+    lb.setAttribute("aria-modal", "true");
+    lb.setAttribute("aria-label", "Photo viewer");
+    lb.innerHTML =
+        '<button type="button" class="lb-btn lb-close" aria-label="Close photo"><i class="fas fa-times"></i></button>' +
+        '<button type="button" class="lb-btn lb-prev" aria-label="Previous photo"><i class="fas fa-chevron-left"></i></button>' +
+        '<button type="button" class="lb-btn lb-next" aria-label="Next photo"><i class="fas fa-chevron-right"></i></button>' +
+        '<div class="lb-stage">' +
+            '<img class="lb-img" alt="">' +
+            '<p class="lb-caption"></p>' +
+            '<div class="lb-counter"></div>' +
+        '</div>';
+    document.body.appendChild(lb);
+
+    var imgEl = lb.querySelector(".lb-img");
+    var capEl = lb.querySelector(".lb-caption");
+    var cntEl = lb.querySelector(".lb-counter");
+    var items = [];
+    var index = 0;
+
+    function show(i, animate) {
+        index = (i + items.length) % items.length;
+        var src = items[index];
+
+        function apply() {
+            imgEl.src = src.currentSrc || src.src;
+            imgEl.alt = src.alt || "";
+            capEl.textContent = src.getAttribute("data-caption") || "";
+            cntEl.textContent = (index + 1) + " / " + items.length;
+            imgEl.classList.remove("is-swapping");
+        }
+
+        if (animate && !reduce) {
+            imgEl.classList.add("is-swapping");
+            setTimeout(apply, 180);
+        } else {
+            apply();
+        }
+    }
+
+    function openLightbox(list, start) {
+        items = list;
+        show(start, false);
+        var multi = items.length > 1;
+        lb.querySelector(".lb-prev").style.display = multi ? "" : "none";
+        lb.querySelector(".lb-next").style.display = multi ? "" : "none";
+        lb.classList.add("is-open");
+    }
+
+    function closeLightbox() {
+        lb.classList.remove("is-open");
+    }
+
+    function isOpen() { return lb.classList.contains("is-open"); }
+
+    /* open when a photo inside an album is clicked */
+    document.addEventListener("click", function (e) {
+        var img = e.target.closest(".gv-modal .masonry-item img");
+        if (!img) return;
+        var list = Array.prototype.slice.call(
+            img.closest(".modal-gallery").querySelectorAll(".masonry-item img")
+        );
+        openLightbox(list, list.indexOf(img));
     });
 
+    /* keep buttons from stealing focus out of the Bootstrap modal */
+    lb.addEventListener("mousedown", function (e) { e.preventDefault(); });
 
-    /*
-     * Keep gallery modals above the fixed navbar.
-     * Bootstrap normally handles this, but this makes
-     * the behavior reliable with a custom premium navbar.
-     */
-    document.querySelectorAll(".gallery-modal").forEach(function (modal) {
-
-        modal.addEventListener("show.bs.modal", function () {
-
-            document.body.classList.add("gallery-modal-open");
-
-        });
-
-        modal.addEventListener("hidden.bs.modal", function () {
-
-            document.body.classList.remove("gallery-modal-open");
-
-        });
-
+    lb.addEventListener("click", function (e) {
+        if (e.target.closest(".lb-close")) return closeLightbox();
+        if (e.target.closest(".lb-prev")) return show(index - 1, true);
+        if (e.target.closest(".lb-next")) return show(index + 1, true);
+        if (!e.target.closest(".lb-img") && !e.target.closest(".lb-caption")) closeLightbox();
     });
 
+    /* keyboard: capture phase so Esc closes only the lightbox, not the album modal */
+    document.addEventListener("keydown", function (e) {
+        if (!isOpen()) return;
+        if (e.key === "Escape") {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            closeLightbox();
+        } else if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            show(index - 1, true);
+        } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            show(index + 1, true);
+        }
+    }, true);
+
+    /* swipe on touch screens */
+    var startX = null;
+    lb.addEventListener("touchstart", function (e) { startX = e.touches[0].clientX; }, { passive: true });
+    lb.addEventListener("touchend", function (e) {
+        if (startX === null) return;
+        var dx = e.changedTouches[0].clientX - startX;
+        startX = null;
+        if (Math.abs(dx) > 50 && items.length > 1) show(index + (dx < 0 ? 1 : -1), true);
+    }, { passive: true });
+
+    /* closing an album modal also closes the viewer */
+    document.querySelectorAll(".gv-modal").forEach(function (m) {
+        m.addEventListener("hidden.bs.modal", closeLightbox);
+    });
 });
 </script>
 

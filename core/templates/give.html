@@ -4,435 +4,235 @@
 {% block title %}Give - {% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God's Word Ministry{% endif %}{% endblock %}
 
 {% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300;1,9..144,500&display=swap" rel="stylesheet">
 <style>
+/* 1. VARIABLES (same tokens as the other pages) */
+.egwm{
+  --bg:#faf7f0; --s0:#f2ecdd; --s3:#eee7d6;
+  --ink:#15120a; --text:#2a261c; --soft:#4a463b; --muted:#6b6557;
+  --gold:#b8921f; --gold-d:#6f540a;
+  --grad:linear-gradient(135deg,#b8921f,#ecd074 50%,#c9a12b);
+  --line:rgba(21,18,10,.10); --line-g:rgba(168,128,26,.42);
+  --shadow:0 14px 40px rgba(60,45,10,.09);
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --sans:'Manrope',system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:'Fraunces',Georgia,serif;
+}
+/* 2. BASE */
+html{scroll-behavior:smooth}
+.egwm{font-family:var(--sans);background:var(--bg);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.6}
+.egwm *,.egwm *::before,.egwm *::after{box-sizing:border-box}
+.egwm p{margin:0;color:var(--soft)}
+.egwm h1,.egwm h2,.egwm h3{font-family:var(--serif);color:var(--ink);font-weight:500;letter-spacing:-.02em;margin:0;line-height:1.1}
+.egwm :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.e-wrap{width:min(1200px,90vw);margin-inline:auto}
 
-    /* =========================================
-       HERO
-    ========================================= */
+/* 3. TYPOGRAPHY */
+.e-kicker{display:inline-block;font-size:.8rem;font-weight:700;color:var(--gold-d);letter-spacing:.08em;margin-bottom:1rem;padding-left:1rem;border-left:2px solid var(--gold)}
+.e-h2 em,.egwm .e-hero h1 em{font-style:italic;font-weight:300;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 
-    .page-hero {
-        background: linear-gradient(160deg, var(--black) 0%, var(--charcoal) 100%);
-        color: #fff;
-        padding: calc(var(--nav-h) + 4rem) 0 4.5rem;
-        margin-top: calc(-1 * var(--nav-h));
-        text-align: center;
-    }
+/* 4. BUTTONS */
+.e-btn{display:inline-flex;align-items:center;justify-content:center;gap:.7rem;width:100%;padding:1.1rem 2rem;border-radius:999px;font:700 .95rem var(--sans);letter-spacing:.02em;border:1px solid transparent;cursor:pointer;background:var(--grad);color:#0a0a0a;box-shadow:0 10px 30px rgba(212,175,55,.25);transition:transform .4s var(--ease),box-shadow .4s var(--ease),background .3s,color .3s}
+.e-btn i{transition:transform .35s var(--ease)}
+.e-btn:hover{transform:translateY(-3px);box-shadow:0 16px 44px rgba(212,175,55,.45)}
+.e-btn:hover i{transform:scale(1.15)}
+.e-btn.copied{background:#2e7d32;color:#fff;box-shadow:0 10px 30px rgba(46,125,50,.3)}
 
-    .page-hero h1 {
-        color: #fff;
-        font-size: clamp(2.2rem, 4.5vw, 3.2rem);
-    }
+/* 5. HERO */
+.e-hero{position:relative;overflow:hidden;background:#0a0a0a;padding:8rem 0 6.5rem;text-align:center}
+.e-hero__bg{position:absolute;inset:0;background:radial-gradient(50% 90% at 50% 10%,rgba(212,175,55,.34),transparent 65%),linear-gradient(145deg,#080808,#171510)}
+.e-hero__bg::before,.e-hero__bg::after{content:'';position:absolute;left:50%;border:1px solid rgba(240,214,122,.18);border-radius:50%;transform:translateX(-50%)}
+.e-hero__bg::before{width:520px;height:520px;top:-300px}
+.e-hero__bg::after{width:820px;height:820px;top:-520px}
+.e-hero::after{content:'';position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(0deg,var(--bg),transparent)}
+.e-hero__inner{position:relative;z-index:2}
+.egwm .e-hero .e-kicker{color:#f0d67a}
+.egwm .e-hero h1{font-size:clamp(2.6rem,6.6vw,5.4rem);line-height:1;color:#fff;margin-bottom:1.3rem}
+.egwm .e-hero p{color:#f1f1f1;max-width:52ch;margin:0 auto;font-size:clamp(1rem,1.5vw,1.15rem);line-height:1.8}
+.e-hero__inner>*{animation:eIn 1s var(--ease) both}
+.e-hero__inner>*:nth-child(2){animation-delay:.12s}
+.e-hero__inner>*:nth-child(3){animation-delay:.24s}
 
+/* 6. LAYOUT */
+.e-sec{position:relative;padding:clamp(2.5rem,5vw,4rem) 0 clamp(4.5rem,9vw,8rem);overflow:hidden}
+.e-glow{position:absolute;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,.2),transparent 65%);pointer-events:none;filter:blur(20px)}
+.e-layout{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,6vw,5rem);align-items:center}
+.e-scripture blockquote{margin:0 0 1.4rem;font:italic 300 clamp(1.7rem,3.4vw,2.8rem)/1.3 var(--serif);color:var(--ink)}
+.e-scripture cite{font-style:normal;font-weight:700;color:var(--gold-d);letter-spacing:.04em}
+.e-rule{width:72px;height:3px;background:var(--grad);border-radius:3px;margin-bottom:2rem}
+.e-thanks{margin-top:2.2rem;font-size:1.05rem}
 
-    /* =========================================
-       SCRIPTURE
-    ========================================= */
+/* 7. GIVING CARD */
+.e-card{background:#fff;border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:26px;padding:clamp(1.8rem,4vw,3rem);box-shadow:0 30px 70px rgba(60,45,10,.15);transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
+.e-card:hover{transform:translateY(-6px);box-shadow:0 38px 80px rgba(60,45,10,.2)}
+.e-card__head{text-align:center;margin-bottom:1.8rem}
+.e-icon{width:66px;height:66px;margin:0 auto 1.1rem;border-radius:50%;background:rgba(184,146,31,.14);border:1px solid var(--line-g);color:var(--gold-d);display:flex;align-items:center;justify-content:center;font-size:1.4rem}
+.e-card__head h3{font-size:clamp(1.7rem,3vw,2.3rem);margin-bottom:.6rem}
+.e-bank{border-top:1px solid var(--line-g)}
+.e-row{display:flex;justify-content:space-between;align-items:center;gap:1.5rem;padding:1.2rem 0;border-bottom:1px solid var(--line)}
+.e-label{font-size:.85rem;font-weight:700;color:var(--muted)}
+.e-value{font-weight:700;color:var(--ink);text-align:right}
+.e-account{margin:1.4rem 0 0;padding:1.4rem;text-align:center;background:linear-gradient(135deg,#fffdf8,#f7ecc8);border:1px solid var(--line-g);border-radius:16px}
+.e-account small{display:block;font-size:.85rem;font-weight:700;color:var(--gold-d);margin-bottom:.4rem}
+.e-account strong{display:block;font:500 clamp(2rem,5vw,2.8rem)/1 var(--serif);letter-spacing:.1em;color:var(--ink)}
+.e-card .e-btn{margin-top:1.5rem}
+.e-notice{display:flex;gap:.7rem;margin-top:1.4rem;padding:1rem 1.2rem;background:var(--s0);border-left:3px solid var(--gold);border-radius:10px;color:var(--soft);font-size:.9rem;line-height:1.65}
+.e-notice i{color:var(--gold-d);margin-top:.25rem}
 
-    .give-scripture {
-        max-width: 700px;
-        margin: 0 auto 3.5rem;
-        text-align: center;
-    }
+/* 9. ANIMATIONS */
+@keyframes eIn{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
+.egwm.e-js .e-reveal{opacity:0;transform:translateY(38px);transition:opacity .9s var(--ease),transform .9s var(--ease);transition-delay:calc(var(--d,0) * 110ms)}
+.egwm.e-js .e-reveal-left{transform:translateX(-46px)}
+.egwm.e-js .e-reveal-right{transform:translateX(46px)}
+.egwm.e-js .e-reveal.e-visible{opacity:1;transform:none}
 
-    .give-scripture blockquote {
-        font-family: var(--font-display);
-        font-style: italic;
-        font-size: 1.25rem;
-        line-height: 1.8;
-        color: #333;
-        margin-bottom: 1rem;
-    }
-
-    .give-scripture cite {
-        color: var(--gold-dark);
-        font-style: normal;
-        font-size: .8rem;
-        font-weight: 600;
-        letter-spacing: .1em;
-        text-transform: uppercase;
-    }
-
-
-    /* =========================================
-       GIVING CARD
-    ========================================= */
-
-    .giving-card {
-        background: #fff;
-        border: 1px solid var(--border);
-        border-radius: 18px;
-        padding: 2.5rem;
-        box-shadow: var(--shadow-sm);
-        max-width: 650px;
-        margin: 0 auto;
-    }
-
-    .giving-card:hover {
-        box-shadow: var(--shadow-md);
-    }
-
-    .giving-card-header {
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-
-    .giving-icon {
-        width: 64px;
-        height: 64px;
-        margin: 0 auto 1rem;
-        border-radius: 50%;
-        background: rgba(201, 162, 39, 0.1);
-        border: 1px solid rgba(201, 162, 39, 0.35);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .giving-icon i {
-        color: var(--gold);
-        font-size: 1.4rem;
-    }
-
-    .giving-card-header h3 {
-        margin-bottom: .5rem;
-    }
-
-    .giving-card-header p {
-        color: var(--muted);
-        margin-bottom: 0;
-    }
-
-
-    /* =========================================
-       BANK DETAILS
-    ========================================= */
-
-    .bank-details {
-        border-top: 1px solid var(--border);
-        border-bottom: 1px solid var(--border);
-    }
-
-    .bank-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1.5rem;
-        padding: 1.15rem 0;
-        border-bottom: 1px solid var(--border);
-    }
-
-    .bank-row:last-child {
-        border-bottom: none;
-    }
-
-    .bank-label {
-        color: var(--muted);
-        font-size: .78rem;
-        font-weight: 600;
-        letter-spacing: .08em;
-        text-transform: uppercase;
-    }
-
-    .bank-value {
-        color: #222;
-        font-weight: 600;
-        text-align: right;
-    }
-
-    .account-number {
-        color: var(--gold-dark);
-        font-family: var(--font-display);
-        font-size: 1.5rem;
-        letter-spacing: .08em;
-    }
-
-
-    /* =========================================
-       COPY BUTTON
-    ========================================= */
-
-    .copy-account {
-        width: 100%;
-        margin-top: 1.75rem;
-        border: none;
-        border-radius: 8px;
-        background: var(--gold);
-        color: #000;
-        padding: .85rem 1.5rem;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all .25s ease;
-    }
-
-    .copy-account:hover {
-        background: var(--gold-light);
-        transform: translateY(-1px);
-    }
-
-    .copy-account.copied {
-        background: #2e7d32;
-        color: #fff;
-    }
-
-
-    /* =========================================
-       NOTICE
-    ========================================= */
-
-    .giving-notice {
-        margin-top: 1.5rem;
-        padding: 1rem 1.1rem;
-        background: var(--off-white);
-        border-left: 3px solid var(--gold);
-        border-radius: 6px;
-        color: var(--muted);
-        font-size: .88rem;
-        line-height: 1.6;
-    }
-
-    .giving-notice i {
-        color: var(--gold-dark);
-        margin-right: .4rem;
-    }
-
-
-    /* =========================================
-       THANK YOU
-    ========================================= */
-
-    .give-thanks {
-        text-align: center;
-        margin-top: 3rem;
-    }
-
-    .give-thanks p {
-        color: var(--muted);
-    }
-
-
-    /* =========================================
-       MOBILE
-    ========================================= */
-
-    @media (max-width: 576px) {
-
-        .giving-card {
-            padding: 1.75rem 1.25rem;
-        }
-
-        .bank-row {
-            display: block;
-        }
-
-        .bank-value {
-            text-align: left;
-            margin-top: .35rem;
-        }
-
-        .account-number {
-            font-size: 1.35rem;
-        }
-
-    }
-
+/* 10. RESPONSIVE */
+@media (max-width:991px){
+  .e-layout{grid-template-columns:1fr}
+  .e-scripture{text-align:center}
+  .e-scripture .e-rule{margin-inline:auto}
+}
+@media (max-width:600px){
+  .e-hero{padding:6.5rem 0 5rem}
+  .e-row{display:block}
+  .e-value{text-align:left;margin-top:.3rem}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .egwm *,.egwm *::before,.egwm *::after{animation:none!important;transition-duration:.01ms!important}
+  .egwm.e-js .e-reveal{opacity:1!important;transform:none!important}
+}
 </style>
 {% endblock %}
 
 
 {% block content %}
+<div class="egwm">
 
 <!-- HERO -->
-
-<section class="page-hero">
-
-    <div class="container" data-reveal>
-
-        <p class="eyebrow on-dark center justify-content-center d-flex">
-            Kingdom Support
-        </p>
-
-        <h1>Give With Purpose</h1>
-
-        <p
-            class="mb-0"
-            style="
-                color: rgba(255,255,255,.7);
-                max-width:560px;
-                margin:.75rem auto 0;
-            "
-        >
-            Your generosity supports the work of the ministry,
-            reaching, teaching, and transforming lives.
-        </p>
-
-    </div>
-
+<section class="e-hero" aria-label="Give">
+  <div class="e-hero__bg" aria-hidden="true"></div>
+  <div class="e-wrap e-hero__inner">
+    <span class="e-kicker">Kingdom Support</span>
+    <h1>Give With <em>Purpose</em></h1>
+    <p>Your generosity supports the work of the ministry, reaching, teaching, and transforming lives.</p>
+  </div>
 </section>
-
 
 <!-- CONTENT -->
+<section class="e-sec">
+  <div class="e-glow" style="left:-12%;top:0" aria-hidden="true"></div>
+  <div class="e-wrap e-layout">
 
-<section class="section-padding" style="padding-top:3.5rem;">
+    <!-- SCRIPTURE -->
+    <div class="e-scripture e-reveal e-reveal-left">
+      <div class="e-rule" aria-hidden="true"></div>
+      <blockquote>&ldquo;Every man according as he purposeth in his heart, so let him give; not grudgingly, or of necessity: for God loveth a cheerful giver.&rdquo;</blockquote>
+      <cite>2 Corinthians 9:7 (KJV)</cite>
+      <p class="e-thanks">Thank you for your generosity. God bless you.</p>
+    </div>
 
-    <div class="container">
+    <!-- GIVING CARD -->
+    <div class="e-card e-reveal e-reveal-right" style="--d:2">
 
+      <div class="e-card__head">
+        <div class="e-icon"><i class="fas fa-hand-holding-heart" aria-hidden="true"></i></div>
+        <h3>Support The Ministry</h3>
+        <p>You can support the work of Embassy of God's Word Ministry through the account below.</p>
+      </div>
 
-        <!-- SCRIPTURE -->
-
-        <div class="give-scripture" data-reveal>
-
-            <blockquote>
-                "Every man according as he purposeth in his heart,
-                so let him give; not grudgingly, or of necessity:
-                for God loveth a cheerful giver."
-            </blockquote>
-
-            <cite>
-                2 Corinthians 9:7 · KJV
-            </cite>
-
+      <div class="e-bank">
+        <div class="e-row">
+          <div class="e-label">Bank</div>
+          <div class="e-value">Zenith Bank</div>
         </div>
-
-
-        <!-- GIVING CARD -->
-
-        <div class="giving-card" data-reveal>
-
-
-            <div class="giving-card-header">
-
-                <div class="giving-icon">
-                    <i class="fas fa-hand-holding-heart"></i>
-                </div>
-
-                <h3>Support The Ministry</h3>
-
-                <p>
-                    You can support the work of Embassy of God's Word
-                    Ministry through the account below.
-                </p>
-
-            </div>
-
-
-            <!-- BANK DETAILS -->
-
-            <div class="bank-details">
-
-                <div class="bank-row">
-
-                    <div class="bank-label">
-                        Bank
-                    </div>
-
-                    <div class="bank-value">
-                        Zenith Bank
-                    </div>
-
-                </div>
-
-
-                <div class="bank-row">
-
-                    <div class="bank-label">
-                        Account Name
-                    </div>
-
-                    <div class="bank-value">
-                        Embassy of Gods Word Ministry
-                    </div>
-
-                </div>
-
-
-                <div class="bank-row">
-
-                    <div class="bank-label">
-                        Account Number
-                    </div>
-
-                    <div class="bank-value account-number">
-                        1015581771
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- COPY -->
-
-            <button
-                type="button"
-                class="copy-account"
-                onclick="egwmCopyAccount(this)"
-            >
-                <i class="fas fa-copy me-2"></i>
-                Copy Account Number
-            </button>
-
-
-            <!-- NOTICE -->
-
-            <div class="giving-notice">
-
-                <i class="fas fa-info-circle"></i>
-
-                Please confirm the account name and bank before
-                completing your transfer.
-
-            </div>
-
+        <div class="e-row">
+          <div class="e-label">Account Name</div>
+          <div class="e-value">Embassy of Gods Word Ministry</div>
         </div>
+      </div>
 
+      <div class="e-account">
+        <small>Account Number</small>
+        <strong>1015581771</strong>
+      </div>
 
-        <!-- THANK YOU -->
+      <button type="button" class="e-btn" onclick="egwmCopyAccount(this)">
+        <i class="fas fa-copy" aria-hidden="true"></i>
+        Copy Account Number
+      </button>
 
-        <div class="give-thanks">
-
-            <p>
-                Thank you for your generosity.
-                God bless you.
-            </p>
-
-        </div>
+      <div class="e-notice">
+        <i class="fas fa-info-circle" aria-hidden="true"></i>
+        <span>Please confirm the account name and bank before completing your transfer.</span>
+      </div>
 
     </div>
 
+  </div>
 </section>
 
+</div>
 {% endblock %}
 
 
 {% block extra_js %}
-
+/* EGWM give page — base.html supplies the surrounding JS tag */
 function egwmCopyAccount(button) {
 
-    const accountNumber = "1015581771";
+    var accountNumber = "1015581771";
 
-    navigator.clipboard.writeText(accountNumber).then(function () {
-
-        const original = button.innerHTML;
-
+    function done() {
+        var original = button.innerHTML;
         button.classList.add("copied");
-
-        button.innerHTML =
-            '<i class="fas fa-check me-2"></i> Account Number Copied';
-
+        button.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i> Account Number Copied';
         setTimeout(function () {
-
             button.classList.remove("copied");
-
             button.innerHTML = original;
-
         }, 2000);
+    }
 
-    }).catch(function () {
-
+    function fail() {
         alert("Unable to copy account number. Please copy it manually.");
+    }
 
-    });
-
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(accountNumber).then(done).catch(fail);
+    } else {
+        try {
+            var t = document.createElement("textarea");
+            t.value = accountNumber;
+            t.style.position = "fixed";
+            t.style.opacity = "0";
+            document.body.appendChild(t);
+            t.select();
+            var ok = document.execCommand("copy");
+            document.body.removeChild(t);
+            if (ok) { done(); } else { fail(); }
+        } catch (e) { fail(); }
+    }
 }
 
+(function () {
+  'use strict';
+  var root = document.querySelector('.egwm');
+  if (!root) { return; }
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els = root.querySelectorAll('.e-reveal');
+  function showAll() { els.forEach(function (el) { el.classList.add('e-visible'); }); }
+  if (reduced || !('IntersectionObserver' in window)) {
+    showAll();
+  } else {
+    root.classList.add('e-js');
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('e-visible'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -5% 0px' });
+    els.forEach(function (el) { io.observe(el); });
+    window.setTimeout(showAll, 6000);
+  }
+})();
 {% endblock %}

@@ -5,235 +5,376 @@
 {% block meta_description %}About Embassy of God's Word Ministry (EGWM) — our mission, vision, beliefs, leadership and weekly services in Bwari, Abuja.{% endblock %}
 
 {% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300;1,9..144,500&display=swap" rel="stylesheet">
 <style>
-.eg-about{--gold:#B8912B;--gold-light:#DFC77E;--gold-deep:#7A5E14;--ink:#0E0E0D;--muted:#6B6960;--ivory:#F7F5F0;--line:rgba(14,14,13,.10);
-  --gold-grad:linear-gradient(135deg,#7A5E14 0%,#B8912B 42%,#E4CF8C 66%,#A9832A 100%);overflow-x:hidden;}
-.eg-about .a-wrap{max-width:1240px;margin:0 auto;padding:0 clamp(1.2rem,4vw,3rem);}
-.eg-about .a-eyebrow{display:block;font-size:.68rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:1rem;}
-.eg-about .a-title{font-size:clamp(2.1rem,4.6vw,3.9rem);line-height:1.06;margin:0 0 1.2rem;}
-.eg-about .a-lede{font-size:1.02rem;line-height:1.85;color:var(--muted);max-width:62ch;}
-.eg-about .a-sec{padding:clamp(4.5rem,9vw,8.5rem) 0;}
-.eg-about .a-sec--ivory{background:var(--ivory);}
-.eg-about .a-sec--dark{background:#0E0E0D;color:#fff;}
-.eg-about .a-sec--dark .a-lede{color:rgba(255,255,255,.68);}
-.eg-about .a-sec--dark .a-eyebrow{color:var(--gold-light);}
-/* HERO */
-.eg-about .a-hero{position:relative;min-height:72vh;display:flex;align-items:flex-end;padding:9rem 0 4.5rem;background:#0E0E0D;overflow:hidden;}
-.eg-about .a-hero__bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&w=2000&q=80') center/cover;opacity:.42;transform:scale(1.06);}
-.eg-about .a-hero__scrim{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.55) 55%,rgba(0,0,0,.35) 100%);}
-.eg-about .a-hero__inner{position:relative;z-index:2;color:#fff;}
-.eg-about .a-hero h1{font-size:clamp(2.6rem,6.4vw,5.4rem);line-height:1.02;margin:0 0 1.2rem;}
-.eg-about .a-hero .a-eyebrow{color:var(--gold-light);}
-.eg-about .a-hero p{max-width:56ch;color:rgba(255,255,255,.75);font-size:1.05rem;line-height:1.85;}
-.eg-about .a-rule{width:56px;height:2px;background:var(--gold-grad);margin:1.6rem 0;}
-/* SPLIT */
-.eg-about .a-split{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2.5rem,6vw,6rem);align-items:center;}
-@media (max-width:900px){.eg-about .a-split{grid-template-columns:1fr;}}
-.eg-about .a-img{position:relative;}
-.eg-about .a-img img{width:100%;height:clamp(320px,52vh,560px);object-fit:cover;display:block;box-shadow:0 40px 110px rgba(14,14,13,.16);}
-.eg-about .a-img::after{content:"";position:absolute;inset:auto -16px -16px auto;width:60%;height:60%;border:1px solid rgba(184,145,43,.4);z-index:-1;}
-/* CARDS */
-.eg-about .a-grid{display:grid;gap:1.4rem;}
-.eg-about .a-grid--2{grid-template-columns:repeat(2,1fr);}
-.eg-about .a-grid--3{grid-template-columns:repeat(3,1fr);}
-@media (max-width:900px){.eg-about .a-grid--2,.eg-about .a-grid--3{grid-template-columns:1fr;}}
-.eg-about .a-card{background:#fff;border:1px solid var(--line);padding:2.2rem;border-radius:2px;box-shadow:0 18px 48px rgba(14,14,13,.06);}
-.eg-about .a-card h3{font-size:1.6rem;margin:.6rem 0 .7rem;}
-.eg-about .a-card p{margin:0;color:var(--muted);line-height:1.8;font-size:.95rem;}
-.eg-about .a-card__num{font-size:.68rem;letter-spacing:.3em;color:var(--gold-deep);}
-.eg-about .a-sec--dark .a-card{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.12);color:#fff;box-shadow:none;}
-.eg-about .a-sec--dark .a-card p{color:rgba(255,255,255,.66);}
-/* SERVICES */
-.eg-about .a-svc{border-top:1px solid var(--line);padding:1.5rem 0;display:grid;grid-template-columns:1fr 1.4fr auto;gap:1rem;align-items:baseline;}
-@media (max-width:700px){.eg-about .a-svc{grid-template-columns:1fr;gap:.3rem;}}
-.eg-about .a-svc__day{font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-deep);font-weight:600;}
-.eg-about .a-svc__name{font-family:'Cormorant Garamond',serif;font-size:1.55rem;}
-.eg-about .a-svc__time{font-size:.9rem;color:var(--muted);letter-spacing:.06em;}
-/* LEADERS */
-.eg-about .a-leader{text-align:center;}
-.eg-about .a-leader img{width:100%;height:340px;object-fit:cover;display:block;border-radius:2px;}
-.eg-about .a-leader__init{height:340px;display:grid;place-items:center;background:var(--gold-grad);color:#fff;font-family:'Cormorant Garamond',serif;font-size:3rem;}
-.eg-about .a-leader h3{margin:1.1rem 0 .25rem;font-size:1.4rem;}
-.eg-about .a-leader span{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-deep);}
-.eg-about .a-leader p{color:var(--muted);font-size:.9rem;line-height:1.8;margin-top:.8rem;}
-/* CTA */
-.eg-about .a-center{text-align:center;}
-.eg-about .a-btn{display:inline-block;padding:1rem 2.2rem;background:var(--gold-grad);color:#fff;font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;}
-.eg-about .a-btn--ghost{background:none;border:1px solid rgba(184,145,43,.6);color:var(--gold-deep);}
-.eg-about .a-actions{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;margin-top:2.2rem;}
-.eg-about .a-mt{margin-top:3rem;}
-.eg-about .a-head{max-width:64ch;margin:0 auto 3.2rem;text-align:center;}
+/* 1. VARIABLES (same tokens as the homepage) */
+.egwm{
+  --bg:#faf7f0; --s0:#f2ecdd; --s1:#fff; --s3:#eee7d6;
+  --ink:#15120a; --text:#2a261c; --soft:#4a463b; --muted:#6b6557;
+  --gold:#b8921f; --gold-l:#87680b; --gold-d:#6f540a;
+  --grad:linear-gradient(135deg,#b8921f,#ecd074 50%,#c9a12b);
+  --line:rgba(21,18,10,.10); --line-g:rgba(168,128,26,.42);
+  --shadow:0 14px 40px rgba(60,45,10,.09);
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --sans:'Manrope',system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:'Fraunces',Georgia,serif;
+}
+/* 2. BASE */
+html{scroll-behavior:smooth}
+.egwm{font-family:var(--sans);background:var(--bg);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.6}
+.egwm *,.egwm *::before,.egwm *::after{box-sizing:border-box}
+.egwm img{max-width:100%;display:block}
+.egwm a{text-decoration:none;color:inherit}
+.egwm p{color:var(--soft);margin:0}
+.egwm h1,.egwm h2,.egwm h3{font-family:var(--serif);color:var(--ink);font-weight:500;letter-spacing:-.02em;margin:0;line-height:1.08}
+.egwm :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.e-wrap{width:min(1200px,90vw);margin-inline:auto}
+.e-sec{position:relative;padding:clamp(4.5rem,9vw,8rem) 0;overflow:hidden}
+.e-sec--a{background:var(--bg)}
+.e-sec--b{background:linear-gradient(180deg,var(--s0),#f7f2e6)}
+.e-sec--a::before,.e-sec--b::before{content:'';position:absolute;top:0;left:50%;width:min(1200px,90vw);height:1px;transform:translateX(-50%);background:linear-gradient(90deg,transparent,var(--line-g),transparent)}
+.e-glow{position:absolute;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,.2),transparent 65%);pointer-events:none;filter:blur(20px)}
+
+/* 3. TYPOGRAPHY */
+.e-kicker{display:inline-block;font-size:.8rem;font-weight:700;color:var(--gold-d);letter-spacing:.08em;margin-bottom:1rem;padding-left:1rem;border-left:2px solid var(--gold)}
+.e-h2{font-size:clamp(2.2rem,4.8vw,4rem);margin-bottom:1.2rem}
+.e-h2 em,.egwm .e-hero h1 em{font-style:italic;font-weight:300;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.e-lede{font-size:1.05rem;line-height:1.8;color:var(--soft);max-width:58ch}
+.e-lede + .e-lede{margin-top:1.2rem}
+.e-head{max-width:720px;margin-bottom:clamp(2.5rem,5vw,4rem)}
+.e-head--c{margin-inline:auto;text-align:center}
+.e-head--c .e-lede{margin-inline:auto}
+
+/* 4. BUTTONS */
+.e-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.7rem;padding:1rem 2rem;border-radius:999px;font:700 .9rem var(--sans);letter-spacing:.02em;border:1px solid transparent;cursor:pointer;transition:transform .4s var(--ease),box-shadow .4s var(--ease),background .3s,color .3s,border-color .3s}
+.e-btn::after{content:'\2192';transition:transform .35s var(--ease)}
+.e-btn:hover::after{transform:translateX(5px)}
+.e-btn--gold{background:var(--grad);color:#0a0a0a;box-shadow:0 10px 30px rgba(212,175,55,.25)}
+.e-btn--gold:hover{transform:translateY(-3px);box-shadow:0 16px 44px rgba(212,175,55,.45);color:#0a0a0a}
+.e-btn--ghost{background:#fff;border-color:rgba(21,18,10,.28);color:var(--ink)}
+.e-btn--ghost:hover{border-color:var(--gold);color:var(--gold-d);transform:translateY(-3px)}
+.e-actions{display:flex;flex-wrap:wrap;gap:1rem}
+
+/* 5. HERO (dark cinematic, fades into the light page) */
+.e-hero{position:relative;min-height:78vh;display:flex;align-items:flex-end;background:#000;overflow:hidden;margin-top:calc(-1 * var(--nav-h,0px));padding:calc(var(--nav-h,0px) + 6rem) 0 5rem}
+.e-hero__bg{position:absolute;inset:-6% 0;background:url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&w=2000&q=80') center/cover;filter:brightness(.7) saturate(.9);will-change:transform}
+.e-hero__scrim{position:absolute;inset:0;background:radial-gradient(60% 70% at 80% 30%,rgba(212,175,55,.2),transparent 60%),linear-gradient(90deg,rgba(0,0,0,.85),rgba(0,0,0,.4)),linear-gradient(0deg,var(--bg) 0%,transparent 26%)}
+.e-hero__inner{position:relative;z-index:2}
+.egwm .e-hero .e-kicker{color:#f0d67a}
+.egwm .e-hero h1{font-size:clamp(2.8rem,7vw,6rem);line-height:.98;color:#fff;margin-bottom:1.4rem;text-shadow:0 10px 50px rgba(0,0,0,.6)}
+.egwm .e-hero p{color:#f1f1f1;max-width:52ch;font-size:clamp(1rem,1.5vw,1.2rem);line-height:1.8}
+.e-hero__inner>*{animation:eIn 1s var(--ease) both}
+.e-hero__inner>*:nth-child(2){animation-delay:.12s}
+.e-hero__inner>*:nth-child(3){animation-delay:.24s}
+
+/* 6. SECTIONS / LAYOUTS */
+.e-split{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2rem,6vw,5rem);align-items:center}
+.e-frame{position:relative;border-radius:22px;overflow:hidden;border:1px solid var(--line-g);box-shadow:0 26px 60px rgba(60,45,10,.18);background:var(--s3)}
+.e-frame img{width:100%;height:clamp(340px,46vw,540px);object-fit:cover;transition:transform 1.2s var(--ease)}
+.e-frame:hover img{transform:scale(1.06)}
+.e-art{position:relative}
+.e-badge{position:absolute;left:-1.2rem;bottom:2rem;z-index:2;background:var(--gold);color:#0a0a0a;padding:1rem 1.4rem;border-radius:14px;font:600 1.05rem/1.3 var(--serif);box-shadow:0 16px 40px rgba(60,45,10,.28);max-width:220px}
+.e-addr{display:flex;gap:.9rem;align-items:flex-start;margin-top:1.8rem;padding:1.2rem 1.4rem;background:#fff;border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:12px;box-shadow:var(--shadow);max-width:58ch}
+.e-addr p{color:var(--text)}
+/* mission / vision: asymmetric */
+.e-mvgrid{display:grid;grid-template-columns:1.25fr 1fr;gap:1.4rem;align-items:start}
+.e-mvgrid .e-mv:nth-child(2){margin-top:3.5rem}
+.e-mv{background:#fff;border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:20px;padding:clamp(1.8rem,3.5vw,3rem);box-shadow:var(--shadow)}
+.e-mv h3{font-size:clamp(1.7rem,3vw,2.4rem);margin-bottom:1rem}
+.e-mv p{font-size:1.02rem;line-height:1.85}
+/* beliefs: bento */
+.e-beliefs{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.e-belief{background:#fff;border:1px solid var(--line);border-radius:18px;padding:2rem;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.e-belief::before{content:'';position:absolute;left:0;top:0;width:3px;height:0;background:var(--grad);transition:height .6s var(--ease)}
+.e-belief:hover::before{height:100%}
+.e-belief h3{font-size:1.5rem;margin-bottom:.7rem}
+.e-belief p{font-size:.95rem;line-height:1.8}
+.e-belief:first-child{grid-column:span 2;background:linear-gradient(135deg,#fffdf8,#f7ecc8)}
+.e-belief:first-child h3{font-size:2rem}
+/* services: rows */
+.e-rows{border-top:1px solid var(--line-g)}
+.e-row{display:grid;grid-template-columns:.7fr 1.3fr auto;gap:1rem;align-items:center;padding:1.5rem 1rem;border-bottom:1px solid var(--line);transition:background .4s,padding .4s var(--ease)}
+.e-row:hover{background:#fff;padding-left:1.8rem}
+.e-row__day{display:inline-block;justify-self:start;font-size:.8rem;font-weight:700;color:#0a0a0a;background:var(--gold);padding:.3rem .9rem;border-radius:99px}
+.e-row__name{font:500 clamp(1.3rem,2.2vw,1.8rem) var(--serif);color:var(--ink)}
+.e-row__time{font-weight:600;color:var(--muted);font-size:.95rem}
+.e-note{margin-top:2rem;text-align:center;color:var(--soft)}
+/* leaders */
+.e-leaders{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem}
+.e-leader{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);text-align:center}
+.e-leader__ph{overflow:hidden}
+.e-leader__ph img,.e-leader__init{width:100%;height:340px;object-fit:cover;transition:transform 1s var(--ease)}
+.e-leader:hover .e-leader__ph img{transform:scale(1.06)}
+.e-leader__init{display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,#fbf3d6,#e9dcae 75%);color:var(--gold-d);font:300 3.4rem var(--serif)}
+.e-leader__body{padding:1.5rem 1.6rem 1.8rem}
+.e-leader h3{font-size:1.45rem}
+.e-leader__role{display:block;font-weight:700;font-size:.85rem;color:var(--gold-d);margin-top:.3rem}
+.e-leader p{font-size:.92rem;margin-top:.8rem;line-height:1.75}
+.e-lift{transition:transform .5s var(--ease),border-color .4s,box-shadow .5s var(--ease)}
+.e-lift:hover{transform:translateY(-6px);border-color:var(--line-g);box-shadow:0 24px 54px rgba(60,45,10,.16)}
+/* CTA band */
+.e-cta{text-align:center;background:radial-gradient(circle at 50% 50%,rgba(212,175,55,.24),transparent 60%),var(--s0)}
+.e-cta .e-lede{margin:0 auto 2.2rem}
+.e-cta .e-actions{justify-content:center}
+
+/* 8. LOCATION */
+.e-map{background:#fff;border:1px solid var(--line-g);border-radius:26px;padding:.7rem;box-shadow:0 30px 80px rgba(60,45,10,.16);overflow:hidden}
+.e-map iframe{width:100%;min-height:420px;border:0;border-radius:20px;display:block}
+.e-map__fb{display:flex;flex-direction:column;align-items:center;gap:1.2rem;text-align:center;padding:clamp(2.5rem,6vw,4.5rem) 1.5rem;border-radius:20px;background:radial-gradient(circle at 50% 40%,rgba(212,175,55,.22),transparent 45%),var(--s3)}
+.e-pin{width:70px;height:70px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 12px rgba(212,175,55,.14);animation:eFloat 3s ease-in-out infinite}
+.e-pin svg{width:32px;height:32px;fill:none;stroke:#0a0a0a;stroke-width:1.8}
+.e-map__fb p{color:var(--ink);font-weight:600;font-size:1.05rem;max-width:44ch}
+
+/* 9. ANIMATIONS */
+@keyframes eIn{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
+@keyframes eFloat{50%{transform:translateY(-8px)}}
+.egwm.e-js .e-reveal{opacity:0;transition:opacity .9s var(--ease),transform .9s var(--ease);transition-delay:calc(var(--d,0) * 110ms);transform:translateY(38px)}
+.egwm.e-js .e-reveal-left{transform:translateX(-46px)}
+.egwm.e-js .e-reveal-right{transform:translateX(46px)}
+.egwm.e-js .e-reveal-scale{transform:scale(.94)}
+.egwm.e-js .e-reveal.e-visible{opacity:1;transform:none}
+.egwm.e-js .e-mvgrid .e-mv:nth-child(2).e-visible{transform:none}
+
+/* 10. RESPONSIVE */
+@media (max-width:991px){
+  .e-split,.e-mvgrid,.e-leaders,.e-beliefs{grid-template-columns:1fr}
+  .e-split .e-art{order:-1}
+  .e-mvgrid .e-mv:nth-child(2){margin-top:0}
+  .e-belief:first-child{grid-column:auto}
+  .e-row{grid-template-columns:1fr;gap:.5rem}
+  .e-badge{left:1rem}
+}
+@media (max-width:600px){
+  .e-hero{min-height:620px;padding-bottom:4rem}
+  .e-actions,.e-actions .e-btn{width:100%}
+  .e-btn{width:100%}
+  .e-map iframe{min-height:320px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .egwm *,.egwm *::before,.egwm *::after{animation:none!important;transition-duration:.01ms!important}
+  .egwm.e-js .e-reveal{opacity:1!important;transform:none!important}
+}
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="eg-about">
+<div class="egwm">
 
-  <!-- HERO -->
-  <section class="a-hero">
-    <div class="a-hero__bg" aria-hidden="true"></div>
-    <div class="a-hero__scrim" aria-hidden="true"></div>
-    <div class="a-wrap a-hero__inner">
-      <span class="a-eyebrow">{% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God&rsquo;s Word Ministry{% endif %}</span>
-      <h1>About Our<br><em>Ministry</em></h1>
-      <div class="a-rule" aria-hidden="true"></div>
-      <p>A house built on the living Word of God — teaching truth, raising disciples and lifting Christ in Bwari, Abuja and beyond.</p>
-    </div>
-  </section>
+<!-- HERO -->
+<section class="e-hero" aria-label="About us">
+  <div class="e-hero__bg" id="eHeroBg" aria-hidden="true"></div>
+  <div class="e-hero__scrim" aria-hidden="true"></div>
+  <div class="e-wrap e-hero__inner">
+    <span class="e-kicker">{% if church_settings %}{{ church_settings.church_name }}{% else %}Embassy of God&rsquo;s Word Ministry{% endif %}</span>
+    <h1>About Our <em>Ministry</em></h1>
+    <p>A house built on the living Word of God — teaching truth, raising disciples and lifting Christ in Bwari, Abuja and beyond.</p>
+  </div>
+</section>
 
-  <!-- WHO WE ARE -->
-  <section class="a-sec">
-    <div class="a-wrap a-split">
-      <div>
-        <span class="a-eyebrow">Who We Are</span>
-        <h2 class="a-title">A Family Rooted In The Word</h2>
-        <p class="a-lede">
-          {% if church_settings and church_settings.about_text %}
-            {{ church_settings.about_text|safe }}
-          {% else %}
-            Embassy of God&rsquo;s Word Ministry is a Word-based, Spirit-led church family. We gather week by week to worship God in truth, to be taught the uncompromised scriptures, and to grow together in love, faith and service. Whether you are new to faith or have walked with God for years, there is a place for you here.
-          {% endif %}
-        </p>
-        <div class="a-rule" aria-hidden="true"></div>
-        <p class="a-lede">
-          We meet at {% if church_settings and church_settings.address %}{{ church_settings.address }}{% else %}Peyi Road, opposite British Oasis International School, Ushafa Old Road, Bwari, Abuja{% endif %}.
-        </p>
-      </div>
-      <div class="a-img">
-        <img loading="lazy" src="{% static 'images/gathering.jpg' %}" alt="Congregation worshipping together">
+<!-- WHO WE ARE -->
+<section class="e-sec e-sec--a">
+  <div class="e-glow" style="right:-10%;top:5%" aria-hidden="true"></div>
+  <div class="e-wrap e-split">
+    <div class="e-reveal e-reveal-left">
+      <span class="e-kicker">Who We Are</span>
+      <h2 class="e-h2">A Family Rooted In The Word</h2>
+      <p class="e-lede">
+        {% if church_settings and church_settings.about_text %}
+          {{ church_settings.about_text|safe }}
+        {% else %}
+          Embassy of God&rsquo;s Word Ministry is a Word-based, Spirit-led church family. We gather week by week to worship God in truth, to be taught the uncompromised scriptures, and to grow together in love, faith and service. Whether you are new to faith or have walked with God for years, there is a place for you here.
+        {% endif %}
+      </p>
+      <div class="e-addr">
+        <p>We meet at {% if church_settings and church_settings.address %}{{ church_settings.address }}{% else %}Peyi Road, opposite British Oasis International School, Ushafa Old Road, Bwari, Abuja{% endif %}.</p>
       </div>
     </div>
-  </section>
-
-  <!-- MISSION / VISION -->
-  <section class="a-sec a-sec--ivory">
-    <div class="a-wrap">
-      <div class="a-head">
-        <span class="a-eyebrow">Our Foundation</span>
-        <h2 class="a-title">Mission &amp; Vision</h2>
-      </div>
-      <div class="a-grid a-grid--2">
-        <article class="a-card">
-          <span class="a-card__num">01</span>
-          <h3>Our Mission</h3>
-          <p>{% if church_settings and church_settings.mission %}{{ church_settings.mission }}{% else %}To preach the gospel of Jesus Christ, teach the Word of God without compromise, and make disciples who live out their faith daily.{% endif %}</p>
-        </article>
-        <article class="a-card">
-          <span class="a-card__num">02</span>
-          <h3>Our Vision</h3>
-          <p>{% if church_settings and church_settings.vision %}{{ church_settings.vision }}{% else %}To see lives transformed by the power of God&rsquo;s Word — raising a generation that carries the presence of God into every sphere of life.{% endif %}</p>
-        </article>
-      </div>
+    <div class="e-art e-reveal e-reveal-right" style="--d:2">
+      <div class="e-frame"><img loading="lazy" src="{% static 'images/gathering.jpg' %}" alt="Congregation worshipping together"></div>
+      <div class="e-badge">Word-based. Spirit-led.</div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- BELIEFS -->
-  <section class="a-sec">
-    <div class="a-wrap">
-      <div class="a-head">
-        <span class="a-eyebrow">What We Believe</span>
-        <h2 class="a-title">Our Core Beliefs</h2>
-      </div>
-      <div class="a-grid a-grid--3">
-        <article class="a-card"><span class="a-card__num">01</span><h3>The Word</h3><p>The Bible is the inspired, infallible Word of God — our final authority for faith, doctrine and daily living.</p></article>
-        <article class="a-card"><span class="a-card__num">02</span><h3>Salvation</h3><p>Salvation is by grace through faith in the finished work of Jesus Christ — freely offered to everyone who believes.</p></article>
-        <article class="a-card"><span class="a-card__num">03</span><h3>The Holy Spirit</h3><p>The Holy Spirit empowers believers for holy living, service, and the operation of spiritual gifts today.</p></article>
-        <article class="a-card"><span class="a-card__num">04</span><h3>Prayer</h3><p>Prayer is the lifeline of the church. We gather to intercede, to seek God&rsquo;s face, and to see His hand move.</p></article>
-        <article class="a-card"><span class="a-card__num">05</span><h3>Communion</h3><p>We honour the Lord&rsquo;s table as a place of remembrance, healing and covenant fellowship with Christ.</p></article>
-        <article class="a-card"><span class="a-card__num">06</span><h3>The Great Commission</h3><p>Every believer is sent. We evangelise, disciple and serve our community with the love of Christ.</p></article>
-      </div>
+<!-- MISSION / VISION -->
+<section class="e-sec e-sec--b">
+  <div class="e-wrap">
+    <div class="e-head e-reveal">
+      <span class="e-kicker">Our Foundation</span>
+      <h2 class="e-h2">Mission &amp; <em>Vision</em></h2>
     </div>
-  </section>
+    <div class="e-mvgrid">
+      <article class="e-mv e-lift e-reveal e-reveal-left">
+        <h3>Our Mission</h3>
+        <p>{% if church_settings and church_settings.mission %}{{ church_settings.mission }}{% else %}To preach the gospel of Jesus Christ, teach the Word of God without compromise, and make disciples who live out their faith daily.{% endif %}</p>
+      </article>
+      <article class="e-mv e-lift e-reveal e-reveal-right" style="--d:2">
+        <h3>Our Vision</h3>
+        <p>{% if church_settings and church_settings.vision %}{{ church_settings.vision }}{% else %}To see lives transformed by the power of God&rsquo;s Word — raising a generation that carries the presence of God into every sphere of life.{% endif %}</p>
+      </article>
+    </div>
+  </div>
+</section>
 
-  <!-- SERVICE TIMES -->
-  <section class="a-sec a-sec--ivory">
-    <div class="a-wrap">
-      <div class="a-head">
-        <span class="a-eyebrow">Join Us</span>
-        <h2 class="a-title">Weekly Services</h2>
-        <p class="a-lede" style="margin-inline:auto;">Come as you are — every service is open to you and your family.</p>
-      </div>
+<!-- BELIEFS -->
+<section class="e-sec e-sec--a">
+  <div class="e-wrap">
+    <div class="e-head e-head--c e-reveal">
+      <span class="e-kicker">What We Believe</span>
+      <h2 class="e-h2">Our Core Beliefs</h2>
+    </div>
+    <div class="e-beliefs">
+      <article class="e-belief e-lift e-reveal" style="--d:0"><h3>The Word</h3><p>The Bible is the inspired, infallible Word of God — our final authority for faith, doctrine and daily living.</p></article>
+      <article class="e-belief e-lift e-reveal" style="--d:1"><h3>Salvation</h3><p>Salvation is by grace through faith in the finished work of Jesus Christ — freely offered to everyone who believes.</p></article>
+      <article class="e-belief e-lift e-reveal" style="--d:2"><h3>The Holy Spirit</h3><p>The Holy Spirit empowers believers for holy living, service, and the operation of spiritual gifts today.</p></article>
+      <article class="e-belief e-lift e-reveal" style="--d:3"><h3>Prayer</h3><p>Prayer is the lifeline of the church. We gather to intercede, to seek God&rsquo;s face, and to see His hand move.</p></article>
+      <article class="e-belief e-lift e-reveal" style="--d:4"><h3>Communion</h3><p>We honour the Lord&rsquo;s table as a place of remembrance, healing and covenant fellowship with Christ.</p></article>
+      <article class="e-belief e-lift e-reveal" style="--d:5"><h3>The Great Commission</h3><p>Every believer is sent. We evangelise, disciple and serve our community with the love of Christ.</p></article>
+    </div>
+  </div>
+</section>
 
+<!-- SERVICE TIMES -->
+<section class="e-sec e-sec--b">
+  <div class="e-wrap">
+    <div class="e-head e-reveal">
+      <span class="e-kicker">Join Us</span>
+      <h2 class="e-h2">Weekly Services</h2>
+      <p class="e-lede">Come as you are — every service is open to you and your family.</p>
+    </div>
+
+    <div class="e-rows e-reveal">
       {% if service_schedule %}
         {% for service in service_schedule %}
-          <div class="a-svc">
-            <span class="a-svc__day">{{ service.get_day_display }}</span>
-            <span class="a-svc__name">{{ service.name }}</span>
-            <span class="a-svc__time">{{ service.start_time|time:"g:i A" }}{% if service.end_time %} &ndash; {{ service.end_time|time:"g:i A" }}{% endif %}{% if service.venue %} &middot; {{ service.venue }}{% endif %}</span>
+          <div class="e-row">
+            <span class="e-row__day">{{ service.get_day_display }}</span>
+            <span class="e-row__name">{{ service.name }}</span>
+            <span class="e-row__time">{{ service.start_time|time:"g:i A" }}{% if service.end_time %} &ndash; {{ service.end_time|time:"g:i A" }}{% endif %}{% if service.venue %} &middot; {{ service.venue }}{% endif %}</span>
           </div>
         {% endfor %}
       {% else %}
-        <div class="a-svc"><span class="a-svc__day">Sunday</span><span class="a-svc__name">Glory Service</span><span class="a-svc__time">9:00 AM &middot; Main Auditorium</span></div>
-        <div class="a-svc"><span class="a-svc__day">Tuesday</span><span class="a-svc__name">Prayer Band Meeting</span><span class="a-svc__time">Main Auditorium</span></div>
-        <div class="a-svc"><span class="a-svc__day">Thursday</span><span class="a-svc__name">Communion Service</span><span class="a-svc__time">Main Auditorium</span></div>
-        <div class="a-svc"><span class="a-svc__day">Friday</span><span class="a-svc__name">All Night Service</span><span class="a-svc__time">Main Auditorium</span></div>
-        <div class="a-svc"><span class="a-svc__day">Saturday</span><span class="a-svc__name">Evangelism &amp; Outreach</span><span class="a-svc__time">Morning &middot; Community</span></div>
-      {% endif %}
-
-      {% if church_settings and church_settings.service_times_text %}
-        <div class="a-center a-mt"><p class="a-lede" style="margin-inline:auto;">{{ church_settings.service_times_text|safe }}</p></div>
+        <div class="e-row"><span class="e-row__day">Sunday</span><span class="e-row__name">Glory Service</span><span class="e-row__time">9:00 AM &middot; Main Auditorium</span></div>
+        <div class="e-row"><span class="e-row__day">Tuesday</span><span class="e-row__name">Prayer Band Meeting</span><span class="e-row__time">Main Auditorium</span></div>
+        <div class="e-row"><span class="e-row__day">Thursday</span><span class="e-row__name">Communion Service</span><span class="e-row__time">Main Auditorium</span></div>
+        <div class="e-row"><span class="e-row__day">Friday</span><span class="e-row__name">All Night Service</span><span class="e-row__time">Main Auditorium</span></div>
+        <div class="e-row"><span class="e-row__day">Saturday</span><span class="e-row__name">Evangelism &amp; Outreach</span><span class="e-row__time">Morning &middot; Community</span></div>
       {% endif %}
     </div>
-  </section>
 
-  <!-- LEADERSHIP -->
-  {% if leadership_home %}
-  <section class="a-sec">
-    <div class="a-wrap">
-      <div class="a-head">
-        <span class="a-eyebrow">Our Leadership</span>
-        <h2 class="a-title">Shepherds Of The House</h2>
-      </div>
-      <div class="a-grid a-grid--3">
-        {% for leader in leadership_home|slice:":3" %}
-          <article class="a-leader">
+    {% if church_settings and church_settings.service_times_text %}
+      <div class="e-note">{{ church_settings.service_times_text|safe }}</div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- LEADERSHIP -->
+{% if leadership_home %}
+<section class="e-sec e-sec--a">
+  <div class="e-wrap">
+    <div class="e-head e-head--c e-reveal">
+      <span class="e-kicker">Our Leadership</span>
+      <h2 class="e-h2">Shepherds Of The House</h2>
+    </div>
+    <div class="e-leaders">
+      {% for leader in leadership_home|slice:":3" %}
+        <article class="e-leader e-lift e-reveal" style="--d:{{ forloop.counter0 }}">
+          <div class="e-leader__ph">
             {% if leader.photo %}
               <img loading="lazy" src="{{ leader.photo.url }}" alt="{{ leader.name }}">
             {% else %}
-              <div class="a-leader__init">{{ leader.name|first }}</div>
+              <div class="e-leader__init">{{ leader.name|first }}</div>
             {% endif %}
-            <h3>{{ leader.name }}</h3>
-            <span>{{ leader.position }}</span>
-            {% if leader.bio %}<p>{{ leader.bio|truncatewords:28 }}</p>{% endif %}
-          </article>
-        {% endfor %}
-      </div>
-      <div class="a-center a-mt"><a href="{% url 'core:leadership' %}" class="a-btn a-btn--ghost">Meet The Full Team</a></div>
-    </div>
-  </section>
-  {% endif %}
-
-  <!-- CTA -->
-  <section class="a-sec a-sec--dark">
-    <div class="a-wrap a-center">
-      <span class="a-eyebrow">Plan Your Visit</span>
-      <h2 class="a-title">We Would Love To Meet You</h2>
-      <p class="a-lede" style="margin-inline:auto;">Sunday Glory Service begins at 9:00 AM. Come early, come as you are — you will be welcomed like family.</p>
-      <div class="a-actions">
-        <a href="{% url 'core:first_visit' %}" class="a-btn">Plan Your First Visit</a>
-        <a href="{% url 'core:prayer_request' %}" class="a-btn a-btn--ghost" style="color:#DFC77E;border-color:rgba(223,199,126,.5);">Request Prayer</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- MAP -->
-  <section class="a-sec">
-    <div class="a-wrap">
-      <div class="a-head">
-        <span class="a-eyebrow">Visit Us</span>
-        <h2 class="a-title">Find Us</h2>
-      </div>
-      <div style="border:1px solid rgba(184,145,43,.35);padding:.6rem;">
-        {% if church_settings and church_settings.google_maps_embed %}
-          {{ church_settings.google_maps_embed|safe }}
-        {% else %}
-          <div style="padding:3rem;text-align:center;background:var(--ivory);">
-            <p class="a-lede" style="margin-inline:auto;color:var(--ink);">{% if church_settings %}{{ church_settings.address }}{% else %}Peyi Road, opposite British Oasis International School, Ushafa Old Road, Bwari, Abuja{% endif %}</p>
           </div>
-        {% endif %}
-      </div>
+          <div class="e-leader__body">
+            <h3>{{ leader.name }}</h3>
+            <span class="e-leader__role">{{ leader.position }}</span>
+            {% if leader.bio %}<p>{{ leader.bio|truncatewords:28 }}</p>{% endif %}
+          </div>
+        </article>
+      {% endfor %}
     </div>
-  </section>
+    <div style="text-align:center;margin-top:3.5rem"><a href="{% url 'core:leadership' %}" class="e-btn e-btn--ghost">Meet The Full Team</a></div>
+  </div>
+</section>
+{% endif %}
+
+<!-- CTA -->
+<section class="e-sec e-cta">
+  <div class="e-wrap e-reveal e-reveal-scale">
+    <span class="e-kicker">Plan Your Visit</span>
+    <h2 class="e-h2">We Would Love To Meet You</h2>
+    <p class="e-lede">Sunday Glory Service begins at 9:00 AM. Come early, come as you are — you will be welcomed like family.</p>
+    <div class="e-actions">
+      <a href="{% url 'core:first_visit' %}" class="e-btn e-btn--gold">Plan Your First Visit</a>
+      <a href="{% url 'core:prayer_request' %}" class="e-btn e-btn--ghost">Request Prayer</a>
+    </div>
+  </div>
+</section>
+
+<!-- MAP -->
+<section class="e-sec e-sec--a">
+  <div class="e-wrap">
+    <div class="e-head e-head--c e-reveal">
+      <span class="e-kicker">Visit Us</span>
+      <h2 class="e-h2">Find Us</h2>
+    </div>
+    <div class="e-map e-reveal e-reveal-scale">
+      {% if church_settings and church_settings.google_maps_embed %}
+        {{ church_settings.google_maps_embed|safe }}
+      {% else %}
+        <div class="e-map__fb">
+          <div class="e-pin"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+          <p>{% if church_settings %}{{ church_settings.address }}{% else %}Peyi Road, opposite British Oasis International School, Ushafa Old Road, Bwari, Abuja{% endif %}</p>
+          <a href="https://maps.app.goo.gl/5fLMxqCiLzGxvQ4h6" target="_blank" rel="noopener noreferrer" class="e-btn e-btn--gold">Get Directions</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
 
 </div>
+{% endblock %}
+
+{% block extra_js %}
+/* EGWM about page interactions — base.html supplies the surrounding JS tag */
+(function () {
+  'use strict';
+  var root = document.querySelector('.egwm');
+  if (!root) { return; }
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Scroll reveal, with a failsafe so nothing stays hidden */
+  var els = root.querySelectorAll('.e-reveal');
+  function showAll() { els.forEach(function (el) { el.classList.add('e-visible'); }); }
+  if (reduced || !('IntersectionObserver' in window)) {
+    showAll();
+  } else {
+    root.classList.add('e-js');
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('e-visible'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    els.forEach(function (el) { io.observe(el); });
+    window.setTimeout(showAll, 6000);
+  }
+
+  /* Subtle hero parallax */
+  var bg = document.getElementById('eHeroBg');
+  if (bg && !reduced) {
+    var ticking = false;
+    window.addEventListener('scroll', function () {
+      if (ticking) { return; }
+      ticking = true;
+      window.requestAnimationFrame(function () {
+        var y = window.scrollY || 0;
+        if (y < window.innerHeight * 1.2) { bg.style.transform = 'translate3d(0,' + (y * 0.2) + 'px,0)'; }
+        ticking = false;
+      });
+    }, { passive: true });
+  }
+})();
 {% endblock %}

@@ -12,533 +12,243 @@ Prayer Request -
 
 
 {% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300;1,9..144,500&display=swap" rel="stylesheet">
 <style>
+/* 1. VARIABLES (same tokens as the other pages) */
+.egwm{
+  --bg:#faf7f0; --s0:#f2ecdd; --s3:#eee7d6;
+  --ink:#15120a; --text:#2a261c; --soft:#4a463b; --muted:#6b6557;
+  --gold:#b8921f; --gold-d:#6f540a;
+  --grad:linear-gradient(135deg,#b8921f,#ecd074 50%,#c9a12b);
+  --line:rgba(21,18,10,.10); --line-g:rgba(168,128,26,.42);
+  --shadow:0 14px 40px rgba(60,45,10,.09);
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --sans:'Manrope',system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:'Fraunces',Georgia,serif;
+}
+/* 2. BASE */
+html{scroll-behavior:smooth}
+.egwm{font-family:var(--sans);background:var(--bg);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.6}
+.egwm *,.egwm *::before,.egwm *::after{box-sizing:border-box}
+.egwm p{margin:0;color:var(--soft)}
+.egwm h1,.egwm h2,.egwm h3{font-family:var(--serif);color:var(--ink);font-weight:500;letter-spacing:-.02em;margin:0;line-height:1.1}
+.egwm :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.e-wrap{width:min(1200px,90vw);margin-inline:auto}
 
-    /* =========================================================
-       PRAYER PAGE
-    ========================================================= */
+/* 3. TYPOGRAPHY */
+.e-kicker{display:inline-block;font-size:.8rem;font-weight:700;color:var(--gold-d);letter-spacing:.08em;margin-bottom:1rem;padding-left:1rem;border-left:2px solid var(--gold)}
+.e-h2{font-size:clamp(2rem,4vw,3.2rem);margin-bottom:1.1rem}
+.e-h2 em,.egwm .e-hero h1 em{font-style:italic;font-weight:300;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.e-lede{font-size:1.05rem;line-height:1.8;max-width:52ch}
 
-    .prayer-page {
-        background: #ffffff;
-        color: #222;
-        min-height: 100vh;
-    }
+/* 4. BUTTONS */
+.e-btn{display:inline-flex;align-items:center;justify-content:center;gap:.7rem;padding:1.05rem 2.2rem;border-radius:999px;font:700 .95rem var(--sans);letter-spacing:.02em;border:1px solid transparent;cursor:pointer;transition:transform .4s var(--ease),box-shadow .4s var(--ease)}
+.e-btn i{transition:transform .35s var(--ease)}
+.e-btn:hover i{transform:scale(1.15) rotate(-6deg)}
+.e-btn--gold{background:var(--grad);color:#0a0a0a;box-shadow:0 10px 30px rgba(212,175,55,.25)}
+.e-btn--gold:hover{transform:translateY(-3px);box-shadow:0 16px 44px rgba(212,175,55,.45);color:#0a0a0a}
 
+/* 5. HERO */
+.e-hero{position:relative;overflow:hidden;background:#0a0a0a;padding:8rem 0 6.5rem;text-align:center}
+.e-hero__bg{position:absolute;inset:0;background:radial-gradient(50% 90% at 50% 10%,rgba(212,175,55,.34),transparent 65%),linear-gradient(145deg,#080808,#171510)}
+.e-hero__bg::before,.e-hero__bg::after{content:'';position:absolute;left:50%;border:1px solid rgba(240,214,122,.18);border-radius:50%;transform:translateX(-50%)}
+.e-hero__bg::before{width:520px;height:520px;top:-300px}
+.e-hero__bg::after{width:820px;height:820px;top:-520px}
+.e-hero::after{content:'';position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(0deg,var(--bg),transparent)}
+.e-hero__inner{position:relative;z-index:2}
+.egwm .e-hero .e-kicker{color:#f0d67a}
+.egwm .e-hero h1{font-size:clamp(2.5rem,6.2vw,5rem);line-height:1.02;color:#fff;max-width:16ch;margin:0 auto 1.3rem}
+.egwm .e-hero p{color:#f1f1f1;max-width:54ch;margin:0 auto;font-size:clamp(1rem,1.5vw,1.15rem);line-height:1.8}
+.e-hero__inner>*{animation:eIn 1s var(--ease) both}
+.e-hero__inner>*:nth-child(2){animation-delay:.12s}
+.e-hero__inner>*:nth-child(3){animation-delay:.24s}
 
-    /* =========================================================
-       HERO
-    ========================================================= */
+/* 6. LAYOUT */
+.e-sec{position:relative;padding:clamp(2.5rem,5vw,4rem) 0 clamp(4.5rem,9vw,8rem);overflow:hidden}
+.e-glow{position:absolute;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,.2),transparent 65%);pointer-events:none;filter:blur(20px)}
+.e-layout{position:relative;display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(2rem,5vw,4.5rem);align-items:start}
+.e-side{position:sticky;top:calc(var(--nav-h,0px) + 2rem)}
+.e-verse{margin-top:2rem;padding:1.6rem 1.8rem;background:linear-gradient(135deg,#fffdf8,#f7ecc8);border:1px solid var(--line-g);border-left:4px solid var(--gold);border-radius:18px;box-shadow:var(--shadow)}
+.e-verse blockquote{margin:0;font:italic 300 clamp(1.15rem,1.8vw,1.4rem)/1.55 var(--serif);color:var(--ink)}
+.e-verse cite{display:block;margin-top:.8rem;font-style:normal;font-weight:700;font-size:.85rem;color:var(--gold-d)}
+.e-note{display:flex;gap:.8rem;align-items:flex-start;margin-top:1.4rem;color:var(--soft);font-size:.92rem;line-height:1.7}
+.e-note i{color:var(--gold-d);margin-top:.3rem}
 
-    .prayer-hero {
-        background: #ffffff;
-        padding-top: calc(var(--nav-h) + 4.5rem);
-        padding-bottom: 4rem;
-        text-align: center;
-        border-bottom: 1px solid var(--border);
-        position: relative;
-        overflow: hidden;
-    }
+/* 7. FORM */
+.e-form{background:#fff;border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:24px;padding:clamp(1.6rem,4vw,3rem);box-shadow:0 26px 60px rgba(60,45,10,.13)}
+.e-fields{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
+.e-field--full{grid-column:1/-1}
+.e-label{display:block;font-weight:700;font-size:.88rem;color:var(--ink);margin-bottom:.5rem}
+.e-label small{font-weight:500;color:var(--muted);font-size:.8rem}
+.e-form input:not([type=checkbox]):not([type=hidden]),.e-form select,.e-form textarea{width:100%;padding:.9rem 1.1rem;background:#faf7f0;border:1px solid rgba(21,18,10,.18);border-radius:12px;color:var(--ink);font:500 1rem var(--sans);transition:border-color .3s,box-shadow .3s,background .3s}
+.e-form select{appearance:auto}
+.e-form textarea{min-height:180px;resize:vertical;line-height:1.7}
+.e-form ::placeholder{color:#7a745f}
+.e-form input:not([type=checkbox]):focus,.e-form select:focus,.e-form textarea:focus{outline:0;background:#fff;border-color:var(--gold);box-shadow:0 0 0 4px rgba(184,146,31,.16)}
+.e-form input[type=checkbox]{width:20px;height:20px;accent-color:var(--gold);flex:none;margin-top:.15rem;cursor:pointer}
+.e-conf{display:flex;gap:.9rem;align-items:flex-start;padding:1.1rem 1.3rem;background:var(--s0);border:1px solid var(--line-g);border-radius:14px}
+.e-conf label{font-weight:700;color:var(--ink);font-size:.92rem;cursor:pointer}
+.e-conf p{font-size:.85rem;line-height:1.6;margin-top:.3rem;color:var(--soft)}
+.e-form .errorlist{list-style:none;padding:0;margin:.4rem 0 0;color:#b42318;font-size:.85rem;font-weight:600}
+.e-submit{text-align:center;padding-top:.5rem}
+.e-foot{text-align:center;margin-top:1.6rem;color:var(--muted);font-size:.9rem;line-height:1.7}
+.e-foot i{color:var(--gold-d);margin-right:.4rem}
 
-    .prayer-hero::before {
-        content: "";
-        position: absolute;
-        width: 420px;
-        height: 420px;
-        border-radius: 50%;
-        background: rgba(201, 162, 39, 0.055);
-        top: -250px;
-        left: 50%;
-        transform: translateX(-50%);
-        pointer-events: none;
-    }
+/* 9. ANIMATIONS */
+@keyframes eIn{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
+.egwm.e-js .e-reveal{opacity:0;transform:translateY(38px);transition:opacity .9s var(--ease),transform .9s var(--ease);transition-delay:calc(var(--d,0) * 110ms)}
+.egwm.e-js .e-reveal-left{transform:translateX(-46px)}
+.egwm.e-js .e-reveal-right{transform:translateX(46px)}
+.egwm.e-js .e-reveal.e-visible{opacity:1;transform:none}
 
-    .prayer-hero .container {
-        position: relative;
-        z-index: 2;
-    }
-
-    .prayer-hero .eyebrow {
-        color: var(--gold-dark);
-        margin-bottom: 1rem;
-    }
-
-    .prayer-hero h1 {
-        color: #171717;
-        font-size: clamp(2.1rem, 4.5vw, 3.3rem);
-        max-width: 760px;
-        margin: 0 auto;
-        line-height: 1.15;
-    }
-
-    .prayer-hero .lead-text {
-        color: #666;
-        max-width: 620px;
-        margin: 1.2rem auto 0;
-        line-height: 1.8;
-        font-size: 1rem;
-    }
-
-
-    /* =========================================================
-       MAIN CONTENT
-    ========================================================= */
-
-    .prayer-content {
-        padding-top: 4rem;
-        padding-bottom: 5rem;
-        background: #ffffff;
-    }
-
-
-    /* =========================================================
-       INTRO
-    ========================================================= */
-
-    .prayer-intro {
-        max-width: 720px;
-        margin: 0 auto 2.5rem;
-        text-align: center;
-    }
-
-    .prayer-intro h2 {
-        color: #171717;
-        font-size: 1.8rem;
-        margin-bottom: .75rem;
-    }
-
-    .prayer-intro p {
-        color: #6b6b6b;
-        line-height: 1.8;
-        margin-bottom: 0;
-    }
-
-
-    /* =========================================================
-       FORM CARD
-    ========================================================= */
-
-    .prayer-form {
-        background: #ffffff;
-        border: 1px solid #e6e2d9;
-        border-radius: 20px;
-        padding: 2.5rem;
-        box-shadow: 0 12px 40px rgba(0,0,0,.06);
-    }
-
-    .prayer-form .form-label {
-        font-weight: 600;
-        font-size: .86rem;
-        color: #292929;
-        margin-bottom: .5rem;
-    }
-
-    .prayer-form .form-control,
-    .prayer-form .form-select,
-    .prayer-form textarea {
-        color: #222;
-        background: #fff;
-        border: 1px solid #dcd8cf;
-        border-radius: 10px;
-        padding: .75rem .9rem;
-        transition:
-            border-color .2s ease,
-            box-shadow .2s ease;
-    }
-
-    .prayer-form .form-control:focus,
-    .prayer-form .form-select:focus,
-    .prayer-form textarea:focus {
-        color: #222;
-        background: #fff;
-        border-color: var(--gold);
-        box-shadow: 0 0 0 3px rgba(201,162,39,.10);
-    }
-
-    .prayer-form textarea {
-        min-height: 170px;
-        resize: vertical;
-        line-height: 1.7;
-    }
-
-
-    /* =========================================================
-       CONFIDENTIALITY
-    ========================================================= */
-
-    .confidential-box {
-        background: #faf9f6;
-        border: 1px solid #e7e2d8;
-        border-radius: 12px;
-        padding: 1rem 1.1rem;
-    }
-
-    .prayer-form .form-check-input {
-        border-color: #bbb;
-        margin-top: .25rem;
-    }
-
-    .prayer-form .form-check-input:checked {
-        background-color: var(--gold);
-        border-color: var(--gold);
-    }
-
-    .prayer-form .form-check-label {
-        color: #333;
-        font-weight: 600;
-        font-size: .88rem;
-    }
-
-    .confidential-note {
-        color: #777;
-        font-size: .8rem;
-        line-height: 1.6;
-        margin: .4rem 0 0 1.65rem;
-    }
-
-
-    /* =========================================================
-       SUBMIT BUTTON
-    ========================================================= */
-
-    .prayer-submit {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: .5rem;
-        min-width: 180px;
-        padding: .8rem 1.5rem;
-        border: none;
-        border-radius: 50px;
-        background: var(--gold);
-        color: #111;
-        font-weight: 700;
-        font-size: .88rem;
-        transition:
-            transform .25s ease,
-            background .25s ease,
-            box-shadow .25s ease;
-    }
-
-    .prayer-submit:hover {
-        background: var(--gold-light);
-        color: #111;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(0,0,0,.10);
-    }
-
-
-    /* =========================================================
-       SMALL FOOTER NOTE
-    ========================================================= */
-
-    .prayer-footer-note {
-        text-align: center;
-        margin-top: 2rem;
-        color: #777;
-        font-size: .88rem;
-        line-height: 1.7;
-    }
-
-    .prayer-footer-note i {
-        color: var(--gold-dark);
-        margin-right: .35rem;
-    }
-
-
-    /* =========================================================
-       ERROR TEXT
-    ========================================================= */
-
-    .prayer-form .errorlist {
-        list-style: none;
-        padding: 0;
-        margin: .35rem 0 0;
-        color: #b42318;
-        font-size: .8rem;
-    }
-
-
-    /* =========================================================
-       MOBILE
-    ========================================================= */
-
-    @media (max-width: 767px) {
-
-        .prayer-hero {
-            padding-top: calc(var(--nav-h) + 3.5rem);
-            padding-bottom: 3rem;
-        }
-
-        .prayer-content {
-            padding-top: 3rem;
-            padding-bottom: 4rem;
-        }
-
-        .prayer-form {
-            padding: 1.5rem;
-            border-radius: 16px;
-        }
-
-        .prayer-hero h1 {
-            font-size: 2.15rem;
-        }
-
-        .prayer-hero .lead-text {
-            font-size: .94rem;
-        }
-
-        .prayer-submit {
-            width: 100%;
-        }
-    }
-
+/* 10. RESPONSIVE */
+@media (max-width:991px){
+  .e-layout{grid-template-columns:1fr}
+  .e-side{position:static}
+}
+@media (max-width:600px){
+  .e-hero{padding:6.5rem 0 5rem}
+  .e-fields{grid-template-columns:1fr}
+  .e-btn{width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .egwm *,.egwm *::before,.egwm *::after{animation:none!important;transition-duration:.01ms!important}
+  .egwm.e-js .e-reveal{opacity:1!important;transform:none!important}
+}
 </style>
 {% endblock %}
 
 
 {% block content %}
+<div class="egwm">
 
-<div class="prayer-page">
+<!-- HERO -->
+<section class="e-hero" aria-label="Prayer request">
+  <div class="e-hero__bg" aria-hidden="true"></div>
+  <div class="e-wrap e-hero__inner">
+    <span class="e-kicker">You Are Not Alone</span>
+    <h1>We Would Love To Pray <em>With You</em></h1>
+    <p>Whatever you are facing, you do not have to face it alone. Share your prayer request with us and let us stand with you in faith.</p>
+  </div>
+</section>
 
-    <!-- =====================================================
-         HERO
-    ====================================================== -->
+<!-- CONTENT -->
+<section class="e-sec">
+  <div class="e-glow" style="right:-10%;top:0" aria-hidden="true"></div>
+  <div class="e-wrap e-layout">
 
-    <section class="prayer-hero">
+    <!-- SIDE -->
+    <aside class="e-side e-reveal e-reveal-left">
+      <span class="e-kicker">Prayer Request</span>
+      <h2 class="e-h2">Share Your Request</h2>
+      <p class="e-lede">Take a moment to tell us what you would like us to pray about. Your request will be handled with care and respect.</p>
+      <figure class="e-verse" style="margin-left:0;margin-right:0">
+        <blockquote>&ldquo;In every thing by prayer and supplication with thanksgiving let your requests be made known unto God.&rdquo;</blockquote>
+        <cite>Philippians 4:6 (KJV)</cite>
+      </figure>
+      <div class="e-note">
+        <i class="fas fa-lock" aria-hidden="true"></i>
+        <span>Your request is treated with care, dignity, and confidentiality.</span>
+      </div>
+    </aside>
 
-        <div class="container" data-reveal>
+    <!-- FORM -->
+    <div class="e-reveal e-reveal-right" style="--d:2">
+      <div class="e-form">
+        <form method="post" action="{% url 'core:prayer_request' %}">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
 
-            <p class="eyebrow justify-content-center d-flex">
-                You Are Not Alone
-            </p>
+          <div class="e-fields">
 
-            <h1>
-                We Would Love To Pray With You
-            </h1>
-
-            <p class="lead-text">
-                Whatever you are facing, you do not have to face it alone.
-                Share your prayer request with us and let us stand with you in faith.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         CONTENT
-    ====================================================== -->
-
-    <section class="prayer-content">
-
-        <div class="container">
-
-            <div class="prayer-intro" data-reveal>
-
-                <p class="eyebrow">
-                    Prayer Request
-                </p>
-
-                <h2>
-                    Share Your Request
-                </h2>
-
-                <p>
-                    Take a moment to tell us what you would like us to pray about.
-                    Your request will be handled with care and respect.
-                </p>
-
+            <!-- FULL NAME -->
+            <div>
+              <label for="{{ form.full_name.id_for_label }}" class="e-label">Your Full Name</label>
+              {{ form.full_name }}
+              {{ form.full_name.errors }}
             </div>
 
-
-            <!-- =================================================
-                 FORM
-            ================================================== -->
-
-            <div class="row justify-content-center">
-
-                <div class="col-lg-8" data-reveal>
-
-                    <div class="prayer-form">
-
-                        <form
-                            method="post"
-                            action="{% url 'core:prayer_request' %}"
-                        >
-
-                            {% csrf_token %}
-
-                            {{ form.non_field_errors }}
-
-
-                            <div class="row g-4">
-
-
-                                <!-- FULL NAME -->
-
-                                <div class="col-md-6">
-
-                                    <label
-                                        for="{{ form.full_name.id_for_label }}"
-                                        class="form-label"
-                                    >
-                                        Your Full Name
-                                    </label>
-
-                                    {{ form.full_name }}
-
-                                    {{ form.full_name.errors }}
-
-                                </div>
-
-
-                                <!-- EMAIL -->
-
-                                <div class="col-md-6">
-
-                                    <label
-                                        for="{{ form.email.id_for_label }}"
-                                        class="form-label"
-                                    >
-                                        Email
-                                        <span style="color:#888;font-weight:400;">
-                                            (optional)
-                                        </span>
-                                    </label>
-
-                                    {{ form.email }}
-
-                                    {{ form.email.errors }}
-
-                                </div>
-
-
-                                <!-- PHONE -->
-
-                                <div class="col-md-6">
-
-                                    <label
-                                        for="{{ form.phone.id_for_label }}"
-                                        class="form-label"
-                                    >
-                                        Phone
-                                        <span style="color:#888;font-weight:400;">
-                                            (optional)
-                                        </span>
-                                    </label>
-
-                                    {{ form.phone }}
-
-                                    {{ form.phone.errors }}
-
-                                </div>
-
-
-                                <!-- URGENCY -->
-
-                                <div class="col-md-6">
-
-                                    <label
-                                        for="{{ form.urgency.id_for_label }}"
-                                        class="form-label"
-                                    >
-                                        Urgency
-                                    </label>
-
-                                    {{ form.urgency }}
-
-                                    {{ form.urgency.errors }}
-
-                                </div>
-
-
-                                <!-- REQUEST -->
-
-                                <div class="col-12">
-
-                                    <label
-                                        for="{{ form.request_details.id_for_label }}"
-                                        class="form-label"
-                                    >
-                                        Prayer Request
-                                    </label>
-
-                                    {{ form.request_details }}
-
-                                    {{ form.request_details.errors }}
-
-                                </div>
-
-
-                                <!-- CONFIDENTIAL -->
-
-                                <div class="col-12">
-
-                                    <div class="confidential-box">
-
-                                        <div class="form-check">
-
-                                            {{ form.confidential }}
-
-                                            <label
-                                                class="form-check-label"
-                                                for="{{ form.confidential.id_for_label }}"
-                                            >
-                                                {{ form.confidential.label }}
-                                            </label>
-
-                                        </div>
-
-                                        <p class="confidential-note">
-                                            If selected, your request will remain
-                                            private and will only be shared with
-                                            the designated prayer team.
-                                        </p>
-
-                                    </div>
-
-                                </div>
-
-
-                                <!-- SUBMIT -->
-
-                                <div class="col-12 text-center pt-2">
-
-                                    <button
-                                        type="submit"
-                                        class="prayer-submit"
-                                    >
-                                        <i class="fas fa-praying-hands"></i>
-                                        Submit Prayer Request
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        </form>
-
-                    </div>
-
-
-                    <div class="prayer-footer-note">
-
-                        <i class="fas fa-lock"></i>
-
-                        Your request is treated with care, dignity,
-                        and confidentiality.
-
-                    </div>
-
+            <!-- EMAIL -->
+            <div>
+              <label for="{{ form.email.id_for_label }}" class="e-label">Email <small>(optional)</small></label>
+              {{ form.email }}
+              {{ form.email.errors }}
+            </div>
+
+            <!-- PHONE -->
+            <div>
+              <label for="{{ form.phone.id_for_label }}" class="e-label">Phone <small>(optional)</small></label>
+              {{ form.phone }}
+              {{ form.phone.errors }}
+            </div>
+
+            <!-- URGENCY -->
+            <div>
+              <label for="{{ form.urgency.id_for_label }}" class="e-label">Urgency</label>
+              {{ form.urgency }}
+              {{ form.urgency.errors }}
+            </div>
+
+            <!-- REQUEST -->
+            <div class="e-field--full">
+              <label for="{{ form.request_details.id_for_label }}" class="e-label">Prayer Request</label>
+              {{ form.request_details }}
+              {{ form.request_details.errors }}
+            </div>
+
+            <!-- CONFIDENTIAL -->
+            <div class="e-field--full">
+              <div class="e-conf">
+                {{ form.confidential }}
+                <div>
+                  <label for="{{ form.confidential.id_for_label }}">{{ form.confidential.label }}</label>
+                  <p>If selected, your request will remain private and will only be shared with the designated prayer team.</p>
                 </div>
-
+              </div>
             </div>
 
-        </div>
+            <!-- SUBMIT -->
+            <div class="e-field--full e-submit">
+              <button type="submit" class="e-btn e-btn--gold">
+                <i class="fas fa-praying-hands" aria-hidden="true"></i>
+                Submit Prayer Request
+              </button>
+            </div>
 
-    </section>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</section>
 
 </div>
+{% endblock %}
 
+{% block extra_js %}
+/* EGWM prayer page interactions — base.html supplies the surrounding JS tag */
+(function () {
+  'use strict';
+  var root = document.querySelector('.egwm');
+  if (!root) { return; }
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els = root.querySelectorAll('.e-reveal');
+  function showAll() { els.forEach(function (el) { el.classList.add('e-visible'); }); }
+  if (reduced || !('IntersectionObserver' in window)) {
+    showAll();
+  } else {
+    root.classList.add('e-js');
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('e-visible'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -4% 0px' });
+    els.forEach(function (el) { io.observe(el); });
+    window.setTimeout(showAll, 6000);
+  }
+})();
 {% endblock %}

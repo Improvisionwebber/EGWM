@@ -12,17 +12,46 @@ Events -
 
 
 {% block extra_css %}
-<style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
+<style>
 /* =========================================================
-   EVENTS PAGE — MATURE / HEADER SAFE
+   EVENTS PAGE
+   All colours are defined here (--ev-*) so nothing depends on
+   variables from base.html. This is what fixes the "all black /
+   invisible" problem: if a base variable was missing, the
+   browser dropped the whole background and text vanished.
 ========================================================= */
 
 .events-page {
+    --ev-ink: #16130c;
+    --ev-ink-soft: #2a2416;
+    --ev-gold: #c9a227;
+    --ev-gold-light: #e6c65c;
+    --ev-gold-dark: #8f7212;
+    --ev-paper: #faf8f3;
+    --ev-card: #ffffff;
+    --ev-text: #2b2a26;
+    --ev-muted: #6f6b60;
+    --ev-line: #e8e3d5;
+    --ev-ease: cubic-bezier(.22, .8, .24, 1);
+    --ev-shadow-sm: 0 1px 2px rgba(22, 19, 12, .05), 0 4px 14px rgba(22, 19, 12, .06);
+    --ev-shadow-lg: 0 2px 4px rgba(22, 19, 12, .05), 0 22px 44px -12px rgba(22, 19, 12, .22);
+
     position: relative;
     isolation: isolate;
     overflow-x: hidden;
-    background: #fff;
+    background: var(--ev-paper);
+    color: var(--ev-text);
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.events-page h1,
+.events-page h2,
+.events-page .card-title {
+    font-family: "Fraunces", Georgia, "Times New Roman", serif;
 }
 
 
@@ -32,134 +61,152 @@ Events -
 
 .events-page .page-hero {
     position: relative;
-    z-index: 1;
-
-    background:
-        radial-gradient(
-            circle at 50% 0%,
-            rgba(201, 162, 39, 0.10),
-            transparent 42%
-        ),
-        linear-gradient(
-            160deg,
-            var(--black) 0%,
-            var(--charcoal) 100%
-        );
-
-    color: #fff;
-
-    /* IMPORTANT:
-       Do not pull the hero underneath the base navbar.
-    */
-    margin-top: 0;
-
-    padding:
-        clamp(7rem, 12vw, 9rem)
-        0
-        clamp(4rem, 7vw, 5.5rem);
-
-    text-align: center;
-
     overflow: hidden;
+    text-align: center;
+    color: #fff;
+    background-color: var(--ev-ink);
+    background-image:
+        radial-gradient(ellipse at 50% -10%, rgba(201, 162, 39, .28), transparent 55%),
+        linear-gradient(165deg, #1d1810 0%, #0f0d08 100%);
+
+    /* room for a fixed navbar so the title never hides behind it */
+    padding: clamp(8rem, 15vw, 11rem) 1rem clamp(4.5rem, 8vw, 6.5rem);
 }
-
-
-/* subtle luxury glow */
 
 .events-page .page-hero::before {
     content: "";
     position: absolute;
-    width: 420px;
-    height: 420px;
-
-    top: -260px;
-    left: 50%;
-    transform: translateX(-50%);
-
-    background: rgba(201, 162, 39, 0.08);
-    border-radius: 50%;
-    filter: blur(70px);
-
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(ellipse at center, #000 20%, transparent 70%);
+            mask-image: radial-gradient(ellipse at center, #000 20%, transparent 70%);
     pointer-events: none;
 }
 
-.events-page .page-hero .container {
+.events-page .page-hero::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--ev-gold), transparent);
+}
+
+.events-page .hero-inner {
     position: relative;
     z-index: 2;
+    will-change: transform, opacity;
+}
+
+.events-page .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    margin: 0 0 1.1rem;
+    font-size: .95rem;
+    font-weight: 500;
+    color: var(--ev-gold-light);
+}
+
+.events-page .hero-eyebrow::before,
+.events-page .hero-eyebrow::after {
+    content: "";
+    width: 34px;
+    height: 1px;
+    background: currentColor;
+    opacity: .6;
 }
 
 .events-page .page-hero h1 {
+    margin: 0;
     color: #fff;
-    font-size: clamp(2.3rem, 5vw, 3.5rem);
+    font-size: clamp(2.8rem, 7vw, 4.75rem);
     font-weight: 700;
-    letter-spacing: -0.02em;
-    margin-bottom: 0;
+    line-height: 1.05;
+    letter-spacing: -.02em;
+}
+
+.events-page .hero-sub {
+    max-width: 560px;
+    margin: 1.2rem auto 0;
+    color: rgba(255, 255, 255, .78);
+    font-size: 1.05rem;
+    line-height: 1.65;
+}
+
+/* one orchestrated entrance on load */
+.events-page .hero-inner > * {
+    opacity: 0;
+    transform: translateY(18px);
+    animation: ev-rise .8s var(--ev-ease) forwards;
+}
+.events-page .hero-inner > *:nth-child(2) { animation-delay: .12s; }
+.events-page .hero-inner > *:nth-child(3) { animation-delay: .24s; }
+
+@keyframes ev-rise {
+    to { opacity: 1; transform: none; }
 }
 
 
 /* =========================================================
-   MAIN CONTENT
+   CONTENT
 ========================================================= */
 
 .events-page .events-content {
-    position: relative;
-    z-index: 2;
-
-    padding-top: clamp(3.5rem, 6vw, 5rem);
-    padding-bottom: clamp(4rem, 7vw, 6rem);
+    padding: clamp(3.5rem, 6vw, 5.5rem) 0 clamp(4rem, 8vw, 7rem);
 }
-
-
-/* Intro */
-
-.events-page .section-subtitle {
-    max-width: 650px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-
-/* =========================================================
-   SECTION HEADINGS
-========================================================= */
 
 .events-page .sub-heading {
-    font-family: var(--font-body);
-    font-weight: 700;
-    font-size: .78rem;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-
-    color: var(--black);
-
     display: flex;
     align-items: center;
-    gap: .65rem;
-
-    margin-bottom: 1.8rem;
-    padding-bottom: .95rem;
-
-    border-bottom: 1px solid var(--border);
-
+    gap: .8rem;
+    margin: 0 0 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--ev-line);
     position: relative;
+    color: var(--ev-ink);
+    font-size: clamp(1.5rem, 3vw, 1.95rem);
+    font-weight: 700;
+    letter-spacing: -.01em;
 }
 
 .events-page .sub-heading::after {
     content: "";
-
     position: absolute;
     left: 0;
     bottom: -1px;
-
-    width: 55px;
-    height: 2px;
-
-    background: var(--gold);
+    width: 72px;
+    height: 3px;
+    background: var(--ev-gold);
+    border-radius: 3px;
 }
 
-.events-page .sub-heading i {
-    color: var(--gold);
-    font-size: .9rem;
+.events-page .sub-heading .heading-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(201, 162, 39, .14);
+    color: var(--ev-gold-dark);
+    font-size: 1rem;
+}
+
+.events-page .sub-heading .count {
+    margin-left: auto;
+    padding: .2rem .7rem;
+    border-radius: 999px;
+    background: var(--ev-ink);
+    color: var(--ev-gold-light);
+    font-family: "Inter", system-ui, sans-serif;
+    font-size: .8rem;
+    font-weight: 600;
+    letter-spacing: 0;
 }
 
 
@@ -169,71 +216,277 @@ Events -
 
 .events-page .event-card {
     position: relative;
-
-    background: #fff;
-
-    border: 1px solid rgba(0, 0, 0, 0.045);
-    border-radius: 18px;
-
-    overflow: hidden;
-
-    box-shadow: var(--shadow-sm);
-
-    transition:
-        transform .35s var(--ease),
-        box-shadow .35s var(--ease),
-        border-color .35s ease;
-
+    display: flex;
+    flex-direction: column;
     height: 100%;
+    overflow: hidden;
+    background: var(--ev-card);
+    border: 1px solid var(--ev-line);
+    border-radius: 18px;
+    box-shadow: var(--ev-shadow-sm);
+    transition: transform .4s var(--ev-ease), box-shadow .4s var(--ev-ease), border-color .3s ease;
 }
 
-.events-page .event-card:hover {
-    transform: translateY(-6px);
-    box-shadow: var(--shadow-md);
-    border-color: rgba(201, 162, 39, .18);
+.events-page .event-card::before {
+    /* gold bar that draws in on hover */
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 4;
+    background: linear-gradient(90deg, var(--ev-gold), var(--ev-gold-light));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .5s var(--ev-ease);
+}
+
+.events-page .event-card:hover,
+.events-page .event-card:focus-within {
+    transform: translateY(-8px);
+    box-shadow: var(--ev-shadow-lg);
+    border-color: rgba(201, 162, 39, .45);
+}
+
+.events-page .event-card:hover::before,
+.events-page .event-card:focus-within::before,
+.events-page .event-card.is-featured::before {
+    transform: scaleX(1);
 }
 
 
-/* =========================================================
-   EVENT IMAGE
-========================================================= */
+/* image */
 
-.events-page .event-card img,
-.events-page .event-card .no-image {
+.events-page .event-media {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+    background: var(--ev-ink-soft);
+}
+
+.events-page .event-media img {
     width: 100%;
-    height: 215px;
-
+    height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform .8s var(--ev-ease);
 }
 
-.events-page .event-card .no-image {
+.events-page .event-card:hover .event-media img {
+    transform: scale(1.07);
+}
+
+.events-page .event-media::after {
+    /* soft fade so the date badge always reads */
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(22, 19, 12, .35) 0%, transparent 45%);
+    pointer-events: none;
+}
+
+.events-page .event-media .no-image {
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-
+    color: var(--ev-gold);
+    font-size: 3rem;
     background:
-        radial-gradient(
-            circle at center,
-            rgba(201, 162, 39, .08),
-            transparent 55%
-        ),
-        var(--off-white);
+        radial-gradient(circle at 50% 40%, rgba(201, 162, 39, .28), transparent 60%),
+        linear-gradient(160deg, #2a2416, #16130c);
 }
 
 
-/* =========================================================
-   CARD BODY
-========================================================= */
+/* date badge */
+
+.events-page .date-badge {
+    position: absolute;
+    left: 14px;
+    top: 14px;
+    z-index: 3;
+    min-width: 56px;
+    padding: .5rem .55rem .45rem;
+    text-align: center;
+    line-height: 1;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .25);
+}
+
+.events-page .date-badge .day {
+    display: block;
+    color: var(--ev-ink);
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.55rem;
+    font-weight: 700;
+}
+
+.events-page .date-badge .month {
+    display: block;
+    margin-top: .25rem;
+    color: var(--ev-gold-dark);
+    font-size: .72rem;
+    font-weight: 600;
+}
+
+
+/* body */
 
 .events-page .event-card .card-body {
-    padding: 1.55rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1.5rem 1.5rem 1.6rem;
 }
 
 .events-page .event-card .card-title {
-    color: var(--black);
+    margin: 1rem 0 .9rem;
+    color: var(--ev-ink);
+    font-size: 1.3rem;
     font-weight: 700;
     line-height: 1.3;
+    transition: color .25s ease;
+}
+
+.events-page .event-card:hover .card-title {
+    color: var(--ev-gold-dark);
+}
+
+.events-page .event-meta {
+    flex: 1;
+    margin-bottom: 1.25rem;
+    color: var(--ev-muted);
+    font-size: .92rem;
+}
+
+.events-page .event-meta p {
+    margin: 0 0 .55rem;
+    line-height: 1.55;
+}
+
+.events-page .event-meta i {
+    width: 18px;
+    margin-right: 6px;
+    color: var(--ev-gold);
+    text-align: center;
+}
+
+.events-page .event-meta .event-desc {
+    margin-top: .9rem;
+    color: var(--ev-text);
+    line-height: 1.65;
+}
+
+
+/* badges */
+
+.events-page .event-badge,
+.events-page .past-event-badge,
+.events-page .badge-featured,
+.events-page .countdown-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    border-radius: 999px;
+    font-size: .75rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.events-page .event-badge {
+    padding: .42rem .85rem;
+    background: rgba(201, 162, 39, .16);
+    color: var(--ev-gold-dark);
+}
+
+.events-page .past-event-badge {
+    padding: .42rem .85rem;
+    background: #ece9df;
+    color: #5f5b50;
+}
+
+.events-page .badge-featured {
+    padding: .42rem .8rem;
+    background: var(--ev-ink);
+    color: var(--ev-gold-light);
+}
+
+.events-page .countdown-tag {
+    padding: .45rem .8rem;
+    background: rgba(201, 162, 39, .12);
+    color: var(--ev-gold-dark);
+}
+
+
+/* button */
+
+.events-page .btn-event {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    padding: .7rem 1.3rem;
+    border: 2px solid var(--ev-ink);
+    border-radius: 999px;
+    background: var(--ev-ink);
+    color: #fff;
+    font-size: .9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background .3s ease, color .3s ease, border-color .3s ease, gap .3s var(--ev-ease);
+}
+
+.events-page .btn-event i {
+    font-size: .78rem;
+    transition: transform .3s var(--ev-ease);
+}
+
+.events-page .event-card:hover .btn-event {
+    background: var(--ev-gold);
+    border-color: var(--ev-gold);
+    color: var(--ev-ink);
+}
+
+.events-page .event-card:hover .btn-event i {
+    transform: translateX(4px);
+}
+
+.events-page .btn-event.is-outline {
+    background: transparent;
+    color: var(--ev-ink);
+    border-color: var(--ev-line);
+}
+
+.events-page .event-card:hover .btn-event.is-outline {
+    background: var(--ev-ink);
+    border-color: var(--ev-ink);
+    color: #fff;
+}
+
+.events-page .btn-event:focus-visible,
+.events-page .admin-icon:focus-visible,
+.events-page .pagination .page-link:focus-visible {
+    outline: 3px solid var(--ev-gold);
+    outline-offset: 3px;
+}
+
+
+/* past events */
+
+.events-page .past-event-card .event-media img {
+    filter: grayscale(.85);
+    transition: transform .8s var(--ev-ease), filter .6s ease;
+}
+
+.events-page .past-event-card:hover .event-media img {
+    filter: grayscale(0);
+}
+
+.events-page .past-event-card .date-badge .month {
+    color: var(--ev-muted);
 }
 
 
@@ -243,29 +496,18 @@ Events -
 
 .events-page .event-admin-controls {
     position: absolute;
-
     top: 12px;
     right: 12px;
-
-    z-index: 50;
-
+    z-index: 10;
     display: flex;
     align-items: center;
-    gap: 7px;
-
+    gap: 6px;
     padding: 5px;
-
     border-radius: 12px;
-
-    background: rgba(255, 255, 255, .94);
-
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, .95);
     -webkit-backdrop-filter: blur(10px);
-
-    box-shadow:
-        0 6px 20px rgba(0, 0, 0, .16);
-
-    pointer-events: auto;
+            backdrop-filter: blur(10px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .22);
 }
 
 .events-page .event-admin-controls form {
@@ -274,151 +516,33 @@ Events -
 }
 
 .events-page .admin-icon {
-    width: 35px;
-    height: 35px;
-
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
-
-    border: none;
+    border: 0;
     border-radius: 9px;
-
+    font-size: 14px;
     text-decoration: none;
     cursor: pointer;
-
-    font-size: 14px;
-
-    transition:
-        transform .2s ease,
-        background .2s ease,
-        color .2s ease,
-        box-shadow .2s ease;
+    transition: transform .2s ease, background .2s ease, color .2s ease, box-shadow .2s ease;
 }
 
-.events-page .edit-icon {
-    background: #f5f5f5;
-    color: #333;
-}
-
+.events-page .edit-icon { background: #f2efe6; color: #2b2a26; }
 .events-page .edit-icon:hover {
-    background: var(--gold);
+    background: var(--ev-gold);
     color: #000;
     transform: translateY(-2px);
-    box-shadow: 0 5px 14px rgba(201, 162, 39, .25);
+    box-shadow: 0 5px 14px rgba(201, 162, 39, .35);
 }
 
-.events-page .delete-icon {
-    background: #fff1f1;
-    color: #dc3545;
-}
-
+.events-page .delete-icon { background: #fdeceb; color: #c62f3b; }
 .events-page .delete-icon:hover {
-    background: #dc3545;
+    background: #c62f3b;
     color: #fff;
     transform: translateY(-2px);
-    box-shadow: 0 5px 14px rgba(220, 53, 69, .25);
-}
-
-
-/* =========================================================
-   EVENT META
-========================================================= */
-
-.events-page .event-meta {
-    font-size: .88rem;
-    color: var(--muted);
-}
-
-.events-page .event-meta p {
-    margin-bottom: .55rem;
-    line-height: 1.55;
-}
-
-.events-page .event-meta i {
-    color: var(--gold);
-    margin-right: 6px;
-    width: 14px;
-}
-
-
-/* =========================================================
-   EVENT BADGES
-========================================================= */
-
-.events-page .event-badge,
-.events-page .past-event-badge {
-    padding: .32rem .85rem;
-
-    border-radius: 50px;
-
-    font-weight: 700;
-    font-size: .7rem;
-
-    letter-spacing: .04em;
-    text-transform: uppercase;
-
-    display: inline-flex;
-    align-items: center;
-}
-
-.events-page .event-badge {
-    background: rgba(201, 162, 39, .14);
-    color: var(--gold-dark);
-}
-
-.events-page .past-event-badge {
-    background: #eeeeee;
-    color: #666;
-}
-
-
-/* =========================================================
-   FEATURED / COUNTDOWN
-========================================================= */
-
-.events-page .badge-featured {
-    background: var(--black);
-    color: var(--gold-light);
-
-    padding: .32rem .75rem;
-
-    border-radius: 50px;
-
-    font-size: .68rem;
-    font-weight: 700;
-
-    letter-spacing: .04em;
-    text-transform: uppercase;
-}
-
-.events-page .countdown-tag {
-    display: inline-flex;
-    align-items: center;
-
-    padding: .3rem .65rem;
-
-    background: rgba(201, 162, 39, .08);
-
-    border-radius: 6px;
-
-    color: var(--gold-dark);
-
-    font-size: .78rem;
-    font-weight: 600;
-}
-
-
-/* =========================================================
-   PAST EVENTS
-========================================================= */
-
-.events-page .past-event-card {
-    opacity: .78;
-}
-
-.events-page .past-event-card:hover {
-    opacity: 1;
+    box-shadow: 0 5px 14px rgba(198, 47, 59, .35);
 }
 
 
@@ -427,20 +551,24 @@ Events -
 ========================================================= */
 
 .events-page .empty-state {
+    padding: 3.5rem 1.5rem;
     text-align: center;
-
-    padding: 4rem 1rem;
-
-    color: var(--muted);
+    color: var(--ev-muted);
+    background: #fff;
+    border: 1.5px dashed #d9d2bd;
+    border-radius: 18px;
 }
 
 .events-page .empty-state i {
-    font-size: 2.3rem;
-    color: var(--gold);
-
-    margin-bottom: 1rem;
-
     display: block;
+    margin-bottom: 1rem;
+    color: var(--ev-gold);
+    font-size: 2.4rem;
+}
+
+.events-page .empty-state p {
+    margin: 0;
+    font-size: 1.02rem;
 }
 
 
@@ -449,108 +577,107 @@ Events -
 ========================================================= */
 
 .events-page .pagination {
-    gap: 5px;
+    gap: 6px;
+    flex-wrap: wrap;
 }
 
 .events-page .pagination .page-link {
-    border-radius: 8px;
-    border-color: var(--border);
-
-    color: var(--black);
-
-    padding: .5rem .75rem;
-}
-
-.events-page .pagination .page-item.active .page-link {
-    background: var(--gold);
-    border-color: var(--gold);
-    color: #000;
+    min-width: 42px;
+    text-align: center;
+    padding: .55rem .85rem;
+    border: 1px solid var(--ev-line);
+    border-radius: 10px !important;
+    background: #fff;
+    color: var(--ev-ink);
+    font-weight: 500;
+    transition: background .2s ease, border-color .2s ease, transform .2s ease;
 }
 
 .events-page .pagination .page-link:hover {
-    background: rgba(201, 162, 39, .1);
-    border-color: var(--gold);
+    background: rgba(201, 162, 39, .14);
+    border-color: var(--ev-gold);
+    color: var(--ev-ink);
+    transform: translateY(-2px);
+}
+
+.events-page .pagination .page-item.active .page-link {
+    background: var(--ev-ink);
+    border-color: var(--ev-ink);
+    color: var(--ev-gold-light);
 }
 
 
 /* =========================================================
-   MOBILE
+   SCROLL REVEAL  (only active when JS runs, so content
+   is never hidden if scripts fail)
+========================================================= */
+
+.events-page.ev-js .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity .7s var(--ev-ease), transform .7s var(--ev-ease);
+    transition-delay: var(--ev-delay, 0ms);
+}
+
+.events-page.ev-js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+}
+
+/* keep hover lift working after the reveal finishes */
+.events-page.ev-js .reveal.is-visible.is-done {
+    transition-delay: 0ms;
+}
+
+
+/* =========================================================
+   RESPONSIVE
 ========================================================= */
 
 @media (max-width: 767px) {
-
-    .events-page .page-hero {
-        padding:
-            6.5rem
-            1rem
-            3.8rem;
-    }
-
-    .events-page .page-hero h1 {
-        font-size: 2.35rem;
-    }
-
-    .events-page .events-content {
-        padding-top: 3rem;
-    }
-
-    .events-page .event-card img,
-    .events-page .event-card .no-image {
-        height: 200px;
-    }
-
-    .events-page .event-admin-controls {
-        top: 10px;
-        right: 10px;
-    }
-
-    .events-page .admin-icon {
-        width: 33px;
-        height: 33px;
-        font-size: 13px;
-    }
+    .events-page .event-media { height: 200px; }
+    .events-page .event-card .card-body { padding: 1.3rem; }
+    .events-page .sub-heading { gap: .6rem; }
 }
 
 @media (max-width: 400px) {
-
-    .events-page .page-hero {
-        padding-top: 6rem;
-    }
-
-    .events-page .event-card .card-body {
-        padding: 1.3rem;
-    }
-
-    .events-page .event-card img,
-    .events-page .event-card .no-image {
-        height: 185px;
-    }
+    .events-page .event-media { height: 185px; }
+    .events-page .hero-eyebrow::before,
+    .events-page .hero-eyebrow::after { width: 18px; }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .events-page *,
+    .events-page *::before,
+    .events-page *::after {
+        animation: none !important;
+        transition-duration: .01ms !important;
+    }
+    .events-page .hero-inner > * { opacity: 1; transform: none; }
+    .events-page.ev-js .reveal { opacity: 1; transform: none; }
+}
 </style>
 {% endblock %}
 
 
 {% block content %}
 
-<div class="events-page">
+<div class="events-page" id="eventsPage">
 
     <!-- =====================================================
          HERO
     ====================================================== -->
 
     <section class="page-hero">
-
         <div class="container">
-
-            <p class="eyebrow on-dark center justify-content-center d-flex">
-                Gather With Us
-            </p>
-
-            <h1>Events</h1>
-
+            <div class="hero-inner" id="heroInner">
+                <p class="hero-eyebrow">Gather with us</p>
+                <h1>Events</h1>
+                <p class="hero-sub">
+                    Services, conferences and community moments. Find what's coming up and see what we've shared together.
+                </p>
+            </div>
         </div>
-
     </section>
 
 
@@ -559,45 +686,40 @@ Events -
     ====================================================== -->
 
     <section class="events-content">
-
         <div class="container">
-
-            <p class="section-subtitle text-center mb-5">
-                Join us for these upcoming and past events.
-            </p>
 
 
             <!-- =================================================
                  UPCOMING EVENTS
             ================================================== -->
 
-            <h2 class="sub-heading">
-                <i class="fas fa-calendar-plus"></i>
-                Upcoming Events
+            <h2 class="sub-heading reveal" id="upcoming">
+                <span class="heading-icon"><i class="fas fa-calendar-plus"></i></span>
+                Upcoming events
+                {% if upcoming_events %}
+                    <span class="count">{{ upcoming_events.paginator.count }}</span>
+                {% endif %}
             </h2>
-
 
             {% if upcoming_events %}
 
-                <div class="row g-4 mb-5" data-reveal>
+                <div class="row g-4 mb-5">
 
                     {% for event in upcoming_events %}
 
-                        <div class="col-lg-4 col-md-6">
+                        <div class="col-lg-4 col-md-6 reveal" style="--ev-delay: {{ forloop.counter0|add:0 }}00ms;">
 
-                            <div class="event-card">
+                            <article class="event-card{% if event.featured %} is-featured{% endif %}">
 
                                 {% if user.is_authenticated and user.is_staff %}
-
                                     <div class="event-admin-controls">
-
                                         <a
                                             href="{% url 'core:dashboard_edit_event' event.pk %}"
                                             class="admin-icon edit-icon"
                                             title="Edit event"
                                             aria-label="Edit {{ event.title }}"
                                         >
-                                            <i class="bi bi-pencil-fill"></i>
+                                            <i class="fas fa-pen"></i>
                                         </a>
 
                                         <form
@@ -605,125 +727,89 @@ Events -
                                             action="{% url 'core:dashboard_delete_event' event.pk %}"
                                             onsubmit="return confirm('Are you sure you want to delete this event?');"
                                         >
-
                                             {% csrf_token %}
-
                                             <button
                                                 type="submit"
                                                 class="admin-icon delete-icon"
                                                 title="Delete event"
                                                 aria-label="Delete {{ event.title }}"
                                             >
-                                                <i class="bi bi-trash-fill"></i>
+                                                <i class="fas fa-trash"></i>
                                             </button>
-
                                         </form>
-
                                     </div>
-
                                 {% endif %}
 
 
-                                {% if event.banner %}
+                                <div class="event-media">
+                                    {% if event.banner %}
+                                        <img src="{{ event.banner.url }}" alt="{{ event.title }}" loading="lazy">
+                                    {% else %}
+                                        <div class="no-image"><i class="fas fa-calendar-alt"></i></div>
+                                    {% endif %}
 
-                                    <img
-                                        src="{{ event.banner.url }}"
-                                        alt="{{ event.title }}"
-                                        loading="lazy"
-                                    >
-
-                                {% else %}
-
-                                    <div class="no-image">
-                                        <i
-                                            class="fas fa-calendar-alt"
-                                            style="font-size:3rem; color:var(--gold);"
-                                        ></i>
+                                    <div class="date-badge" aria-hidden="true">
+                                        <span class="day">{{ event.start_date|date:"d" }}</span>
+                                        <span class="month">{{ event.start_date|date:"M" }}</span>
                                     </div>
-
-                                {% endif %}
+                                </div>
 
 
                                 <div class="card-body">
 
                                     <div class="d-flex justify-content-between align-items-start gap-2">
-
-                                        <span class="event-badge">
-                                            {{ event.get_event_type_display }}
-                                        </span>
+                                        <span class="event-badge">{{ event.get_event_type_display }}</span>
 
                                         {% if event.featured %}
                                             <span class="badge-featured">
-                                                Featured
+                                                <i class="fas fa-star"></i> Featured
                                             </span>
                                         {% endif %}
-
                                     </div>
 
-
-                                    <h5 class="card-title mt-3">
-                                        {{ event.title }}
-                                    </h5>
-
+                                    <h3 class="card-title">{{ event.title }}</h3>
 
                                     <div class="event-meta">
-
                                         <p>
                                             <i class="fas fa-calendar-alt"></i>
-
                                             {{ event.start_date|date:"M d, Y" }}
-
-                                            {% if event.end_date %}
-                                                – {{ event.end_date|date:"M d, Y" }}
-                                            {% endif %}
+                                            {% if event.end_date %} – {{ event.end_date|date:"M d, Y" }}{% endif %}
                                         </p>
-
 
                                         <p>
                                             <i class="fas fa-clock"></i>
                                             {{ event.start_date|date:"g:i A" }}
                                         </p>
 
-
                                         <p>
                                             <i class="fas fa-map-pin"></i>
                                             {{ event.venue }}
                                         </p>
 
-
                                         {% if event.description %}
-
-                                            <p>
-                                                {{ event.description|truncatewords:15 }}
-                                            </p>
-
+                                            <p class="event-desc">{{ event.description|truncatewords:15 }}</p>
                                         {% endif %}
 
-
                                         {% if event.countdown %}
-
-                                            <p>
+                                            <p class="mt-3 mb-0">
                                                 <span class="countdown-tag">
-                                                    <i class="fas fa-clock"></i>
+                                                    <i class="fas fa-hourglass-half"></i>
                                                     {{ event.start_date|timeuntil }} remaining
                                                 </span>
                                             </p>
-
                                         {% endif %}
-
                                     </div>
-
 
                                     <a
                                         href="{% url 'core:event_detail' event.slug %}"
-                                        class="btn btn-gold btn-sm"
+                                        class="btn-event stretched-link"
+                                        aria-label="View details for {{ event.title }}"
                                     >
-                                        View Details
+                                        View details <i class="fas fa-arrow-right"></i>
                                     </a>
 
                                 </div>
-
-                            </div>
+                            </article>
 
                         </div>
 
@@ -735,71 +821,36 @@ Events -
                 <!-- UPCOMING PAGINATION -->
 
                 {% if upcoming_events.paginator.num_pages > 1 %}
-
                     <nav class="mb-5" aria-label="Upcoming events pagination">
-
                         <ul class="pagination justify-content-center">
 
                             {% if upcoming_events.has_previous %}
-
                                 <li class="page-item">
-                                    <a
-                                        class="page-link"
-                                        href="?upcoming_page={{ upcoming_events.previous_page_number }}"
-                                    >
-                                        Previous
-                                    </a>
+                                    <a class="page-link" href="?upcoming_page={{ upcoming_events.previous_page_number }}&past_page={{ past_events.number|default:1 }}#upcoming">Previous</a>
                                 </li>
-
                             {% endif %}
 
-
                             {% for num in upcoming_events.paginator.page_range %}
-
                                 <li class="page-item {% if upcoming_events.number == num %}active{% endif %}">
-
-                                    <a
-                                        class="page-link"
-                                        href="?upcoming_page={{ num }}"
-                                    >
-                                        {{ num }}
-                                    </a>
-
+                                    <a class="page-link" href="?upcoming_page={{ num }}&past_page={{ past_events.number|default:1 }}#upcoming">{{ num }}</a>
                                 </li>
-
                             {% endfor %}
 
-
                             {% if upcoming_events.has_next %}
-
                                 <li class="page-item">
-                                    <a
-                                        class="page-link"
-                                        href="?upcoming_page={{ upcoming_events.next_page_number }}"
-                                    >
-                                        Next
-                                    </a>
+                                    <a class="page-link" href="?upcoming_page={{ upcoming_events.next_page_number }}&past_page={{ past_events.number|default:1 }}#upcoming">Next</a>
                                 </li>
-
                             {% endif %}
 
                         </ul>
-
                     </nav>
-
                 {% endif %}
-
 
             {% else %}
 
-                <div class="empty-state mb-5">
-
+                <div class="empty-state mb-5 reveal">
                     <i class="fas fa-calendar-alt"></i>
-
-                    <p class="mb-0">
-                        More gatherings are coming soon.
-                    </p>
-
+                    <p>No events are scheduled right now. Check back soon for new gatherings.</p>
                 </div>
 
             {% endif %}
@@ -809,129 +860,103 @@ Events -
                  PAST EVENTS
             ================================================== -->
 
-            <h2 class="sub-heading mt-5">
-
-                <i class="fas fa-calendar-check"></i>
-
-                Past Events
-
+            <h2 class="sub-heading mt-5 reveal" id="past">
+                <span class="heading-icon"><i class="fas fa-calendar-check"></i></span>
+                Past events
+                {% if past_events %}
+                    <span class="count">{{ past_events.paginator.count }}</span>
+                {% endif %}
             </h2>
-
 
             {% if past_events %}
 
-                <div class="row g-4" data-reveal>
+                <div class="row g-4">
 
                     {% for event in past_events %}
 
-                        <div class="col-lg-4 col-md-6">
+                        <div class="col-lg-4 col-md-6 reveal" style="--ev-delay: {{ forloop.counter0|add:0 }}00ms;">
 
-                            <div class="event-card past-event-card">
+                            <article class="event-card past-event-card">
 
                                 {% if user.is_authenticated and user.is_staff %}
-
                                     <div class="event-admin-controls">
-
                                         <a
                                             href="{% url 'core:dashboard_edit_event' event.pk %}"
                                             class="admin-icon edit-icon"
                                             title="Edit event"
                                             aria-label="Edit {{ event.title }}"
                                         >
-                                            <i class="bi bi-pencil-fill"></i>
+                                            <i class="fas fa-pen"></i>
                                         </a>
-
 
                                         <form
                                             method="post"
                                             action="{% url 'core:dashboard_delete_event' event.pk %}"
                                             onsubmit="return confirm('Are you sure you want to delete this event?');"
                                         >
-
                                             {% csrf_token %}
-
                                             <button
                                                 type="submit"
                                                 class="admin-icon delete-icon"
                                                 title="Delete event"
                                                 aria-label="Delete {{ event.title }}"
                                             >
-                                                <i class="bi bi-trash-fill"></i>
+                                                <i class="fas fa-trash"></i>
                                             </button>
-
                                         </form>
-
                                     </div>
-
                                 {% endif %}
 
 
-                                {% if event.banner %}
+                                <div class="event-media">
+                                    {% if event.banner %}
+                                        <img src="{{ event.banner.url }}" alt="{{ event.title }}" loading="lazy">
+                                    {% else %}
+                                        <div class="no-image"><i class="fas fa-calendar-alt"></i></div>
+                                    {% endif %}
 
-                                    <img
-                                        src="{{ event.banner.url }}"
-                                        alt="{{ event.title }}"
-                                        loading="lazy"
-                                    >
-
-                                {% else %}
-
-                                    <div class="no-image">
-
-                                        <i
-                                            class="fas fa-calendar-alt"
-                                            style="font-size:3rem; color:#aaa;"
-                                        ></i>
-
+                                    <div class="date-badge" aria-hidden="true">
+                                        <span class="day">{{ event.start_date|date:"d" }}</span>
+                                        <span class="month">{{ event.start_date|date:"M" }}</span>
                                     </div>
-
-                                {% endif %}
+                                </div>
 
 
                                 <div class="card-body">
 
-                                    <span class="past-event-badge">
-                                        {{ event.get_event_type_display }}
-                                    </span>
+                                    <div>
+                                        <span class="past-event-badge">{{ event.get_event_type_display }}</span>
+                                    </div>
 
-
-                                    <h5 class="card-title mt-3">
-                                        {{ event.title }}
-                                    </h5>
-
+                                    <h3 class="card-title">{{ event.title }}</h3>
 
                                     <div class="event-meta">
-
                                         <p>
                                             <i class="fas fa-calendar-alt"></i>
                                             {{ event.start_date|date:"M d, Y" }}
                                         </p>
-
 
                                         <p>
                                             <i class="fas fa-clock"></i>
                                             {{ event.start_date|date:"g:i A" }}
                                         </p>
 
-
                                         <p>
                                             <i class="fas fa-map-pin"></i>
                                             {{ event.venue }}
                                         </p>
-
                                     </div>
-
 
                                     <a
                                         href="{% url 'core:event_detail' event.slug %}"
-                                        class="btn btn-outline-gold btn-sm"
+                                        class="btn-event is-outline stretched-link"
+                                        aria-label="View details for {{ event.title }}"
                                     >
-                                        View Details
+                                        View details <i class="fas fa-arrow-right"></i>
                                     </a>
 
                                 </div>
-
-                            </div>
+                            </article>
 
                         </div>
 
@@ -943,83 +968,88 @@ Events -
                 <!-- PAST PAGINATION -->
 
                 {% if past_events.paginator.num_pages > 1 %}
-
-                    <nav class="mt-4" aria-label="Past events pagination">
-
+                    <nav class="mt-5" aria-label="Past events pagination">
                         <ul class="pagination justify-content-center">
 
                             {% if past_events.has_previous %}
-
                                 <li class="page-item">
-
-                                    <a
-                                        class="page-link"
-                                        href="?past_page={{ past_events.previous_page_number }}"
-                                    >
-                                        Previous
-                                    </a>
-
+                                    <a class="page-link" href="?upcoming_page={{ upcoming_events.number|default:1 }}&past_page={{ past_events.previous_page_number }}#past">Previous</a>
                                 </li>
-
                             {% endif %}
 
-
                             {% for num in past_events.paginator.page_range %}
-
                                 <li class="page-item {% if past_events.number == num %}active{% endif %}">
-
-                                    <a
-                                        class="page-link"
-                                        href="?past_page={{ num }}"
-                                    >
-                                        {{ num }}
-                                    </a>
-
+                                    <a class="page-link" href="?upcoming_page={{ upcoming_events.number|default:1 }}&past_page={{ num }}#past">{{ num }}</a>
                                 </li>
-
                             {% endfor %}
 
-
                             {% if past_events.has_next %}
-
                                 <li class="page-item">
-
-                                    <a
-                                        class="page-link"
-                                        href="?past_page={{ past_events.next_page_number }}"
-                                    >
-                                        Next
-                                    </a>
-
+                                    <a class="page-link" href="?upcoming_page={{ upcoming_events.number|default:1 }}&past_page={{ past_events.next_page_number }}#past">Next</a>
                                 </li>
-
                             {% endif %}
 
                         </ul>
-
                     </nav>
-
                 {% endif %}
-
 
             {% else %}
 
-                <div class="empty-state">
-
+                <div class="empty-state reveal">
                     <i class="fas fa-calendar-check"></i>
-
-                    <p class="mb-0">
-                        Past gatherings will be archived here once recorded.
-                    </p>
-
+                    <p>Past events will appear here once they've been recorded.</p>
                 </div>
 
             {% endif %}
 
         </div>
-
     </section>
 
 </div>
+
+
+<script>
+(function () {
+    var page = document.getElementById('eventsPage');
+    if (!page) return;
+
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var items = page.querySelectorAll('.reveal');
+
+    /* Scroll reveal: elements fade in as they enter the viewport */
+    if ('IntersectionObserver' in window && !reduce) {
+        page.classList.add('ev-js');
+
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (!entry.isIntersecting) return;
+                var el = entry.target;
+                el.classList.add('is-visible');
+                io.unobserve(el);
+                // drop the stagger delay afterwards so hover stays snappy
+                setTimeout(function () { el.classList.add('is-done'); }, 1200);
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+        items.forEach(function (el) { io.observe(el); });
+    }
+
+    /* Hero drifts up and fades slightly as you scroll past it */
+    var hero = document.getElementById('heroInner');
+    if (hero && !reduce) {
+        var ticking = false;
+        window.addEventListener('scroll', function () {
+            if (ticking) return;
+            ticking = true;
+            window.requestAnimationFrame(function () {
+                var y = Math.min(window.scrollY, 600);
+                hero.style.transform = 'translateY(' + (y * 0.18) + 'px)';
+                hero.style.opacity = String(1 - y / 700);
+                ticking = false;
+            });
+        }, { passive: true });
+    }
+})();
+</script>
 
 {% endblock %}

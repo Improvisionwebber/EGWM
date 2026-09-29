@@ -12,521 +12,229 @@ Contact Us -
 
 
 {% block extra_css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300;1,9..144,500&display=swap" rel="stylesheet">
 <style>
+/* 1. VARIABLES (same tokens as the other pages) */
+.egwm{
+  --bg:#faf7f0; --s0:#f2ecdd; --s3:#eee7d6;
+  --ink:#15120a; --text:#2a261c; --soft:#4a463b; --muted:#6b6557;
+  --gold:#b8921f; --gold-d:#6f540a;
+  --grad:linear-gradient(135deg,#b8921f,#ecd074 50%,#c9a12b);
+  --line:rgba(21,18,10,.10); --line-g:rgba(168,128,26,.42);
+  --shadow:0 14px 40px rgba(60,45,10,.09);
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --sans:'Manrope',system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:'Fraunces',Georgia,serif;
+}
+/* 2. BASE */
+html{scroll-behavior:smooth}
+.egwm{font-family:var(--sans);background:var(--bg);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased;line-height:1.6}
+.egwm *,.egwm *::before,.egwm *::after{box-sizing:border-box}
+.egwm a{text-decoration:none;color:inherit}
+.egwm p{margin:0;color:var(--soft)}
+.egwm h1,.egwm h2,.egwm h3,.egwm h4{font-family:var(--serif);color:var(--ink);font-weight:500;letter-spacing:-.02em;margin:0;line-height:1.1}
+.egwm :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.e-wrap{width:min(1200px,90vw);margin-inline:auto}
 
-    /* =========================================================
-       PAGE HERO
-    ========================================================= */
+/* 3. TYPOGRAPHY */
+.e-kicker{display:inline-block;font-size:.8rem;font-weight:700;color:var(--gold-d);letter-spacing:.08em;margin-bottom:1rem;padding-left:1rem;border-left:2px solid var(--gold)}
+.e-h2{font-size:clamp(2.1rem,4.4vw,3.6rem);margin-bottom:1.1rem}
+.e-h2 em,.egwm .e-hero h1 em{font-style:italic;font-weight:300;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.e-lede{font-size:1.05rem;line-height:1.8;max-width:56ch}
 
-    .page-hero {
-        background: #ffffff;
-        color: var(--black);
-        padding: calc(var(--nav-h) + 4rem) 0 4rem;
-        margin-top: calc(-1 * var(--nav-h));
-        text-align: center;
-        border-bottom: 1px solid var(--border);
-    }
+/* 4. BUTTONS */
+.e-btn{display:inline-flex;align-items:center;justify-content:center;gap:.7rem;padding:1rem 2rem;border-radius:999px;font:700 .9rem var(--sans);letter-spacing:.02em;border:1px solid transparent;cursor:pointer;transition:transform .4s var(--ease),box-shadow .4s var(--ease),background .3s,color .3s,border-color .3s}
+.e-btn i{transition:transform .35s var(--ease)}
+.e-btn:hover i{transform:translateX(3px) scale(1.08)}
+.e-btn--gold{background:var(--grad);color:#0a0a0a!important;box-shadow:0 10px 30px rgba(212,175,55,.25)}
+.e-btn--gold:hover{transform:translateY(-3px);box-shadow:0 16px 44px rgba(212,175,55,.45)}
+.e-btn--ghost{background:#fff;border-color:rgba(21,18,10,.28);color:var(--ink)!important}
+.e-btn--ghost:hover{border-color:var(--gold);color:var(--gold-d)!important;transform:translateY(-3px)}
 
-    .page-hero h1 {
-        color: var(--black);
-        font-size: clamp(2.2rem, 4.5vw, 3.2rem);
-        margin-bottom: .75rem;
-    }
+/* 5. HERO */
+.e-hero{position:relative;overflow:hidden;background:#0a0a0a;padding:8rem 0 6.5rem}
+.e-hero__bg{position:absolute;inset:0;background:radial-gradient(60% 80% at 82% 25%,rgba(212,175,55,.3),transparent 62%),radial-gradient(40% 60% at 10% 90%,rgba(212,175,55,.14),transparent 60%),linear-gradient(145deg,#080808,#171510)}
+.e-hero__bg::before,.e-hero__bg::after{content:'';position:absolute;border:1px solid rgba(240,214,122,.2);border-radius:50%}
+.e-hero__bg::before{width:340px;height:340px;top:-130px;right:-70px}
+.e-hero__bg::after{width:220px;height:220px;bottom:-90px;left:-60px}
+.e-hero::after{content:'';position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(0deg,var(--bg),transparent)}
+.e-hero__inner{position:relative;z-index:2}
+.egwm .e-hero .e-kicker{color:#f0d67a}
+.egwm .e-hero h1{font-size:clamp(2.8rem,7vw,5.6rem);line-height:1;color:#fff;margin-bottom:1.3rem}
+.egwm .e-hero p{color:#f1f1f1;max-width:52ch;font-size:clamp(1rem,1.5vw,1.15rem);line-height:1.8}
+.e-hero__inner>*{animation:eIn 1s var(--ease) both}
+.e-hero__inner>*:nth-child(2){animation-delay:.12s}
+.e-hero__inner>*:nth-child(3){animation-delay:.24s}
 
-    .page-hero .hero-description {
-        max-width: 600px;
-        margin: 0 auto;
-        color: var(--muted);
-        font-size: 1rem;
-        line-height: 1.7;
-    }
+/* 6. SECTIONS */
+.e-sec{position:relative;padding:clamp(3rem,6vw,5rem) 0 clamp(4.5rem,9vw,8rem);overflow:hidden}
+.e-glow{position:absolute;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,.2),transparent 65%);pointer-events:none;filter:blur(20px)}
+.e-intro{max-width:680px;margin-bottom:clamp(2.2rem,4vw,3.5rem)}
+.e-contact{position:relative;display:grid;grid-template-columns:1.15fr 1fr;gap:1.4rem;align-items:stretch}
+.e-stack{display:grid;gap:1.4rem}
 
+/* 7. CARDS */
+.e-lift{transition:transform .5s var(--ease),border-color .4s,box-shadow .5s var(--ease)}
+.e-lift:hover{transform:translateY(-6px);border-color:var(--line-g);box-shadow:0 24px 54px rgba(60,45,10,.16)}
+.e-card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:clamp(1.8rem,3.5vw,2.6rem);box-shadow:var(--shadow)}
+.e-card--pastor{background:linear-gradient(135deg,#fffdf8,#f7ecc8);display:flex;flex-direction:column;justify-content:center}
+.e-icon{width:58px;height:58px;border-radius:50%;background:rgba(184,146,31,.14);border:1px solid var(--line-g);color:var(--gold-d);display:flex;align-items:center;justify-content:center;font-size:1.15rem;margin-bottom:1.3rem;transition:background .3s,color .3s,transform .4s var(--ease)}
+.e-card:hover .e-icon{background:var(--gold);color:#0a0a0a;transform:scale(1.08)}
+.e-card h3{font-size:1.6rem;margin-bottom:.7rem}
+.e-card p{line-height:1.75;margin-bottom:1.4rem}
+.e-card--pastor h3{font-size:clamp(1.9rem,3.4vw,2.7rem)}
+.e-number{display:block;font:500 clamp(1.7rem,3.4vw,2.6rem) var(--serif);color:var(--ink)!important;margin-bottom:1.6rem;transition:color .3s}
+.e-number:hover{color:var(--gold-d)!important}
+.e-mail{word-break:break-word;font-weight:700;color:var(--gold-d)!important;border-bottom:1px solid var(--line-g);padding-bottom:.2rem}
+.e-mail:hover{color:var(--ink)!important}
+.e-actions{display:flex;flex-wrap:wrap;gap:.8rem}
 
-    /* =========================================================
-       CONTACT SECTION
-    ========================================================= */
+/* 8. LOCATION */
+.e-loc{position:relative;margin-top:1.4rem;display:grid;grid-template-columns:1.2fr 1fr;background:#fff;border:1px solid var(--line-g);border-radius:26px;overflow:hidden;box-shadow:0 30px 80px rgba(60,45,10,.14)}
+.e-loc__info{padding:clamp(2rem,5vw,3.8rem);display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+.e-loc__info h3{font-size:clamp(1.7rem,3vw,2.5rem);margin-bottom:1rem}
+.e-loc__info p{color:var(--text);font-size:1.05rem;line-height:1.8;margin-bottom:1.8rem}
+.e-loc__art{position:relative;min-height:280px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 45%,rgba(212,175,55,.26),transparent 45%),var(--s3);overflow:hidden}
+.e-loc__art::before{content:'';position:absolute;inset:-20%;background-image:linear-gradient(rgba(21,18,10,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(21,18,10,.07) 1px,transparent 1px);background-size:56px 56px;transform:perspective(500px) rotateX(55deg)}
+.e-pin{position:relative;width:78px;height:78px;border-radius:50%;background:var(--gold);color:#0a0a0a;display:flex;align-items:center;justify-content:center;font-size:1.6rem;box-shadow:0 0 0 12px rgba(212,175,55,.16),0 0 50px rgba(212,175,55,.3);animation:eFloat 3s ease-in-out infinite}
+.e-foot{text-align:center;margin-top:clamp(3rem,6vw,4.5rem)}
+.e-foot p{margin-bottom:.4rem;color:var(--muted)}
 
-    .contact-section {
-        background: #ffffff;
-    }
+/* 9. ANIMATIONS */
+@keyframes eIn{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
+@keyframes eFloat{50%{transform:translateY(-8px)}}
+.egwm.e-js .e-reveal{opacity:0;transform:translateY(38px);transition:opacity .9s var(--ease),transform .9s var(--ease);transition-delay:calc(var(--d,0) * 110ms)}
+.egwm.e-js .e-reveal-left{transform:translateX(-46px)}
+.egwm.e-js .e-reveal-right{transform:translateX(46px)}
+.egwm.e-js .e-reveal.e-visible{opacity:1;transform:none}
 
-    .contact-intro {
-        max-width: 700px;
-        margin: 0 auto 3.5rem;
-        text-align: center;
-    }
-
-    .contact-intro p {
-        color: var(--muted);
-        line-height: 1.8;
-        margin-bottom: 0;
-    }
-
-
-    /* =========================================================
-       CONTACT CARDS
-    ========================================================= */
-
-    .contact-card {
-        height: 100%;
-        background: #ffffff;
-        border: 1px solid var(--border);
-        border-radius: 18px;
-        padding: 2rem;
-        box-shadow: var(--shadow-sm);
-        transition:
-            transform .3s var(--ease),
-            box-shadow .3s var(--ease),
-            border-color .3s ease;
-    }
-
-    .contact-card:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--shadow-md);
-        border-color: rgba(201, 162, 39, .45);
-    }
-
-    .contact-icon {
-        width: 52px;
-        height: 52px;
-        border-radius: 50%;
-        background: rgba(201, 162, 39, .10);
-        color: var(--gold-dark);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 1.25rem;
-        font-size: 1.15rem;
-    }
-
-    .contact-card h4 {
-        color: var(--black);
-        font-size: 1.15rem;
-        margin-bottom: .7rem;
-    }
-
-    .contact-card p {
-        color: var(--muted);
-        line-height: 1.7;
-        margin-bottom: 1rem;
-    }
-
-    .contact-card a {
-        color: var(--gold-dark);
-        text-decoration: none;
-        font-weight: 600;
-    }
-
-    .contact-card a:hover {
-        color: var(--gold);
-    }
-
-
-    /* =========================================================
-       ACTION BUTTONS
-    ========================================================= */
-
-    .contact-action {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: .5rem;
-        padding: .65rem 1.15rem;
-        border-radius: 50px;
-        border: 1px solid var(--gold);
-        color: var(--black) !important;
-        background: transparent;
-        font-size: .85rem;
-        font-weight: 700;
-        transition: all .25s ease;
-    }
-
-    .contact-action:hover {
-        background: var(--gold);
-        color: #000 !important;
-        transform: translateY(-2px);
-    }
-
-
-    /* =========================================================
-       LOCATION CARD
-    ========================================================= */
-
-    .location-card {
-        background: #ffffff;
-        border: 1px solid var(--border);
-        border-radius: 20px;
-        padding: 2.5rem;
-        margin-top: 2rem;
-        box-shadow: var(--shadow-sm);
-    }
-
-    .location-card h3 {
-        color: var(--black);
-        margin-bottom: .75rem;
-    }
-
-    .location-card p {
-        color: var(--muted);
-        line-height: 1.8;
-        margin-bottom: 1.25rem;
-    }
-
-    .directions-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: .55rem;
-        background: var(--gold);
-        color: #000 !important;
-        text-decoration: none;
-        padding: .75rem 1.4rem;
-        border-radius: 50px;
-        font-size: .85rem;
-        font-weight: 700;
-        transition: all .25s ease;
-    }
-
-    .directions-btn:hover {
-        background: var(--gold-light);
-        color: #000 !important;
-        transform: translateY(-2px);
-    }
-
-
-    /* =========================================================
-       PASTOR CONTACT
-    ========================================================= */
-
-    .pastor-contact {
-        background: #faf9f6;
-        border: 1px solid var(--border);
-        border-radius: 20px;
-        padding: 2.5rem;
-        text-align: center;
-        margin-top: 2rem;
-    }
-
-    .pastor-contact .pastor-icon {
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        background: var(--gold);
-        color: #000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1.25rem;
-        font-size: 1.35rem;
-    }
-
-    .pastor-contact h3 {
-        color: var(--black);
-        margin-bottom: .5rem;
-    }
-
-    .pastor-contact p {
-        color: var(--muted);
-        margin-bottom: 1.25rem;
-    }
-
-    .pastor-number {
-        display: block;
-        font-family: var(--font-display);
-        font-size: 1.35rem;
-        color: var(--black) !important;
-        margin-bottom: 1.25rem;
-    }
-
-
-    /* =========================================================
-       MOBILE
-    ========================================================= */
-
-    @media (max-width: 576px) {
-
-        .page-hero {
-            padding-bottom: 3rem;
-        }
-
-        .contact-card,
-        .location-card,
-        .pastor-contact {
-            padding: 1.75rem;
-        }
-
-        .contact-action,
-        .directions-btn {
-            width: 100%;
-        }
-
-    }
-
+/* 10. RESPONSIVE */
+@media (max-width:991px){
+  .e-contact,.e-loc{grid-template-columns:1fr}
+  .e-loc__art{min-height:200px;order:-1}
+}
+@media (max-width:600px){
+  .e-hero{padding:6.5rem 0 5rem}
+  .e-actions,.e-btn{width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .egwm *,.egwm *::before,.egwm *::after{animation:none!important;transition-duration:.01ms!important}
+  .egwm.e-js .e-reveal{opacity:1!important;transform:none!important}
+}
 </style>
 {% endblock %}
 
 
 {% block content %}
+<div class="egwm">
 
-<!-- =========================================================
-     HERO
-========================================================= -->
-
-<section class="page-hero">
-    <div class="container" data-reveal>
-
-        <p class="eyebrow center justify-content-center d-flex">
-            Get In Touch
-        </p>
-
-        <h1>Contact Us</h1>
-
-        <p class="hero-description">
-            We would love to hear from you. Whether you have a question,
-            need prayer, or simply want to connect with us, we are here.
-        </p>
-
-    </div>
+<!-- HERO -->
+<section class="e-hero" aria-label="Contact us">
+  <div class="e-hero__bg" aria-hidden="true"></div>
+  <div class="e-wrap e-hero__inner">
+    <span class="e-kicker">Get In Touch</span>
+    <h1>Contact <em>Us</em></h1>
+    <p>We would love to hear from you. Whether you have a question, need prayer, or simply want to connect with us, we are here.</p>
+  </div>
 </section>
 
+<!-- CONTACT CONTENT -->
+<section class="e-sec">
+  <div class="e-glow" style="right:-10%;top:0" aria-hidden="true"></div>
+  <div class="e-wrap">
 
-<!-- =========================================================
-     CONTACT CONTENT
-========================================================= -->
+    <div class="e-intro e-reveal">
+      <span class="e-kicker">Connect With Us</span>
+      <h2 class="e-h2">We Are Here For You</h2>
+      <p class="e-lede">Reach out to Embassy of God's Word Ministry through any of the contact options below. We look forward to connecting with you.</p>
+    </div>
 
-<section class="section-padding contact-section">
+    <div class="e-contact">
 
-    <div class="container">
-
-        <div class="contact-intro" data-reveal>
-
-            <p class="eyebrow">
-                Connect With Us
-            </p>
-
-            <h2 class="mb-3">
-                We Are Here For You
-            </h2>
-
-            <p>
-                Reach out to Embassy of God's Word Ministry through any of
-                the contact options below. We look forward to connecting
-                with you.
-            </p>
-
+      <!-- PASTOR / PHONE -->
+      <article class="e-card e-card--pastor e-lift e-reveal e-reveal-left">
+        <div class="e-icon"><i class="fas fa-user-tie" aria-hidden="true"></i></div>
+        <span class="e-kicker" style="align-self:flex-start">Need To Speak With Someone?</span>
+        <h3>Contact The Pastor</h3>
+        <p style="margin-top:.8rem">For enquiries, prayer, or further information, you can reach the pastor directly. Speak with the ministry through our pastor's phone line.</p>
+        <a href="tel:+2348065682282" class="e-number">+234 806 568 2282</a>
+        <div class="e-actions">
+          <a href="tel:+2348065682282" class="e-btn e-btn--gold"><i class="fas fa-phone" aria-hidden="true"></i> Call Now</a>
         </div>
-
-
-        <!-- =====================================================
-             CONTACT CARDS
-        ====================================================== -->
-
-        <div class="row g-4" data-reveal>
-
-
-            <!-- PHONE -->
-
-            <div class="col-md-4">
-
-                <div class="contact-card">
-
-                    <div class="contact-icon">
-                        <i class="fas fa-phone"></i>
-                    </div>
-
-                    <h4>Call Us</h4>
-
-                    <p>
-                        Speak directly with the ministry through our
-                        pastor's phone line.
-                    </p>
-
-                    <a
-                        href="tel:+2348065682282"
-                        class="contact-action"
-                    >
-                        <i class="fas fa-phone"></i>
-                        Call Pastor
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            <!-- EMAIL -->
-
-            <div class="col-md-4">
-
-                <div class="contact-card">
-
-                    <div class="contact-icon">
-                        <i class="fas fa-envelope"></i>
-                    </div>
-
-                    <h4>Email Us</h4>
-
-                    <p>
-                        Send us an email and we will get back to you
-                        as soon as possible.
-                    </p>
-
-                    <a
-                        href="mailto:embassyofgodswordministry@gmail.com"
-                        class="contact-action"
-                    >
-                        <i class="fas fa-envelope"></i>
-                        Send Email
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            <!-- LOCATION -->
-
-            <div class="col-md-4">
-
-                <div class="contact-card">
-
-                    <div class="contact-icon">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </div>
-
-                    <h4>Visit Us</h4>
-
-                    <p>
-                        Join us physically at our ministry location
-                        in Bwari, Abuja.
-                    </p>
-
-                    <a
-                        href="https://www.google.com/maps/search/?api=1&query=Peyi+Road+opposite+British+Oasis+International+School+Ushafa+Old+Road+Bwari+Abuja"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="contact-action"
-                    >
-                        <i class="fas fa-directions"></i>
-                        Get Directions
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- =====================================================
-             LOCATION
-        ====================================================== -->
-
-        <div class="location-card" data-reveal>
-
-            <div class="row align-items-center">
-
-                <div class="col-lg-8">
-
-                    <p class="eyebrow mb-2">
-                        Our Location
-                    </p>
-
-                    <h3>
-                        Embassy of God's Word Ministry
-                    </h3>
-
-                    <p class="mb-lg-0">
-                        Peyi Road, opposite British Oasis International
-                        School, Ushafa Old Road, Bwari, Abuja.
-                    </p>
-
-                </div>
-
-                <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
-
-                    <a
-                        href="https://www.google.com/maps/search/?api=1&query=Peyi+Road+opposite+British+Oasis+International+School+Ushafa+Old+Road+Bwari+Abuja"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="directions-btn"
-                    >
-                        <i class="fas fa-map-marked-alt"></i>
-                        Open In Google Maps
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- =====================================================
-             PASTOR CONTACT
-        ====================================================== -->
-
-        <div class="pastor-contact" data-reveal>
-
-            <div class="pastor-icon">
-                <i class="fas fa-user-tie"></i>
-            </div>
-
-            <p class="eyebrow mb-2">
-                Need To Speak With Someone?
-            </p>
-
-            <h3>
-                Contact The Pastor
-            </h3>
-
-            <p>
-                For enquiries, prayer, or further information,
-                you can reach the pastor directly.
-            </p>
-
-            <a
-                href="tel:+2348065682282"
-                class="pastor-number"
-            >
-                +234 806 568 2282
-            </a>
-
-            <a
-                href="tel:+2348065682282"
-                class="btn btn-gold"
-            >
-                <i class="fas fa-phone me-2"></i>
-                Call Now
-            </a>
-
-        </div>
-
-
-        <!-- =====================================================
-             EMAIL FOOTER
-        ====================================================== -->
-
-        <div class="text-center mt-5" data-reveal>
-
-            <p style="color: var(--muted); margin-bottom: .4rem;">
-                General enquiries
-            </p>
-
-            <a
-                href="mailto:embassyofgodswordministry@gmail.com"
-                style="
-                    color: var(--gold-dark);
-                    font-weight: 700;
-                    text-decoration: none;
-                "
-            >
-                embassyofgodswordministry@gmail.com
-            </a>
-
-        </div>
+      </article>
+
+      <div class="e-stack">
+        <!-- EMAIL -->
+        <article class="e-card e-lift e-reveal e-reveal-right" style="--d:1">
+          <div class="e-icon"><i class="fas fa-envelope" aria-hidden="true"></i></div>
+          <h3>Email Us</h3>
+          <p>Send us an email and we will get back to you as soon as possible.</p>
+          <div class="e-actions">
+            <a href="mailto:embassyofgodswordministry@gmail.com" class="e-btn e-btn--ghost"><i class="fas fa-envelope" aria-hidden="true"></i> Send Email</a>
+          </div>
+        </article>
+
+        <!-- VISIT -->
+        <article class="e-card e-lift e-reveal e-reveal-right" style="--d:2">
+          <div class="e-icon"><i class="fas fa-map-marker-alt" aria-hidden="true"></i></div>
+          <h3>Visit Us</h3>
+          <p>Join us physically at our ministry location in Bwari, Abuja.</p>
+          <div class="e-actions">
+            <a href="https://www.google.com/maps/search/?api=1&query=Peyi+Road+opposite+British+Oasis+International+School+Ushafa+Old+Road+Bwari+Abuja" target="_blank" rel="noopener noreferrer" class="e-btn e-btn--ghost"><i class="fas fa-directions" aria-hidden="true"></i> Get Directions</a>
+          </div>
+        </article>
+      </div>
 
     </div>
 
+    <!-- LOCATION -->
+    <div class="e-loc e-reveal e-reveal-scale">
+      <div class="e-loc__info">
+        <span class="e-kicker">Our Location</span>
+        <h3>Embassy of God's Word Ministry</h3>
+        <p>Peyi Road, opposite British Oasis International School, Ushafa Old Road, Bwari, Abuja.</p>
+        <a href="https://www.google.com/maps/search/?api=1&query=Peyi+Road+opposite+British+Oasis+International+School+Ushafa+Old+Road+Bwari+Abuja" target="_blank" rel="noopener noreferrer" class="e-btn e-btn--gold"><i class="fas fa-map-marked-alt" aria-hidden="true"></i> Open In Google Maps</a>
+      </div>
+      <div class="e-loc__art" aria-hidden="true">
+        <div class="e-pin"><i class="fas fa-map-marker-alt"></i></div>
+      </div>
+    </div>
+
+    <!-- EMAIL FOOTER -->
+    <div class="e-foot e-reveal">
+      <p>General enquiries</p>
+      <a href="mailto:embassyofgodswordministry@gmail.com" class="e-mail">embassyofgodswordministry@gmail.com</a>
+    </div>
+
+  </div>
 </section>
 
+</div>
+{% endblock %}
+
+{% block extra_js %}
+/* EGWM contact page interactions — base.html supplies the surrounding JS tag */
+(function () {
+  'use strict';
+  var root = document.querySelector('.egwm');
+  if (!root) { return; }
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els = root.querySelectorAll('.e-reveal');
+  function showAll() { els.forEach(function (el) { el.classList.add('e-visible'); }); }
+  if (reduced || !('IntersectionObserver' in window)) {
+    showAll();
+  } else {
+    root.classList.add('e-js');
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('e-visible'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -5% 0px' });
+    els.forEach(function (el) { io.observe(el); });
+    window.setTimeout(showAll, 6000);
+  }
+})();
 {% endblock %}
