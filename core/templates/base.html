@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Embassy of God's Word Ministry{% endblock %}</title>
     <meta name="description" content="{% block meta_description %}{% if church_settings and church_settings.meta_description %}{{ church_settings.meta_description }}{% else %}Embassy of God's Word Ministry – Abuja, Nigeria. Pastor Kingsley Nwekwo. Worship, prayer, and community.{% endif %}{% endblock %}">
+    <link rel="icon" type="image/jpeg" href="{% static 'images/logo.JPG' %}">
+    <link rel="apple-touch-icon" href="{% static 'images/logo.JPG' %}"> 
     <link rel="icon" href="{% if church_settings and church_settings.favicon %}{{ church_settings.favicon.url }}{% else %}#{% endif %}" type="image/x-icon">
     <link
         rel="stylesheet"
